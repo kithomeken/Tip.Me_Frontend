@@ -9,10 +9,13 @@ import { APPLICATION } from "../../global/ConstantsRegistry";
 import { authenticationRoutes } from "../../routes/authRoutes";
 import { DeviceInfo, classNames } from "../../lib/modules/HelperFunctions";
 import { firebaseAuthActions, resetAuth0 } from "../../store/auth/firebaseAuthActions";
+import { onAuthStateChanged } from "firebase/auth";
+import { firebaseAuth } from "../../firebase/firebaseConfigs";
 
 export const SignIn = () => {
     const [state, setstate] = useState({
         posting: false,
+        auth0User: 'Not Authenticated',
     })
 
     const [credentials, setCredentials] = useState({
@@ -23,10 +26,9 @@ export const SignIn = () => {
     const location = useLocation()
     const dispatch: any = useDispatch();
 
+    const locationState: any = location.state
     const auth0: any = useAppSelector(state => state.auth0)
 
-
-    const locationState: any = location.state
     const signUpRoute: any = (authenticationRoutes.find((routeName) => routeName.name === 'AUTH_SIGN_UP'))?.path
 
     React.useEffect(() => {
@@ -68,6 +70,22 @@ export const SignIn = () => {
         }
     }
 
+    if (auth0.authenticated) {
+        onAuthStateChanged(firebaseAuth, authenticatedUser => {
+            if (authenticatedUser !== null) {
+                console.log('Logged in', authenticatedUser);
+                setstate({
+                    ...state, auth0User: 'Authenticated'
+                })
+            } else {
+                console.log('No user');
+                setstate({
+                    ...state, auth0User: 'Not Authenticated'
+                })
+            }
+        })
+    }
+
     // if (authenticationState.isAuthenticated) {
     //     // Account successfully authenticated.
     //     // Parse the encrypted string into JSON {iv/cipher}
@@ -107,7 +125,7 @@ export const SignIn = () => {
                             <header className="landing-header">
                                 <div className="landing pl-3 mb-0 text-left">
                                     <h2 className="odyssey text-left text-purple-500 nunito">{APPLICATION.NAME}</h2>
-                                    <span className="text-sm block text-left mt-0 mb-3">Account Sign In</span>
+                                    <span className="text-sm block text-left mt-0 mb-3">Account Sign In | {state.auth0User}</span>
 
                                     <span className="text-stone-500 text-sm block">
                                         <span>Don't have an account?</span>
@@ -118,10 +136,10 @@ export const SignIn = () => {
 
                             <form className="space-y-3 shadow-none px-2 mb-3" onSubmit={signInWithPassword}>
                                 <div className="shadow-none space-y-px mb-4">
-                                    <label htmlFor="email-address" className="block text-sm leading-6 text-stone-700 mb-1">Email:</label>
+                                    <label htmlFor="email" className="block text-sm leading-6 text-stone-700 mb-1">Email:</label>
 
                                     <div className="relative mt-2 rounded shadow-sm">
-                                        <input type="email" name="email-address" id="email-address" placeholder="you@social.com" autoComplete="off"
+                                        <input type="email" name="email" id="email" placeholder="you@social.com" autoComplete="off"
                                             className={classNames(
                                                 'text-stone-900 ring-slate-300 placeholder:text-stone-500 focus:border-0 focus:outline-none focus:ring-purple-600 focus:outline-purple-500 hover:border-stone-400 border border-stone-300',
                                                 'block w-full rounded-md py-2 pl-3 pr-8  text-sm'
@@ -146,7 +164,7 @@ export const SignIn = () => {
                                             className={classNames(
                                                 'text-stone-900 ring-slate-300 placeholder:text-stone-500 focus:border-0 focus:outline-none focus:ring-purple-600 focus:outline-purple-500 hover:border-stone-400 border border-stone-300',
                                                 'block w-full rounded-md py-2 pl-3 pr-8  text-sm'
-                                            )} onChange={(e) => setCredentials({ ...credentials, email: e.target.value })} value={credentials.password} required />
+                                            )} onChange={(e) => setCredentials({ ...credentials, password: e.target.value })} value={credentials.password} required />
                                     </div>
                                 </div>
 
