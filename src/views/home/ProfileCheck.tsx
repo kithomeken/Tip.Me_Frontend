@@ -374,7 +374,7 @@ export const ProfileCheck = () => {
                                                         <button className="bg-purple-600 float-right relative w-28 py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white hover:bg-purple-700 focus:outline-none focus:ring-0 focus:ring-offset-2 focus:bg-purple-700" type="submit">
                                                             {
                                                                 idC_State.processing ? (
-                                                                    <div className="flex justify-center items-center gap-3 py-2">
+                                                                    <div className="flex justify-center items-center py-3">
                                                                         <i className="fad fa-spinner-third fa-xl fa-spin"></i>
                                                                     </div>
                                                                 ) : (
