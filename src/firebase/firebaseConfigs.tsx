@@ -21,11 +21,3 @@ const firebaseApp = initializeApp(firebaseConfig);
 const analytics = getAnalytics(firebaseApp);
 
 export const firebaseAuth = getAuth(firebaseApp)
-onAuthStateChanged(firebaseAuth, authenticatedUser => {
-    if (authenticatedUser !== null) {
-        console.log('Logged in');
-    } else {
-        console.log('No user');
-        
-    }
-})
