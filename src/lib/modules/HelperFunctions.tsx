@@ -120,3 +120,39 @@ export function maskNumber(number: any) {
     // Return the original number if it doesn't have at least 6 characters
     return number;
 }
+
+export function passwordValidator(password: string) {
+    const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#()\-[\]{}_\-+='\\|;:'",.<>\/~])[A-Za-z\d@$!%*?&#()\-[\]{}_\-+='\\|;:'",.<>\/~]{8,}$/;
+    return strongPasswordRegex.test(password);
+}
+
+export function nameValidator(tValue: string) {
+    if (tValue.match(new RegExp('[`!@#$%^&*()_+\-=\[\]{};:"\\|,.<>\/?~]'))) {
+        return false
+    } else {
+        /* 
+         * Remove allowed special characters then test for numbers
+        */
+        tValue = tValue.replace("'", '')
+        tValue = tValue.replace(" ", '')
+
+        if (!tValue.match(new RegExp('[A-Z]')) || !tValue.match(new RegExp('[a-z]'))) {
+            return false
+        }
+    }
+
+    return true
+}
+
+export function emailValidator(tValue) {
+    let lastAtPos = tValue.lastIndexOf('@')
+    let lastDotPos = tValue.lastIndexOf('.')
+
+    if (!(lastAtPos < lastDotPos && lastAtPos > 0 && tValue.indexOf('@@') === -1 && lastDotPos > 2 && (tValue.length - lastDotPos) > 2)) {
+        return false
+    }
+
+    return true
+}
+
+
