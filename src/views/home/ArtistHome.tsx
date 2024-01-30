@@ -12,11 +12,11 @@ import { API_RouteReplace, classNames, formatAmount } from '../../lib/modules/He
 import { MoneyIn } from './MoneyIn';
 import { MoneyOut } from './MoneyOut';
 import { WithdrawModal } from './WithdrawModal';
+import { ERR_500 } from '../errors/ERR_500';
 
 export const ArtistHome = () => {
     const accountState: any = useAppSelector(state => state.account)
-    const qrCodeText = APPLICATION.URL + '/artist/' + accountState.account
-    const qrCodeImageName = 'qrcode_' + accountState.account + '.png'
+    
 
     const [qrCode, setQRCode] = useState({
         lowQuality: '',
@@ -32,6 +32,7 @@ export const ArtistHome = () => {
             craft: null,
             entity: null,
             money_in: null,
+            qrCodeImageName: null,
         },
     })
 
@@ -49,11 +50,14 @@ export const ArtistHome = () => {
             console.log(response);
 
             if (response.data.success) {
-                GenerateQRCode()
                 status = 'fulfilled'
+                const qrCodeText = APPLICATION.URL + '/artist/' + data.craft.account
+                GenerateQRCode(qrCodeText)
+
                 data.craft = response.data.payload.craft
                 data.entity = response.data.payload.entity
                 data.craft.bal = formatAmount(parseFloat(data.craft.bal))
+                data.qrCodeImageName = 'qrcode_' + data.craft.account + '.png'
             } else {
                 status = 'rejected'
             }
@@ -67,7 +71,7 @@ export const ArtistHome = () => {
         })
     }
 
-    function GenerateQRCode() {
+    function GenerateQRCode(qrCodeText: string) {
         let { lowQuality } = qrCode
         let { highQuality } = qrCode
 
@@ -139,9 +143,7 @@ export const ArtistHome = () => {
 
             {
                 state.status === 'rejected' ? (
-                    <>
-                        Rejected
-                    </>
+                    <ERR_500 />
                 ) : state.status === 'fulfilled' ? (
                     <div className="w-full">
                         <div className={`w-full mb-3`}>
@@ -150,7 +152,7 @@ export const ArtistHome = () => {
                                     <div className="flex-none flex flex-col justify-center border-t md:border-t-0 pt-3 md:pt-0">
                                         <img src={qrCode.lowQuality} alt="qr_code" className="block text-center m-auto" />
 
-                                        <a className="text-purple-600 w-40 py-2 m-auto px-4 flex flex-row items-center justify-center border border-purple-600 md:hidden text-sm text-center rounded-md bg-white hover:bg-purple-700 focus:outline-none" href={qrCode.highQuality} download={qrCodeImageName}>
+                                        <a className="text-purple-600 w-40 py-2 m-auto px-4 flex flex-row items-center justify-center border border-purple-600 md:hidden text-sm text-center rounded-md bg-white hover:bg-purple-700 focus:outline-none" href={qrCode.highQuality} download={state.data.qrCodeImageName}>
                                             <i className="fa-duotone fa-download mr-2 fa-lg"></i>
                                             Download
                                         </a>
@@ -193,7 +195,7 @@ export const ArtistHome = () => {
                                             </div>
 
                                             <div className="flex flex-col justify-center md:py-2">
-                                                <a className="bg-purple-600 w-40 py-2 px-4 hidden text-sm md:flex flex-row items-center justify-center text-center rounded-md text-white hover:bg-purple-700 focus:outline-none" href={qrCode.highQuality} download={qrCodeImageName}>
+                                                <a className="bg-purple-600 w-40 py-2 px-4 hidden text-sm md:flex flex-row items-center justify-center text-center rounded-md text-white hover:bg-purple-700 focus:outline-none" href={qrCode.highQuality} download={state.data.qrCodeImageName}>
                                                     <i className="fa-duotone fa-download mr-2 fa-lg"></i>
                                                     Download
                                                 </a>
