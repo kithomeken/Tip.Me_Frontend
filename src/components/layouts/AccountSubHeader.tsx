@@ -14,8 +14,13 @@ interface headerProps {
 
 export const AccountSubHeader: FC<headerProps> = ({ errorMode = false }) => {
     const dispatch: any = useDispatch()
-    const accountState = useAppSelector(state => state.account)
-    const accountProfile: any = (standardRoutes.find((routeName: { name: string }) => routeName.name === 'ACCOUNT_PROFILE'))?.path
+    const auth0: any = useAppSelector(state => state.auth0)
+
+    const IdentityRoute: any = (
+        standardRoutes.find(
+            (routeName: { name: string }) => routeName.name === 'ACCOUNT_PROFILE'
+        )
+    )?.path
 
     function classNames(...classes: any[]) {
         return classes.filter(Boolean).join(' ')
@@ -38,7 +43,7 @@ export const AccountSubHeader: FC<headerProps> = ({ errorMode = false }) => {
                                         "flex flex-row items-center w-auto px-3 rounded py-1 bg-white text-sm text-slate-500 hover:bg-slate-100 hover:text-slate-700 focus:outline-none focus:ring-0 focus:ring-offset focus:ring-offset-slate-100 focus:ring-green-500 align-middle"
                                     )
                                 }>
-                                <span className="text-sm">{accountState.first_name} {accountState.last_name}</span>
+                                <span className="text-sm">{auth0.identity.display_name}</span>
                                 <img className="ml-4 rounded-full h-10 w-10" src={cartoonChar} alt="avatar" />
                             </Menu.Button>
                         </div>
@@ -63,7 +68,7 @@ export const AccountSubHeader: FC<headerProps> = ({ errorMode = false }) => {
                                                 <Menu.Item>
                                                     {({ active }) => (
                                                         <Link
-                                                            to={accountProfile}
+                                                            to={IdentityRoute}
                                                             className={classNames(
                                                                 active ? 'bg-slate-100 text-slate-800' : 'text-slate-700',
                                                                 'px-4 py-3 text-sm text-left w-full block mt-2'
