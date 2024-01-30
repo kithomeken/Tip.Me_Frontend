@@ -109,7 +109,7 @@ async function googleProviderSignInWithPopUp(dispatch: any, firebaseProps: any) 
             } else if (popUpErrors.includes(errorCode)) {
                 errorMessage = 'Google sign-in process cancelled by user'
             } else {
-                errorMessage = 'Something went wrong. Kindly try again'
+                errorMessage = null
             }
 
             dispatch({
@@ -162,7 +162,7 @@ async function googleProviderSignInWithRedirect(dispatch: any, firebaseProps: an
             } else if (popUpErrors.includes(errorCode)) {
                 errorMessage = 'Google sign-in process cancelled by user'
             } else {
-                errorMessage = 'Something went wrong. Kindly try again'
+                errorMessage = null
             }
 
             dispatch({
@@ -203,7 +203,7 @@ async function googleProviderSignInWithRedirect(dispatch: any, firebaseProps: an
             } else if (popUpErrors.includes(errorCode)) {
                 errorMessage = 'Google sign-in process cancelled by user'
             } else {
-                errorMessage = 'Something went wrong. Kindly try again'
+                errorMessage = null
             }
 
             dispatch({
@@ -252,7 +252,7 @@ async function emailPasswordSignIn(dispatch: any, firebaseProps: any) {
             } else if (errorCode === 'auth/requires-recent-login') {
                 errorMessage = "Your session has expired. Please sign in again to continue."
             } else {
-                errorMessage = 'Something went wrong. Kindly try again'
+                errorMessage = null
             }
 
             dispatch({
@@ -298,7 +298,7 @@ async function emailPasswordSignUp(dispatch: any, firebaseProps: any) {
             } else if (errorCode === 'auth/operation-not-allowed') {
                 errorMessage = 'Something went wrong. Kindly try again'
             } else {
-                errorMessage = 'Something went wrong. Kindly try again'
+                errorMessage = null
             }
 
             dispatch({
