@@ -19,20 +19,4 @@ function invalidateSanctumToken(dispatch: any) {
         type: AUTH_.REVOKE_SESSION,
         response: null,
     });
-
-    axios
-        .post(revokeAPI, axiosOptions)
-        .then((response) => {
-            dispatch({
-                type: AUTH_.REVOKE_SESSION,
-                response: response.data,
-            });
-        })
-        .catch((error) => {
-            console.error(error);
-            dispatch({
-                type: AUTH_.REVOKE_EXCEPTION,
-                response: "Signing out error",
-            });
-        });
 }

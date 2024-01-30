@@ -111,9 +111,8 @@ export const firebaseAuthReducer = (state = initialState, action: any) => {
 
             return {
                 ...state,
-                uaid: null,
-                identifier: null,
-                isAuthenticated: false,
+                identity: null,
+                authenticated: false,
             }
 
         default:
