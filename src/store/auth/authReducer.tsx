@@ -48,7 +48,7 @@ export const authReducer = (state = initialState, action: any) => {
                 error: "The provided credentials are incorrect.",
             }
 
-        case AUTH_.AUTHENTICATION_REVOKED:
+        case AUTH_.REVOKE_SESSION:
             CookieServices.remove(COOKIE_KEYS.SANCTUM)
             CookieServices.remove(COOKIE_KEYS.UAID)
             StorageServices.removeLocalStorage(STORAGE_KEYS.ACCOUNT_DATA)

@@ -16,7 +16,7 @@ function invalidateSanctumToken(dispatch: any) {
     const axiosOptions = Object.assign(HttpServices.axiosInstanceHeaders(), null)
     
     dispatch({
-        type: AUTH_.AUTHENTICATION_REVOKED,
+        type: AUTH_.REVOKE_SESSION,
         response: null,
     });
 
@@ -24,7 +24,7 @@ function invalidateSanctumToken(dispatch: any) {
         .post(revokeAPI, axiosOptions)
         .then((response) => {
             dispatch({
-                type: AUTH_.AUTHENTICATION_REVOKED,
+                type: AUTH_.REVOKE_SESSION,
                 response: response.data,
             });
         })

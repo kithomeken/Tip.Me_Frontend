@@ -8,6 +8,7 @@ import { postAuthReducer } from './auth/postAuthRecuder';
 import { persistStore, persistReducer } from 'redux-persist'
 import { configureStore, ThunkAction, Action, combineReducers } from '@reduxjs/toolkit';
 import { firebaseAuthReducer } from './auth/firebaseReducers';
+import { identityCheckReducer } from './identitycheckReducers';
 
 const persistConfig = {
     key: 'root',
@@ -17,6 +18,7 @@ const persistConfig = {
 const rootReducer = combineReducers({
     auth: authReducer,
     account: postAuthReducer,
+    idC: identityCheckReducer,
     auth0: firebaseAuthReducer,
 })
 
