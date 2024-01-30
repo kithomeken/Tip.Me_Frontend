@@ -1,3 +1,5 @@
+import { isValidPhoneNumber } from "react-phone-number-input";
+import { emailValidator, nameValidator, passwordValidator } from "../../lib/modules/HelperFunctions";
 
 export function G_onInputChangeHandler(event: any, posting: boolean) {
     let input: any = {
@@ -33,39 +35,45 @@ export function G_onInputBlurHandler(event: any, posting: boolean, title: any, m
         let tValue = event.target.value.trim()
         let tName = event.target.name
 
+        let targetTitle = tName.charAt(0).toUpperCase() + tName.slice(1)
+        targetTitle = targetTitle.replace('_', ' ')
+
+        const head = title === '' ? targetTitle : title + ' ' + tName.replace('_', ' ')
+
         if (tValue.length < 1 && event.target.required) {
             /* 
              * Mandatory inputs should not be empty
             */
-            input.error = title + ' ' + tName + ' cannot be empty'
+            input.error = head + ' cannot be empty'
+
             return input
         }
 
         switch (tName) {
             case 'name':
                 if (tValue.length < minChar) {
-                    input.error = title + ' ' + tName + ' cannot be less than ' + minChar + ' characters'
+                    input.error = head + ' cannot be less than ' + minChar + ' characters'
                     return input
                 } else if (tValue.length > maxChar) {
-                    input.error = title + ' ' + tName + ' cannot be more than ' + maxChar + ' characters'
+                    input.error = head + ' cannot be more than ' + maxChar + ' characters'
                     return input
                 }
                 break
 
             case 'description':
                 if (tValue.length < 5) {
-                    input.error = title + ' ' + tName + ' cannot be less than 5 characters'
+                    input.error = head + ' cannot be less than 5 characters'
                     return input
                 } else if (tValue.length > 200) {
-                    input.error = title + ' ' + tName + ' cannot be more than 200 characters'
+                    input.error = head + ' cannot be more than 200 characters'
                     return input
                 }
                 break
-            
+
             case 'amount':
                 tValue = tValue.replace(',', '')
                 const isValidAmount = /^\d+(\.\d{1,2})?$/.test(tValue);
-                
+
                 if (!isValidAmount) {
                     input.error = isValidAmount ? '' : 'Invalid amount format';
                 } else if (tValue < 100) {
@@ -73,42 +81,35 @@ export function G_onInputBlurHandler(event: any, posting: boolean, title: any, m
                 }
                 break
 
+            case 'artist_name':
             case 'first_name':
             case 'last_name':
-                let targetTitle = tName.charAt(0).toUpperCase() + tName.slice(1)
-                targetTitle = targetTitle.replace('_', ' ')
-
                 if (tValue.length < 3) {
-                    input.error = targetTitle + ' cannot be less than 3 characters'
+                    input.error = head + ' cannot be less than 3 characters'
                     return input
                 } else if (tValue.length > 30) {
-                    input.error = targetTitle + ' cannot be more than 30 characters'
+                    input.error = head + ' cannot be more than 30 characters'
                     return input
                 } else {
                     /* 
                      * Validate name details
+                     * Set first character to upper case
                     */
-                    if (tValue.match(new RegExp('[`!@#$%^&*()_+\-=\[\]{};:"\\|,.<>\/?~]'))) {
-                        input.error = 'Please provide a valid ' + targetTitle
-                    } else {
-                        /* 
-                         * Remove allowed special characters then test for numbers
-                        */
-                        tValue = tValue.replace("'", '')
-                        tValue = tValue.replace(" ", '')
+                    tValue = tValue.charAt(0).toUpperCase() + tValue.slice(1)
+                    input.value = tValue
 
-                        if (!tValue.match(new RegExp('[A-Z]')) || !tValue.match(new RegExp('[a-z]'))) {
-                            input.error = 'Please provide a valid ' + targetTitle
-                        }
+                    let isValidName = nameValidator(tValue)
+
+                    if (!isValidName) {
+                        input.error = 'Please provide a valid ' + targetTitle.toLowerCase()
                     }
                 }
                 break
 
             case 'email':
-                let lastAtPos = tValue.lastIndexOf('@')
-                let lastDotPos = tValue.lastIndexOf('.')
+                let isValidEmail = emailValidator(tValue)
 
-                if (!(lastAtPos < lastDotPos && lastAtPos > 0 && tValue.indexOf('@@') === -1 && lastDotPos > 2 && (tValue.length - lastDotPos) > 2)) {
+                if (!isValidEmail) {
                     input.error = 'Please provide a valid email address'
                 }
                 break
@@ -124,16 +125,33 @@ export function G_onInputBlurHandler(event: any, posting: boolean, title: any, m
                 } else if (tValue.length > pwdMaxLength) {
                     input.error = tName + ' cannot be more than ' + maxChar + ' characters'
                     return input
+                } else {
+                    let isValidPwd = passwordValidator(tValue)
+
+                    if (!isValidPwd) {
+                        input.error = 'Kindly set a strong password '
+                        return input
+                    }
                 }
+                break
+
+            case 'msisdn':
+                const validPhone = isValidPhoneNumber(tValue)
+
+                if (validPhone) {
+                    input.error = 'Kindly add a valid phone number '
+                    return input
+                }
+
                 break
 
             default:
                 const firstCase = tName
                 if (tValue.length < minChar) {
-                    input.error = title + ' ' + tName + ' cannot be less than ' + minChar + ' characters'
+                    input.error = head + ' cannot be less than ' + minChar + ' characters'
                     return input
                 } else if (tValue.length > maxChar) {
-                    input.error = title + ' ' + tName + ' cannot be more than ' + maxChar + ' characters'
+                    input.error = head + ' cannot be more than ' + maxChar + ' characters'
                     return input
                 }
                 break
