@@ -138,7 +138,7 @@ export const ArtistHome = () => {
             {
                 state.status === 'rejected' ? (
                     <>
-
+    Rejected
                     </>
                 ) : state.status === 'fulfilled' ? (
                     <div className="w-full">
