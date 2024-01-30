@@ -3,6 +3,12 @@
 ***************************/
 export const AUTH = {
     FIREBASE_SSO: '/v1/identity/auth/firebase-sso',
+    META_CHECK:   '/v1/identity/account/meta/check',
+    PRE_META_01:  '/v1/identity/account/meta/artist_name/check',
+    ID_META_01:   '/v1/identity/account/meta/display_name',
+    ID_META_02:   '/v1/identity/account/meta/msisdn',
+    ARTIST_TYPES: '/v1/identity/account/meta/artist/types',
+    ID_META_03:   '/v1/identity/account/meta/artist',
 }
 
 

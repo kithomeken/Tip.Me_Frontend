@@ -2,7 +2,7 @@ export function API_Controller () {
     let FQDN = null
     let API = null
     let APP = null
-    let online = true
+    let online = false
 
     if (process.env.NODE_ENV === 'production') {
         APP = ''
