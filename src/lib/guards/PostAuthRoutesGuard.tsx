@@ -6,17 +6,14 @@ import { useAppSelector } from "../../store/hooks"
 import { revokeAuthenticationAction } from "../../store/auth/revokeAuthentication"
 
 export default function PostAuthRoutesGuard() {
-    const dispatch: any = useDispatch()
     const location = useLocation()
+    const dispatch: any = useDispatch()
 
-    const authenticationState = useAppSelector(state => state.auth)
-    const accountState = useAppSelector(state => state.account)
-    const sessionState = Auth.checkAuthentication(authenticationState, accountState)
+    const auth0: any = useAppSelector(state => state.auth0)
+    const sessionState = Auth.checkAuthentication(auth0)
 
-    console.log(sessionState);
-
-    if (sessionState.isAuthenticated) {
-        if (sessionState.accountInfoExists) {
+    if (sessionState.authenticated) {
+        if (sessionState.identity) {
             // Redirect to home or the previous location
             const locationState: any = location.state
             const state = {
@@ -30,7 +27,7 @@ export default function PostAuthRoutesGuard() {
             }
         }
     } else {
-        if (sessionState.resetAccountSession) {
+        if (sessionState.status.disabled) {
             /* 
              * Redux session state is authenticated
              * but cookies are not set.

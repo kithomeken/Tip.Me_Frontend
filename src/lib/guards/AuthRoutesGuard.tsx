@@ -8,16 +8,15 @@ import { standardErrorRoutes } from "../../routes/errorRoutes"
 import { revokeAuthenticationAction } from "../../store/auth/revokeAuthentication"
 
 export default function AuthRoutesGuard() {
-    const dispatch: any = useDispatch()
     const location = useLocation()
+    const dispatch: any = useDispatch()
     const locationState: any = location.state
 
-    const authenticationState = useAppSelector(state => state.auth)
-    const accountState = useAppSelector(state => state.account)
-    const sessionState = Auth.checkAuthentication(authenticationState, accountState)
+    const auth0: any = useAppSelector(state => state.auth0)
+    const sessionState = Auth.checkAuthentication(auth0)
 
-    if (sessionState.isAuthenticated) {
-        if (!sessionState.accountInfoExists) {
+    if (sessionState.authenticated) {
+        if (!sessionState.identity) {
             const currentLocation = location.pathname
             const postAuthenticationRoute: any = (postAuthRoutes.find((routeName) => routeName.name === 'ACC_CHECK_'))?.path        
 
@@ -27,7 +26,7 @@ export default function AuthRoutesGuard() {
             return <Navigate to={postAuthenticationRoute} replace state={state} />
         }
         
-        if (sessionState.suspendedAccount) {
+        if (sessionState.status.disabled) {
             const suspendAccountRoute: any = (standardErrorRoutes.find((routeName) => routeName.name === 'SUSP_ACC'))?.path
             return <Navigate to={suspendAccountRoute} replace />;
         }
@@ -39,7 +38,7 @@ export default function AuthRoutesGuard() {
             return <Navigate to={locationState.from} replace />;
         }
     } else {
-        if (sessionState.resetAccountSession) {
+        if (sessionState.status.resetSession) {
             /* 
              * Redux session state is authenticated
              * but cookies are not set.

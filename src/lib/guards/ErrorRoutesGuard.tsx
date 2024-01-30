@@ -11,12 +11,11 @@ import { Header } from "../../components/layouts/Header"
 export default function ErrorRoutesGuard() {
     const dispatch: any = useDispatch()
 
-    const authenticationState = useAppSelector(state => state.auth)
-    const accountState = useAppSelector(state => state.account)
-    const sessionState = Auth.checkAuthentication(authenticationState, accountState)
+    const auth0: any = useAppSelector(state => state.auth0)
+    const sessionState = Auth.checkAuthentication(auth0)
     
-    if (!sessionState.isAuthenticated) {
-        if (sessionState.resetAccountSession) {
+    if (!sessionState.authenticated) {
+        if (sessionState.status.resetSession) {
             /* 
              * Redux session state is authenticated
              * but cookies are not set.

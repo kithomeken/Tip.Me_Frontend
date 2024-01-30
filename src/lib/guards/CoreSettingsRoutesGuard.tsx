@@ -20,21 +20,21 @@ export default function CoreSettingsRouteGuard() {
 
     const location = useLocation()
     const currentLocation = location.pathname
-    const reduxAuthState = useAppSelector(state => state.auth)
-    const sessionState = Auth.checkAuthentication(reduxAuthState)
+    const auth0: any = useAppSelector(state => state.auth0)
+    const sessionState = Auth.checkAuthentication(auth0)
 
     React.useEffect(() => {
         gatePassValidation()
     }, [location.pathname])
 
-    if (!sessionState.isAuthenticated) {
+    if (!sessionState.authenticated) {
         const navigationState = {
             from: currentLocation
         }
 
         return <Navigate to="/auth/sign-in" replace state={navigationState} />
     } else {
-        if (sessionState.suspendedAccount) {
+        if (sessionState.status.disabled) {
             // Suspended accounts
             const suspendAccountRoute: any = (standardErrorRoutes.find((routeName) => routeName.name === 'SUSP_ACC'))?.path
             return <Navigate to={suspendAccountRoute} replace />;

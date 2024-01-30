@@ -13,16 +13,15 @@ export default function StandardRoutesGuard() {
     const location = useLocation()
     const currentLocation = location.pathname
 
-    const authenticationState = useAppSelector(state => state.auth)
-    const accountState = useAppSelector(state => state.account)
-    const sessionState = Auth.checkAuthentication(authenticationState, accountState)
+    const auth0: any = useAppSelector(state => state.auth0)
+    const sessionState = Auth.checkAuthentication(auth0)
     
     const state = {
         from: currentLocation
     }
 
-    if (!sessionState.isAuthenticated) {
-        if (sessionState.resetAccountSession) {
+    if (!sessionState.authenticated) {
+        if (sessionState.status.resetSession) {
             /* 
              * Redux session state is authenticated
              * but cookies are not set.
@@ -36,7 +35,7 @@ export default function StandardRoutesGuard() {
             return <Navigate to="/auth/sign-in" replace state={state} />;
         }
     } else {
-        if (sessionState.suspendedAccount) {
+        if (sessionState.status.disabled) {
             // Suspended accounts
             const suspendAccountRoute: any = (standardErrorRoutes.find((routeName) => routeName.name === 'SUSP_ACC'))?.path
             return <Navigate to={suspendAccountRoute} replace />;
