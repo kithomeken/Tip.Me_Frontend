@@ -30,6 +30,7 @@ export const ArtistHome = () => {
         activeTab: 'in',
         data: {
             craft: null,
+            entity: null,
             money_in: null,
         },
     })
@@ -51,7 +52,8 @@ export const ArtistHome = () => {
                 GenerateQRCode()
                 status = 'fulfilled'
                 data.craft = response.data.payload.craft
-                data.craft.bal = formatAmount(parseFloat(data.craft.bal))                
+                data.entity = response.data.payload.entity
+                data.craft.bal = formatAmount(parseFloat(data.craft.bal))
             } else {
                 status = 'rejected'
             }
@@ -138,7 +140,7 @@ export const ArtistHome = () => {
             {
                 state.status === 'rejected' ? (
                     <>
-    Rejected
+                        Rejected
                     </>
                 ) : state.status === 'fulfilled' ? (
                     <div className="w-full">
@@ -158,7 +160,7 @@ export const ArtistHome = () => {
                                         <div className="w-full">
                                             <div className="w-full flex flex-row items-center -middle">
                                                 <span className="py-1 flex-grow px-1.5 block text-2xl text-purple-600 mb-2 capitalize">
-                                                    {state.data.craft.name}
+                                                    {state.data.entity.name}
                                                 </span>
 
                                                 <button type="button" onClick={showOrHideWithdrawModal} className="bg-purple-600 flex-none w-40 py-2 px-4 float-right hidden text-sm md:flex flex-row items-center justify-center text-center rounded-md text-white hover:bg-purple-700 focus:outline-none">
@@ -178,8 +180,8 @@ export const ArtistHome = () => {
                                                 </span>
 
                                                 <span className=" py-1 px-1.5 text-3xl">
-                                                    <span className="text-slate-700">{state.data.craft.bal.split('.')[0]}</span>
-                                                    <span className="text-slate-400">.{state.data.craft.bal.split('.')[1]}</span>
+                                                    <span className="text-slate-700">{state.data.entity.bal.split('.')[0]}</span>
+                                                    <span className="text-slate-400">.{state.data.entity.bal.split('.')[1]}</span>
                                                 </span>
                                             </div>
 
