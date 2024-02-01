@@ -236,7 +236,7 @@ export const SignIn = () => {
                         <div className="md:px-10 px-4">
                             <header className="landing-header">
                                 <div className="landing pl-3 mb-0 text-left">
-                                    <h2 className="odyssey text-left text-purple-500 nunito">{APPLICATION.NAME}</h2>
+                                    <h2 className="odyssey text-left text-purple-500 unito">{APPLICATION.NAME}</h2>
                                     <span className="text-sm block text-left mt-0 mb-3">Account Sign In</span>
 
                                     <span className="text-stone-500 text-sm block">
