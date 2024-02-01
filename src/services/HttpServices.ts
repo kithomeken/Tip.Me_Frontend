@@ -5,7 +5,7 @@ import Crypto from "../security/Crypto"
 import CookieServices from "./CookieServices"
 import { API_DOMAIN, FULLY_QUALIFIED_DOMAIN_NAME } from "../api/API_Controller"
 import { COOKIE_KEYS } from "../global/ConstantsRegistry"
-import { revokeAuthenticationAction } from "../store/auth/revokeAuthentication"
+import { revokeAuthSession } from "../store/auth/firebaseAuthActions"
 
 class HttpServices {
     protected decryptSanctumTokenCookie() {
@@ -245,7 +245,7 @@ class HttpServices {
 
     revokeAuthenticatedSession() {
         console.log('Revoking authentication');
-        store.dispatch(revokeAuthenticationAction())
+        store.dispatch(revokeAuthSession())
     }
 }
 
