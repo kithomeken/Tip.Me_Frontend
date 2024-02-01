@@ -13,7 +13,7 @@ import { ERR_404 } from './views/errors/ERR_404'
 import { coreSettingsRoutes } from "./routes/configRoutes"
 import EncryptionKeys from "./security/EncryptionKeys"
 import { standardRoutes } from './routes/standardRoutes'
-import { authenticationRoutes, postAuthRoutes } from './routes/authRoutes'
+import { authenticationRoutes } from './routes/authRoutes'
 import { FULLY_QUALIFIED_DOMAIN_NAME } from "./api/API_Controller"
 import { sanctumAxiosInstance } from "./lib/modules/HelperFunctions"
 import { AUTH_SIGN_IN, AUTH_SIGN_OUT, CSRF_COOKIE_ROUTE } from "./api/API_Registry"
@@ -21,7 +21,6 @@ import { standardErrorRoutes } from "./routes/errorRoutes"
 import CoreSettingsRouteGuard from "./lib/guards/CoreSettingsRoutesGuard"
 import AuthRoutesGuard from "./lib/guards/AuthRoutesGuard"
 import ErrorRoutesGuard from "./lib/guards/ErrorRoutesGuard"
-import PostAuthRoutesGuard from "./lib/guards/PostAuthRoutesGuard"
 import StandardRoutesGuard from "./lib/guards/StandardRoutesGuard"
 
 import './firebase/firebaseConfigs'
@@ -81,20 +80,6 @@ function App() {
                                     />
                                 )
                             })
-                            }
-                        </Route>
-
-                        <Route element={<PostAuthRoutesGuard />} >
-                            {
-                                postAuthRoutes.map((route, index) => {
-                                    return (
-                                        <Route
-                                            path={route.path}
-                                            element={route.element}
-                                            key={index}
-                                        />
-                                    )
-                                })
                             }
                         </Route>
 
