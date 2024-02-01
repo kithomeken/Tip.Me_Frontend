@@ -22,7 +22,7 @@ export default function AuthRoutesGuard() {
              * 
              * Reset session and start all-over again
             */
-            dispatch(revokeAuthSession())
+            // dispatch(revokeAuthSession())
             
             return 
         }
