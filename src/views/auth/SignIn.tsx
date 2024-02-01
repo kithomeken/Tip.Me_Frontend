@@ -60,7 +60,7 @@ export const SignIn = () => {
                     deviceInfo: DeviceInfo(),
                 }
 
-                generateSanctumToken(dispatch, accessToken, props)
+                return generateSanctumToken(dispatch, accessToken, props)
             })
             .catch(() => {
                 dispatch(resetAuth0())
