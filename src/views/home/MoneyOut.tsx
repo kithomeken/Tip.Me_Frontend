@@ -1,7 +1,6 @@
 import React, { useState } from "react"
 
 import { ACCOUNT } from "../../api/API_Registry"
-import { useAppSelector } from "../../store/hooks"
 import ReactTable from "../../lib/hooks/ReactTable"
 import HttpServices from "../../services/HttpServices"
 import { Loading } from "../../components/modules/Loading"
@@ -14,8 +13,6 @@ export const MoneyOut = ({ account }: { account: string }) => {
             requests: null
         }
     })
-
-    const authState = useAppSelector(state => state.auth)
 
     React.useEffect(() => {
         moneyOutTransactions()
@@ -113,14 +110,14 @@ export const MoneyOut = ({ account }: { account: string }) => {
                                     )
                                 }
 
-                                {
+                                {/* {
                                     authState.uaid === data.acid ? (
                                         <span className=" py-1 px-1.5 block text-sm text-red-500 float-right">
                                             <i className="fa-light fa-trash fa-lg mr-2"></i>
                                             Delete Request
                                         </span>
                                     ) : null
-                                }
+                                } */}
 
                             </div>
                         </div>

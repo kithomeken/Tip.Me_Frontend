@@ -15,9 +15,7 @@ import { WithdrawModal } from './WithdrawModal';
 import { ERR_500 } from '../errors/ERR_500';
 
 export const ArtistHome = () => {
-    const accountState: any = useAppSelector(state => state.account)
     
-
     const [qrCode, setQRCode] = useState({
         lowQuality: '',
         highQuality: ''
@@ -45,7 +43,7 @@ export const ArtistHome = () => {
         let { data } = state
 
         try {
-            const apiRoute = API_RouteReplace(ACCOUNT.ARTIST_DETAILS, ':auid', accountState.account)
+            const apiRoute = API_RouteReplace(ACCOUNT.ARTIST_DETAILS, ':auid', 'owudow')
             const response: any = await HttpServices.httpGet(apiRoute)
             console.log(response);
 
@@ -125,10 +123,10 @@ export const ArtistHome = () => {
     const loadRespectiveTab = (tab: string = 'in') => {
         switch (tab) {
             case "in":
-                return <MoneyIn account={accountState.account} />
+                return <MoneyIn account={'wohidw'} />
 
             case "out":
-                return <MoneyOut account={accountState.account} />
+                return <MoneyOut account={'iuhdwodi'} />
 
             default:
                 return null
@@ -258,7 +256,7 @@ export const ArtistHome = () => {
 
             <WithdrawModal
                 show={state.show}
-                account={accountState.account}
+                account={'wdiuhwoid'}
                 showOrHide={showOrHideWithdrawModal}
             />
         </React.Fragment >
