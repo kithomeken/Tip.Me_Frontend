@@ -1,3 +1,5 @@
+import { signOut } from "firebase/auth";
+import { firebaseAuth } from "../../firebase/firebaseConfigs";
 import { AUTH_, COOKIE_KEYS, STORAGE_KEYS } from "../../global/ConstantsRegistry";
 import { encryptAndStoreCookie, encryptAndStoreLS } from "../../lib/modules/HelperFunctions";
 import CookieServices from "../../services/CookieServices";
@@ -13,6 +15,7 @@ const initialState = {
 export const firebaseAuthReducer = (state = initialState, action: any) => {
     switch (action.type) {
         case AUTH_.RESET_:
+            
             return {
                 ...state,
                 error: null,
@@ -39,6 +42,12 @@ export const firebaseAuthReducer = (state = initialState, action: any) => {
             }
 
         case AUTH_.FIREBASE_EXCEPTION:
+            signOut(firebaseAuth).then(() => {
+                // Sign-out successful.
+            }).catch((error) => {
+                // An error happened.
+            });
+
             return {
                 ...state,
                 processing: false,
@@ -49,6 +58,14 @@ export const firebaseAuthReducer = (state = initialState, action: any) => {
         case AUTH_.SANCTUM_TOKEN:
             const payload = action.response.payload
             const identity = payload.identity
+            
+            const identityObject = {
+                uid: identity.uid,
+                email: identity.email,
+                msisdn: identity.msisdn,
+                provider: identity.provider_id,
+                display_name: identity.display_name,
+            }
 
             encryptAndStoreLS(STORAGE_KEYS.ACCOUNT_DATA, identity)
             encryptAndStoreCookie(COOKIE_KEYS.SANCTUM, payload.token)
@@ -57,12 +74,18 @@ export const firebaseAuthReducer = (state = initialState, action: any) => {
                 ...state,
                 processing: false,
                 authenticated: true,
-                identity: identity
+                identity: identityObject
             }
 
         case AUTH_.SANCTUM_EXCEPTION:
             CookieServices.remove(COOKIE_KEYS.SANCTUM)
             StorageServices.removeLocalStorage(STORAGE_KEYS.ACCOUNT_DATA)
+
+            signOut(firebaseAuth).then(() => {
+                // Sign-out successful.
+            }).catch((error) => {
+                // An error happened.
+            });
 
             return {
                 ...state,

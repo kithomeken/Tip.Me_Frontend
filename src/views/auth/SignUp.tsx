@@ -1,19 +1,20 @@
 import { Helmet } from "react-helmet";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-
 import { useDispatch } from "react-redux";
 import { Navigate, useLocation } from "react-router";
+
+import { getRedirectResult } from "firebase/auth";
 import { useAppSelector } from "../../store/hooks";
-import { APPLICATION } from "../../global/ConstantsRegistry";
 import { authenticationRoutes } from "../../routes/authRoutes";
-import { DeviceInfo, classNames, emailValidator, passwordValidator } from "../../lib/modules/HelperFunctions";
-import { firebaseAuthActions, resetAuth0 } from "../../store/auth/firebaseAuthActions";
+import { firebaseAuth } from "../../firebase/firebaseConfigs";
+import { APPLICATION, AUTH_ } from "../../global/ConstantsRegistry";
 import { G_onInputChangeHandler, G_onInputBlurHandler } from "../../components/lib/InputHandlers";
+import { firebaseAuthActions, generateSanctumToken, resetAuth0 } from "../../store/auth/firebaseAuthActions";
+import { DeviceInfo, classNames, emailValidator, passwordValidator } from "../../lib/modules/HelperFunctions";
 
 export const SignUp = () => {
     const [state, setstate] = useState({
-        posting: false,
         pwdVisibility: false,
         input: {
             email: '',
@@ -40,11 +41,34 @@ export const SignUp = () => {
     )?.path
 
     React.useEffect(() => {
-        /* 
-        * On refresh or load of the Sign In page
-        * reset the redux state to come a fresh
-        */
-        dispatch(resetAuth0())
+        authRedirectResult()
+            .then(async (result) => {
+                if (!result) {
+                    return;
+                }
+
+                const firebaseUser: any = result.user;
+                const accessToken = firebaseUser.accessToken;
+
+                dispatch({
+                    type: AUTH_.FIREBASE_TOKEN,
+                    response: {
+                        accessToken: accessToken,
+                        refreshToken: firebaseUser.stsTokenManager.refreshToken,
+                        expirationTime: firebaseUser.stsTokenManager.expirationTime,
+                    },
+                });
+
+                const props = {
+                    deviceInfo: DeviceInfo(),
+                }
+
+                generateSanctumToken(dispatch, accessToken, props)
+            })
+            .catch(() => {
+                dispatch(resetAuth0())
+                return null;
+            });
     }, [])
 
     const onChangeHandler = (e: any) => {
@@ -88,8 +112,8 @@ export const SignUp = () => {
 
     const validateForm = () => {
         let valid = true
-        let {input} = state
-        let {errors} = state;
+        let { input } = state
+        let { errors } = state;
 
         if (!input.email) {
             errors.email = 'Please provide a email address'
@@ -147,23 +171,27 @@ export const SignUp = () => {
         }
     };
 
-    const signInWithGoogle = () => {
+    const signUpWithGoogle = () => {
         if (!auth0.processing) {
             dispatch(resetAuth0())
             setstate({
                 ...state, errors: {
                     email: '',
+                    confirm: '',
                     password: '',
-                    confirm: ''
+                }, input: {
+                    email: '',
+                    confirm: '',
+                    password: '',
+
                 }
             })
 
-            const signInProps = {
+            const signUpProps = {
                 identity: 'google',
-                deviceInfo: DeviceInfo(),
             }
 
-            dispatch(firebaseAuthActions(signInProps))
+            dispatch(firebaseAuthActions(signUpProps))
         }
     }
 
@@ -176,6 +204,45 @@ export const SignUp = () => {
         const redirectRoute = locationState?.from === undefined ? '/home' : locationState?.from
         return <Navigate state={state} replace to={redirectRoute} />;
     }
+
+    const authRedirectResult = async () => {
+        try {
+            const user = await getRedirectResult(firebaseAuth);
+
+            return user;
+        } catch (error) {
+            const errorCode = error.code;
+            let errorMessage = error.message;
+            let popUpErrors = [
+                'auth/popup-blocked',
+                'auth/popup-closed-by-user',
+                'auth/cancelled-popup-request',
+            ]
+
+            if (errorCode === 'auth/user-not-found') {
+                errorMessage = "Sorry, we couldn't sign you in. Please check your credentials"
+            } else if (errorCode === 'auth/wrong-password') {
+                errorMessage = "Sorry, we couldn't sign you in. Please check your credentials"
+            } else if (errorCode === 'auth/user-disabled') {
+                errorMessage = 'Your account has been disabled. Please contact support for assistance.'
+            } else if (errorCode === 'auth/account-exists-with-different-credential') {
+                errorMessage = "Email is associated with a different sign-in method. Please sign in using the method originally used."
+            } else if (errorCode === 'auth/requires-recent-login') {
+                errorMessage = "Your session has expired. Please sign in again to continue."
+            } else if (popUpErrors.includes(errorCode)) {
+                errorMessage = 'Google sign-in process cancelled by user'
+            } else {
+                errorMessage = null
+            }
+
+            dispatch({
+                type: AUTH_.FIREBASE_EXCEPTION,
+                response: errorMessage,
+            });
+
+            return null;
+        }
+    };
 
 
     return (
@@ -273,18 +340,15 @@ export const SignUp = () => {
                                 </div>
 
                                 <div className="pb-3 pt-3 flex justify-center">
-                                    <button className="bg-purple-600 relative w-40 py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white hover:bg-purple-700 focus:outline-none focus:ring-0 focus:ring-offset-2 focus:bg-purple-700" type="submit">
-                                        {
-                                            auth0.processing ? (
-                                                <div className="flex justify-center items-center gap-3 py-2">
-                                                    <i className="fad fa-spinner-third fa-xl fa-spin"></i>
-                                                </div>
-                                            ) : (
-                                                <div className="flex justify-center items-center gap-3">
-                                                    Sign Up
-                                                </div>
-                                            )
-                                        }
+                                    <button type="submit" className="w-44 disabled:cursor-not-allowed text-sm rounded-md border border-transparent shadow-sm px-4 py-2 bg-purple-600 text-white disabled:bg-purple-600 hover:bg-purple-700 focus:outline-none flex items-center justify-center" disabled={auth0.processing} style={{ height: '2.5rem' }}>
+                                        {auth0.processing ? (
+                                            <span className="flex flex-row items-center">
+                                                <i className="fad fa-spinner-third fa-xl fa-spin mr-2"></i>
+                                                <span>Signing Up...</span>
+                                            </span>
+                                        ) : (
+                                            <span>Sign Up</span>
+                                        )}
                                     </button>
                                 </div>
                             </form>
@@ -297,7 +361,7 @@ export const SignUp = () => {
 
                             <div className="px-3 py-4 text-sm">
                                 <div className="flex items-center pt-1 justify-center dark:bg-gray-800">
-                                    <button type="button" onClick={signInWithGoogle} className="px-4 py-2 border flex gap-2 border-slate-200 dark:border-slate-700 rounded-lg text-stone-700 dark:text-stone-200 hover:border-stone-400 hover:text-slate-900 dark:hover:text-slate-300 transition duration-150">
+                                    <button type="button" onClick={signUpWithGoogle} className="gap-2 border-slate-300 dark:border-slate-700 text-stone-700 dark:text-stone-200 hover:border-stone-400 hover:text-slate-900 dark:hover:text-slate-300 transition duration-150 disabled:cursor-not-allowed text-sm rounded-md border shadow-sm px-4 py-2 focus:outline-none flex items-center justify-center" disabled={auth0.processing} style={{ height: '2.5rem' }}>
                                         <img className="w-6 h-6" src="https://www.svgrepo.com/show/475656/google-color.svg" loading="lazy" alt="google logo" />
                                         <span className="pl-2">Sign in with Google</span>
                                     </button>

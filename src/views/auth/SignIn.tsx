@@ -3,23 +3,26 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 import { useDispatch } from "react-redux";
-import { Navigate, useLocation } from "react-router";
 import { useAppSelector } from "../../store/hooks";
-import { APPLICATION } from "../../global/ConstantsRegistry";
+import { Navigate, useLocation } from "react-router";
+import { firebaseAuth } from "../../firebase/firebaseConfigs";
 import { authenticationRoutes } from "../../routes/authRoutes";
-import { DeviceInfo, classNames } from "../../lib/modules/HelperFunctions";
-import { firebaseAuthActions, firebaseSSO_SignIn, resetAuth0 } from "../../store/auth/firebaseAuthActions";
+import { APPLICATION, AUTH_ } from "../../global/ConstantsRegistry";
+import { GoogleAuthProvider, getRedirectResult } from "firebase/auth";
+import { DeviceInfo, classNames, emailValidator } from "../../lib/modules/HelperFunctions";
+import { G_onInputChangeHandler, G_onInputBlurHandler } from "../../components/lib/InputHandlers";
+import { firebaseSSO_SignIn, generateSanctumToken, resetAuth0 } from "../../store/auth/firebaseAuthActions";
 
 export const SignIn = () => {
     const [state, setstate] = useState({
-        posting: false,
-        auth0User: 'Not Authenticated',
+        input: {
+            email: '',
+            password: ''
+        }, errors: {
+            email: '',
+            password: ''
+        }
     })
-
-    const [credentials, setCredentials] = useState({
-        email: "",
-        password: "",
-    });
 
     const location = useLocation()
     const dispatch: any = useDispatch();
@@ -27,63 +30,149 @@ export const SignIn = () => {
     const locationState: any = location.state
     const auth0: any = useAppSelector(state => state.auth0)
 
-    const signUpRoute: any = (authenticationRoutes.find((routeName) => routeName.name === 'AUTH_SIGN_UP'))?.path
+    const signUpRoute: any = (
+        authenticationRoutes.find(
+            (routeName) => routeName.name === 'AUTH_SIGN_UP'
+        )
+    )?.path
 
     React.useEffect(() => {
-        /* 
-        * On refresh or load of the Sign In page
-        * reset the redux state to come a fresh
-        */
-        dispatch(resetAuth0())
-    }, [])
+        authRedirectResult()
+            .then(async (result) => {
+                if (!result) {
+                    return;
+                }
+
+                console.log('KAPUCHAD', result);
+                const firebaseUser: any = result.user;
+                const accessToken = firebaseUser.accessToken;
+
+                dispatch({
+                    type: AUTH_.FIREBASE_TOKEN,
+                    response: {
+                        accessToken: accessToken,
+                        refreshToken: firebaseUser.stsTokenManager.refreshToken,
+                        expirationTime: firebaseUser.stsTokenManager.expirationTime,
+                    },
+                });
+
+                const props = {
+                    deviceInfo: DeviceInfo(),
+                }
+
+                generateSanctumToken(dispatch, accessToken, props)
+            })
+            .catch(() => {
+                dispatch(resetAuth0())
+                return null;
+            });
+    }, [dispatch])
+
+    const onChangeHandler = (e: any) => {
+        if (!auth0.processing) {
+            let output: any = G_onInputChangeHandler(e, auth0.processing)
+            let { input } = state
+            let { errors }: any = state
+
+            input[e.target.name] = output.value
+            errors[e.target.name] = output.error
+
+            setstate({
+                ...state, input, errors
+            })
+        }
+    }
+
+    const onInputBlur = (e: any) => {
+        if (!auth0.processing) {
+            dispatch(resetAuth0())
+            let output: any = G_onInputBlurHandler(e, auth0.processing, '')
+            let { input } = state
+            let { errors }: any = state
+
+            dispatch(resetAuth0())
+            input[e.target.name] = output.value
+            errors[e.target.name] = output.error
+
+            setstate({
+                ...state, input, errors
+            })
+        }
+    }
+
+    const validateForm = () => {
+        let valid = true
+        let { input } = state
+        let { errors } = state;
+
+        if (!input.email) {
+            errors.email = 'Please provide a email address'
+            valid = false
+        } else if (!emailValidator(input.email)) {
+            errors.email = 'Please provide a valid email address'
+            valid = false
+        }
+
+        if (!input.password) {
+            errors.password = 'Please provide a password';
+            valid = false
+        }
+
+        setstate({
+            ...state, errors
+        })
+
+        return valid;
+    };
 
     const passwordSignInFormHandler = (e: any) => {
         e.preventDefault();
 
         if (!auth0.processing) {
-            dispatch(resetAuth0())
-            const signInProps = {
-                identity: 'password',
-                credentials: credentials,
-                deviceInfo: DeviceInfo(),
-                locationState: locationState
-            }
+            let passedValidation = validateForm()
 
-            dispatch(firebaseSSO_SignIn(signInProps))
+            if (passedValidation) {
+                dispatch(resetAuth0())
+                setstate({
+                    ...state, errors: {
+                        email: '',
+                        password: '',
+                    }
+                })
+
+                const signInProps = {
+                    identity: 'password',
+                    deviceInfo: DeviceInfo(),
+                    credentials: {
+                        email: state.input.email,
+                        password: state.input.password,
+                    }
+                }
+
+                dispatch(firebaseSSO_SignIn(signInProps))
+            }
         }
     };
 
     const signInWithGoogle = () => {
         if (!auth0.processing) {
             dispatch(resetAuth0())
+            setstate({
+                ...state, errors: {
+                    email: '',
+                    password: '',
+                }, input: {
+                    email: '',
+                    password: '',
+                }
+            })
+
             const signInProps = {
                 identity: 'google',
-                credentials: credentials,
-                deviceInfo: DeviceInfo(),
-                locationState: locationState
             }
 
-            console.log('DEVICE', signInProps.deviceInfo);
-            
-
-            dispatch(firebaseAuthActions(signInProps))
+            dispatch(firebaseSSO_SignIn(signInProps))
         }
-    }
-
-    if (auth0.authenticated) {
-        // onAuthStateChanged(firebaseAuth, authenticatedUser => {
-        //     if (authenticatedUser !== null) {
-        //         console.log('Logged in', authenticatedUser);
-        //         setstate({
-        //             ...state, auth0User: 'Authenticated'
-        //         })
-        //     } else {
-        //         console.log('No user');
-        //         setstate({
-        //             ...state, auth0User: 'Not Authenticated'
-        //         })
-        //     }
-        // })
     }
 
     if (auth0.authenticated) {
@@ -95,6 +184,45 @@ export const SignIn = () => {
         const redirectRoute = locationState?.from === undefined ? '/home' : locationState?.from
         return <Navigate state={state} replace to={redirectRoute} />;
     }
+
+    const authRedirectResult = async () => {
+        try {
+            const user = await getRedirectResult(firebaseAuth);
+
+            return user;
+        } catch (error) {
+            const errorCode = error.code;
+            let errorMessage = error.message;
+            let popUpErrors = [
+                'auth/popup-blocked',
+                'auth/popup-closed-by-user',
+                'auth/cancelled-popup-request',
+            ]
+
+            if (errorCode === 'auth/user-not-found') {
+                errorMessage = "Sorry, we couldn't sign you in. Please check your credentials"
+            } else if (errorCode === 'auth/wrong-password') {
+                errorMessage = "Sorry, we couldn't sign you in. Please check your credentials"
+            } else if (errorCode === 'auth/user-disabled') {
+                errorMessage = 'Your account has been disabled. Please contact support for assistance.'
+            } else if (errorCode === 'auth/account-exists-with-different-credential') {
+                errorMessage = "Email is associated with a different sign-in method. Please sign in using the method originally used."
+            } else if (errorCode === 'auth/requires-recent-login') {
+                errorMessage = "Your session has expired. Please sign in again to continue."
+            } else if (popUpErrors.includes(errorCode)) {
+                errorMessage = 'Google sign-in process cancelled by user'
+            } else {
+                errorMessage = null
+            }
+
+            dispatch({
+                type: AUTH_.FIREBASE_EXCEPTION,
+                response: errorMessage,
+            });
+
+            return null;
+        }
+    };
 
     return (
         <React.Fragment>
@@ -123,13 +251,21 @@ export const SignIn = () => {
                                     <label htmlFor="email" className="block text-sm leading-6 text-stone-700 mb-1">Email:</label>
 
                                     <div className="relative mt-2 rounded shadow-sm">
-                                        <input type="email" name="email" id="email" placeholder="you@social.com" autoComplete="off"
+                                        <input type="email" name="email" id="email" placeholder="john.doe@email.com" autoComplete="off"
                                             className={classNames(
                                                 'text-stone-900 ring-slate-300 placeholder:text-stone-500 focus:border-0 focus:outline-none focus:ring-purple-600 focus:outline-purple-500 hover:border-stone-400 border border-stone-300',
                                                 'block w-full rounded-md py-2 pl-3 pr-8  text-sm'
-                                            )} onChange={(e) => setCredentials({ ...credentials, email: e.target.value })} value={credentials.email} required />
+                                            )} onChange={onChangeHandler} onBlur={onInputBlur} value={state.input.email} required />
 
                                     </div>
+
+                                    {
+                                        state.errors.email && (
+                                            <span className='invalid-feedback text-xs text-red-600 pl-0'>
+                                                {state.errors.email}
+                                            </span>
+                                        )
+                                    }
 
                                     {
                                         auth0.error && (
@@ -148,8 +284,16 @@ export const SignIn = () => {
                                             className={classNames(
                                                 'text-stone-900 ring-slate-300 placeholder:text-stone-500 focus:border-0 focus:outline-none focus:ring-purple-600 focus:outline-purple-500 hover:border-stone-400 border border-stone-300',
                                                 'block w-full rounded-md py-2 pl-3 pr-8  text-sm'
-                                            )} onChange={(e) => setCredentials({ ...credentials, password: e.target.value })} value={credentials.password} required />
+                                            )} onChange={onChangeHandler} onBlur={onInputBlur} value={state.input.password} required />
                                     </div>
+
+                                    {
+                                        state.errors.password && (
+                                            <span className='invalid-feedback text-xs text-red-600 pl-0'>
+                                                {state.errors.password}
+                                            </span>
+                                        )
+                                    }
                                 </div>
 
                                 <div className="text-sm">
@@ -161,19 +305,15 @@ export const SignIn = () => {
                                 </div>
 
                                 <div className="pb-3 pt-3 flex justify-center">
-                                    <button className="bg-purple-600 relative w-40 py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white hover:bg-purple-700 focus:outline-none focus:ring-0 focus:ring-offset-2 focus:bg-purple-700" type="submit">
-                                        {
-                                            auth0.processing ? (
-                                                    <div className="flex justify-center items-center gap-3 py-2">
-                                                        <i className="fad fa-spinner-third fa-xl fa-spin"></i>
-                                                    </div>
-                                            ) : (
-                                                <div className="flex justify-center items-center gap-3">
-                                                    <i className="fa-solid fa-lock fa-xl"></i>
-                                                    Sign In
-                                                </div>
-                                            )
-                                        }
+                                    <button type="submit" className="w-44 disabled:cursor-not-allowed text-sm rounded-md border border-transparent shadow-sm px-4 py-2 bg-purple-600 text-white disabled:bg-purple-600 hover:bg-purple-700 focus:outline-none flex items-center justify-center" disabled={auth0.processing} style={{ height: '2.5rem' }}>
+                                        {auth0.processing ? (
+                                            <span className="flex flex-row items-center">
+                                                <i className="fad fa-spinner-third fa-xl fa-spin mr-2"></i>
+                                                <span>Signing In...</span>
+                                            </span>
+                                        ) : (
+                                            <span>Sign In</span>
+                                        )}
                                     </button>
                                 </div>
                             </form>
@@ -186,7 +326,7 @@ export const SignIn = () => {
 
                             <div className="px-3 py-4 text-sm">
                                 <div className="flex items-center pt-1 justify-center dark:bg-gray-800">
-                                    <button type="button" onClick={signInWithGoogle} className="px-4 py-2 border flex gap-2 border-slate-200 dark:border-slate-700 rounded-lg text-stone-700 dark:text-stone-200 hover:border-stone-400 hover:text-slate-900 dark:hover:text-slate-300 transition duration-150">
+                                    <button type="button" onClick={signInWithGoogle} className="gap-2 border-slate-300 dark:border-slate-700 text-stone-700 dark:text-stone-200 hover:border-stone-400 hover:text-slate-900 dark:hover:text-slate-300 transition duration-150 disabled:cursor-not-allowed text-sm rounded-md border shadow-sm px-4 py-2 focus:outline-none flex items-center justify-center" disabled={auth0.processing} style={{ height: '2.5rem' }}>
                                         <img className="w-6 h-6" src="https://www.svgrepo.com/show/475656/google-color.svg" loading="lazy" alt="google logo" />
                                         <span className="pl-2">Sign in with Google</span>
                                     </button>
