@@ -1,12 +1,15 @@
 import { Link } from "react-router-dom"
-import React, { FC, Fragment } from "react"
 import { useDispatch } from "react-redux"
+import React, { FC, Fragment } from "react"
 import { Menu, Transition } from "@headlessui/react"
 
+import Crypto from "../../security/Crypto"
 import { useAppSelector } from "../../store/hooks"
+import StorageServices from "../../services/StorageServices"
 import { standardRoutes } from "../../routes/standardRoutes"
+import { STORAGE_KEYS } from "../../global/ConstantsRegistry"
 import cartoonChar from '../../assets/images/cartoon_character.jpg'
-import { revokeAuthenticationAction } from "../../store/auth/revokeAuthentication"
+import { revokeAuthSession } from "../../store/auth/firebaseAuthActions"
 
 interface headerProps {
     errorMode?: boolean,
@@ -15,6 +18,14 @@ interface headerProps {
 export const AccountSubHeader: FC<headerProps> = ({ errorMode = false }) => {
     const dispatch: any = useDispatch()
     const auth0: any = useAppSelector(state => state.auth0)
+
+    const encryptedKeyString = StorageServices.getLocalStorage(STORAGE_KEYS.ACCOUNT_DATA)
+    const storageObject = JSON.parse(encryptedKeyString)
+
+    let Identity: any = Crypto.decryptDataUsingAES256(storageObject)
+    Identity = JSON.parse(Identity)
+    console.log('ededede', Identity.photo_url);
+    
 
     const IdentityRoute: any = (
         standardRoutes.find(
@@ -27,7 +38,7 @@ export const AccountSubHeader: FC<headerProps> = ({ errorMode = false }) => {
     }
 
     const accountSignOutHandler = () => {
-        dispatch(revokeAuthenticationAction())
+        dispatch(revokeAuthSession())
     }
 
     return (
@@ -44,7 +55,14 @@ export const AccountSubHeader: FC<headerProps> = ({ errorMode = false }) => {
                                     )
                                 }>
                                 <span className="text-sm">{auth0.identity.display_name}</span>
-                                <img className="ml-4 rounded-full h-10 w-10" src={cartoonChar} alt="avatar" />
+
+                                {
+                                    Identity.photo_url === null ? (
+                                        <img className="ml-4 rounded-full h-10 w-10" src={cartoonChar} alt="avatar" />
+                                    ) : (
+                                        <img className="ml-4 rounded-full h-10 w-10" src={Identity.photo_url} alt={Identity.photo_url} />
+                                    )
+                                }
                             </Menu.Button>
                         </div>
 
