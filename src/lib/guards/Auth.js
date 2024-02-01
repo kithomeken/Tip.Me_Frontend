@@ -1,7 +1,7 @@
 import Crypto from '../../security/Crypto'
 import StorageServices from '../../services/StorageServices'
+import { revokeAuthSession } from "../../store/auth/firebaseAuthActions"
 import { STORAGE_KEYS, COOKIE_KEYS } from "../../global/ConstantsRegistry"
-import { revokeAuthenticationAction } from "../../store/auth/revokeAuthentication"
 
 class Auth {
     checkAuthentication(auth0) {
@@ -96,7 +96,7 @@ class Auth {
 
     revokeAuth() {
         const dispatch = dispatch()
-        dispatch(revokeAuthenticationAction())
+        dispatch(revokeAuthSession())
     }
 }
 

@@ -4,7 +4,7 @@ import { Navigate, Outlet } from "react-router"
 
 import Auth from "./Auth"
 import { useAppSelector } from "../../store/hooks"
-import { revokeAuthenticationAction } from "../../store/auth/revokeAuthentication"
+import { revokeAuthSession } from "../../store/auth/firebaseAuthActions"
 import { CONFIG_MARGIN_TOP } from "../../global/ConstantsRegistry"
 import { Header } from "../../components/layouts/Header"
 
@@ -23,7 +23,7 @@ export default function ErrorRoutesGuard() {
              * Reset session and start all-over again
             */
 
-            dispatch(revokeAuthenticationAction())
+            dispatch(revokeAuthSession())
         } else {
             // Redirect to sign-in
             return <Navigate to="/auth/sign-in" replace />;

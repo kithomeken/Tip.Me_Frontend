@@ -1,14 +1,12 @@
 import * as rp from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
-import { authReducer } from './auth/authReducer'
 import { sessionService } from 'redux-react-session';
 import { initStateWithPrevTab } from 'redux-state-sync';
-import { postAuthReducer } from './auth/postAuthRecuder';
 import { persistStore, persistReducer } from 'redux-persist'
-import { configureStore, ThunkAction, Action, combineReducers } from '@reduxjs/toolkit';
 import { firebaseAuthReducer } from './auth/firebaseReducers';
 import { identityCheckReducer } from './identitycheckReducers';
+import { configureStore, ThunkAction, Action, combineReducers } from '@reduxjs/toolkit';
 
 const persistConfig = {
     key: 'root',
@@ -16,8 +14,6 @@ const persistConfig = {
 }
 
 const rootReducer = combineReducers({
-    auth: authReducer,
-    account: postAuthReducer,
     idC: identityCheckReducer,
     auth0: firebaseAuthReducer,
 })

@@ -6,7 +6,7 @@ import { useAppSelector } from "../../store/hooks"
 import { Header } from "../../components/layouts/Header"
 import { standardErrorRoutes } from "../../routes/errorRoutes"
 import { CONFIG_MARGIN_TOP } from "../../global/ConstantsRegistry"
-import { revokeAuthenticationAction } from "../../store/auth/revokeAuthentication"
+import { revokeAuthSession } from "../../store/auth/firebaseAuthActions"
 
 export default function StandardRoutesGuard() {
     const dispatch: any = useDispatch()
@@ -29,7 +29,7 @@ export default function StandardRoutesGuard() {
              * Reset session and start all-over again
             */
 
-            dispatch(revokeAuthenticationAction())
+            dispatch(revokeAuthSession())
         } else {
             // Redirect to sign-in
             return <Navigate to="/auth/sign-in" replace state={state} />;

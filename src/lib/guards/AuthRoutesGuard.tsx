@@ -3,9 +3,8 @@ import { Navigate, Outlet, useLocation } from "react-router"
 
 import Auth from "./Auth"
 import { useAppSelector } from "../../store/hooks"
-import { postAuthRoutes } from "../../routes/authRoutes"
 import { standardErrorRoutes } from "../../routes/errorRoutes"
-import { revokeAuthenticationAction } from "../../store/auth/revokeAuthentication"
+import { revokeAuthSession } from "../../store/auth/firebaseAuthActions"
 
 export default function AuthRoutesGuard() {
     const location = useLocation()
@@ -17,13 +16,15 @@ export default function AuthRoutesGuard() {
 
     if (sessionState.authenticated) {
         if (!sessionState.identity) {
-            const currentLocation = location.pathname
-            const postAuthenticationRoute: any = (postAuthRoutes.find((routeName) => routeName.name === 'ACC_CHECK_'))?.path        
-
-            const state = {
-                from: currentLocation
-            }
-            return <Navigate to={postAuthenticationRoute} replace state={state} />
+            /* 
+             * Redux session state is authenticated
+             * but cookies are not set.
+             * 
+             * Reset session and start all-over again
+            */
+            dispatch(revokeAuthSession())
+            
+            return 
         }
         
         if (sessionState.status.disabled) {
@@ -46,7 +47,7 @@ export default function AuthRoutesGuard() {
              * Reset session and start all-over again
             */
 
-            dispatch(revokeAuthenticationAction())
+            dispatch(revokeAuthSession())
         }
     }
 
