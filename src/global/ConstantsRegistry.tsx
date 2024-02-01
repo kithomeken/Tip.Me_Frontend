@@ -6,7 +6,7 @@ import { API_Controller } from "../api/API_Controller"
 * Application Constants
 * */
 export const APPLICATION = {
-    NAME: 'Tip.Me',
+    NAME: 'Biggest Fan',
     THEME: 'green',
     URL: API_Controller().APP,
     ERR_MSG: 'Something went wrong. Check connection'
@@ -45,24 +45,6 @@ export const STYLE = {
 export const CONFIG_MAX_WIDTH = { maxWidth: '1024px' }
 export const CONFIG_MARGIN_TOP = { marginTop: '64px' }
 
-
-
-/*
-* Post-Authentication Redux Actions
-* */
-export const POST_AUTH = {
-    FETCHING_DATA: 'FETCHING_DATA',
-    FETCHED_DATA: 'FETCHED_DATA',
-
-    // Profile data actions
-    FETCHED_PROFILE_DATA: 'FETCHED_PROFILE_DATA',
-    PROFILE_DATA_EXCEPTION: 'PROFILE_DATA_EXCEPTION',
-
-    // Accessible menus data actions
-    FETCHED_MENU_DATA: 'FETCHED_MENU_DATA',
-    MENU_DATA_EXCEPTION: 'MENU_DATA_EXCEPTION',
-}
-
 export const AUTH_ = {
     RESET_: 'RESET',
     PROCESSING: 'PROCESSING',
@@ -75,16 +57,6 @@ export const AUTH_ = {
     ID_META_01: 'ID_META_01',
     ID_META_02: 'ID_META_02',
     ID_META_03: 'ID_META_03',
-
-
-    AUTHENTICATING: 'AUTHENTICATING',
-    AUTHENTICATED: 'AUTHENTICATED',
-    AUTH_EXCEPTION: 'AUTH_EXCEPTION',
-    REVOKE_SESSIO: 'REVOKE_SESSIO',
-
-    AUTHENTICATION_REVOKED: 'AUTHENTICATION_REVOKED',
-    REVOKE_EXCEPTION: 'REVOKE_EXCEPTION',
-    RESET_STATE: 'RESET_STATE',
 }
 
 
