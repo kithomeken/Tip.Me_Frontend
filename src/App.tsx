@@ -16,7 +16,7 @@ import { standardRoutes } from './routes/standardRoutes'
 import { authenticationRoutes } from './routes/authRoutes'
 import { FULLY_QUALIFIED_DOMAIN_NAME } from "./api/API_Controller"
 import { sanctumAxiosInstance } from "./lib/modules/HelperFunctions"
-import { AUTH_SIGN_IN, AUTH_SIGN_OUT, CSRF_COOKIE_ROUTE } from "./api/API_Registry"
+import { AUTH, AUTH_SIGN_IN, AUTH_SIGN_OUT, CSRF_COOKIE_ROUTE } from "./api/API_Registry"
 import { standardErrorRoutes } from "./routes/errorRoutes"
 import CoreSettingsRouteGuard from "./lib/guards/CoreSettingsRoutesGuard"
 import AuthRoutesGuard from "./lib/guards/AuthRoutesGuard"
@@ -34,7 +34,7 @@ const RoutingContext = React.createContext<RouteContextType>(null!)
 const sanctumConfig = {
     userObjectRoute: 'api/v1/account/auth/profile',
     csrfCookieRoute: CSRF_COOKIE_ROUTE,
-    signInRoute: '/api' + AUTH_SIGN_IN,
+    signInRoute: '/api' + AUTH.FIREBASE_SSO,
     apiUrl: FULLY_QUALIFIED_DOMAIN_NAME,
     signOutRoute: '/api' + AUTH_SIGN_OUT,
     axiosInstance: sanctumAxiosInstance()
