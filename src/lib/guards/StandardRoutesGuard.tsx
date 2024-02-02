@@ -29,7 +29,7 @@ export default function StandardRoutesGuard() {
              * Reset session and start all-over again
             */
 
-            dispatch(revokeAuthSession())
+            // dispatch(revokeAuthSession())
         } else {
             // Redirect to sign-in
             return <Navigate to="/auth/sign-in" replace state={state} />;
