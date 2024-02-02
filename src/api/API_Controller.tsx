@@ -12,8 +12,8 @@ export function API_Controller () {
         APP = 'http://localhost:3000'
 
         if (connectToUbuntuBangalore01) {
-            FQDN = 'http://134.209.152.32:81'
-            API = 'http://134.209.152.32:81/api'
+            FQDN = 'https://api.theapplication.online'
+            API = 'https://api.theapplication.online/api'
         } else {
             FQDN = 'http://localhost:81/tippy/public'
             API = 'http://localhost:81/tippy/public/api'
