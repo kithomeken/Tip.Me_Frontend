@@ -13,6 +13,8 @@ export default function ErrorRoutesGuard() {
 
     const auth0: any = useAppSelector(state => state.auth0)
     const sessionState = Auth.checkAuthentication(auth0)
+
+    console.log('ErrorRoutesGuard', sessionState);
     
     if (!sessionState.authenticated) {
         if (sessionState.status.resetSession) {
@@ -24,6 +26,7 @@ export default function ErrorRoutesGuard() {
             */
 
             // dispatch(revokeAuthSession())
+            return
         } else {
             // Redirect to sign-in
             return <Navigate to="/auth/sign-in" replace />;
