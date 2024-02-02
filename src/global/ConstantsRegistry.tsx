@@ -6,7 +6,7 @@ import { API_Controller } from "../api/API_Controller"
 * Application Constants
 * */
 export const APPLICATION = {
-    NAME: 'Biggest Fan',
+    NAME: 'Big Fan',
     THEME: 'green',
     URL: API_Controller().APP,
     ERR_MSG: 'Something went wrong. Check connection'
