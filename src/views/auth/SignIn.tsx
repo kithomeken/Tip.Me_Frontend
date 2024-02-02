@@ -3,12 +3,12 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 import { useDispatch } from "react-redux";
+import { getRedirectResult } from "firebase/auth";
 import { useAppSelector } from "../../store/hooks";
 import { Navigate, useLocation } from "react-router";
 import { firebaseAuth } from "../../firebase/firebaseConfigs";
 import { authenticationRoutes } from "../../routes/authRoutes";
 import { APPLICATION, AUTH_ } from "../../global/ConstantsRegistry";
-import { GoogleAuthProvider, getRedirectResult } from "firebase/auth";
 import { DeviceInfo, classNames, emailValidator } from "../../lib/modules/HelperFunctions";
 import { G_onInputChangeHandler, G_onInputBlurHandler } from "../../components/lib/InputHandlers";
 import { firebaseSSO_SignIn, generateSanctumToken, resetAuth0 } from "../../store/auth/firebaseAuthActions";
@@ -230,32 +230,46 @@ export const SignIn = () => {
                 <title>Sign In</title>
             </Helmet>
 
-            <div className="flex flex-col">
-                <div className="wrapper flex-grow">
+            <div className="flex flex-col md:h-screen md:flex-row justify-center items-center dark:bg-gray-800">
+                <div className="hidden md:block md:w-3/5 block_strp h-screen">
+
+                </div>
+
+                <div className="wrapper w-full md:w-2/5 md:h-screen overflow-auto">
                     <section className="gx-container">
-                        <div className="md:px-10 px-4">
+                        <div className="md:px-4 px-4">
                             <header className="landing-header">
                                 <div className="landing pl-3 mb-0 text-left">
-                                    <h2 className="odyssey text-left text-purple-500 unito">{APPLICATION.NAME}</h2>
-                                    <span className="text-sm block text-left mt-0 mb-3">Account Sign In</span>
-
-                                    <span className="text-stone-500 text-sm block">
-                                        <span>Don't have an account?</span>
-                                        <Link to={signUpRoute} className="text-purple-600 underline ml-1">Sign Up</Link>
-                                    </span>
+                                    <span className="odyssey py-3 text-left text-amber-500 nunito block">{APPLICATION.NAME}</span>
+                                    <span className="text-stone-700 block text-left mt-0 mb-3">Account Sign In</span>
                                 </div>
                             </header>
 
-                            <form className="space-y-3 shadow-none px-2 mb-3" onSubmit={passwordSignInFormHandler}>
+                            <div className="px-3 py-4 text-sm mb-2">
+                                <div className="flex items-center pt-1 justify-center dark:bg-gray-800">
+                                    <button type="button" onClick={signInWithGoogle} className="gap-2 w-64 border-slate-300 dark:border-slate-700 text-stone-700 dark:text-stone-200 hover:border-stone-400 hover:text-slate-900 dark:hover:text-slate-300 transition duration-150 disabled:cursor-not-allowed text-sm rounded-md border shadow-sm px-4 py-2.5 focus:outline-none flex items-center justify-center" disabled={auth0.processing} style={{ height: '3rem' }}>
+                                        <img className="w-6 h-6" src="https://www.svgrepo.com/show/475656/google-color.svg" loading="lazy" alt="google logo" />
+                                        <span className="pl-2">Sign in with Google</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div className="flex flex-row justify-center items-center align-middle py-2 px-10">
+                                <div className="flex-grow border-b border-amber-300"></div>
+                                <span className="flex-none text-stone-600 px-4">or</span>
+                                <div className="flex-grow border-b border-amber-300"></div>
+                            </div>
+
+                            <form className="space-y-3 shadow-none py-3 px-2 mb-3 md:w-4/5 md:px-6 m-auto" onSubmit={passwordSignInFormHandler}>
                                 <div className="shadow-none space-y-px mb-4">
                                     <label htmlFor="email" className="block text-sm leading-6 text-stone-700 mb-1">Email:</label>
 
                                     <div className="relative mt-2 rounded shadow-sm">
                                         <input type="email" name="email" id="email" placeholder="john.doe@email.com" autoComplete="off"
                                             className={classNames(
-                                                'text-stone-900 ring-slate-300 placeholder:text-stone-500 focus:border-0 focus:outline-none focus:ring-purple-600 focus:outline-purple-500 hover:border-stone-400 border border-stone-300',
-                                                'block w-full rounded-md py-2 pl-3 pr-8  text-sm'
-                                            )} onChange={onChangeHandler} onBlur={onInputBlur} value={state.input.email} required />
+                                                'text-stone-900 ring-slate-300 placeholder:text-stone-500 focus:border-0 focus:outline-none focus:ring-amber-600 focus:outline-amber-500 hover:border-stone-400 border border-stone-300',
+                                                'block w-full rounded-md py-2 pl-3 pr-8 text-sm'
+                                            )} onChange={onChangeHandler} onBlur={onInputBlur} value={state.input.email} required style={{ height: '3rem' }} />
 
                                     </div>
 
@@ -282,9 +296,9 @@ export const SignIn = () => {
                                     <div className="relative mt-2 rounded shadow-sm">
                                         <input type="password" name="password" id="password" placeholder="********" autoComplete="off"
                                             className={classNames(
-                                                'text-stone-900 ring-slate-300 placeholder:text-stone-500 focus:border-0 focus:outline-none focus:ring-purple-600 focus:outline-purple-500 hover:border-stone-400 border border-stone-300',
-                                                'block w-full rounded-md py-2 pl-3 pr-8  text-sm'
-                                            )} onChange={onChangeHandler} onBlur={onInputBlur} value={state.input.password} required />
+                                                'text-stone-900 ring-slate-300 placeholder:text-stone-500 focus:border-0 focus:outline-none focus:ring-amber-600 focus:outline-amber-500 hover:border-stone-400 border border-stone-300',
+                                                'block w-full rounded-md py-2 pl-3 pr-8 text-sm'
+                                            )} onChange={onChangeHandler} onBlur={onInputBlur} value={state.input.password} required style={{ height: '3rem' }} />
                                     </div>
 
                                     {
@@ -305,7 +319,7 @@ export const SignIn = () => {
                                 </div>
 
                                 <div className="pb-3 pt-3 flex justify-center">
-                                    <button type="submit" className="w-44 disabled:cursor-not-allowed text-sm rounded-md border border-transparent shadow-sm px-4 py-2 bg-purple-600 text-white disabled:bg-purple-600 hover:bg-purple-700 focus:outline-none flex items-center justify-center" disabled={auth0.processing} style={{ height: '2.5rem' }}>
+                                    <button type="submit" className="w-44 disabled:cursor-not-allowed text-sm rounded-md border border-transparent shadow-sm px-4 py-2 bg-amber-500 text-white disabled:bg-amber-600 hover:bg-amber-600 focus:outline-none flex items-center justify-center" disabled={auth0.processing} style={{ height: '3rem' }}>
                                         {auth0.processing ? (
                                             <span className="flex flex-row items-center">
                                                 <i className="fad fa-spinner-third fa-xl fa-spin mr-2"></i>
@@ -318,24 +332,14 @@ export const SignIn = () => {
                                 </div>
                             </form>
 
-                            <div className="flex flex-row justify-center items-center align-middle">
-                                <div className="flex-grow border-b"></div>
-                                <span className="flex-none text-stone-600 px-4">or</span>
-                                <div className="flex-grow border-b"></div>
-                            </div>
-
-                            <div className="px-3 py-4 text-sm">
-                                <div className="flex items-center pt-1 justify-center dark:bg-gray-800">
-                                    <button type="button" onClick={signInWithGoogle} className="gap-2 border-slate-300 dark:border-slate-700 text-stone-700 dark:text-stone-200 hover:border-stone-400 hover:text-slate-900 dark:hover:text-slate-300 transition duration-150 disabled:cursor-not-allowed text-sm rounded-md border shadow-sm px-4 py-2 focus:outline-none flex items-center justify-center" disabled={auth0.processing} style={{ height: '2.5rem' }}>
-                                        <img className="w-6 h-6" src="https://www.svgrepo.com/show/475656/google-color.svg" loading="lazy" alt="google logo" />
-                                        <span className="pl-2">Sign in with Google</span>
-                                    </button>
-                                </div>
-                            </div>
+                            <span className="text-ston text- block md:w-4/5 md:px-6 m-auto pb-4">
+                                <span>Don't have an account?</span>
+                                <Link to={signUpRoute} className="text-amber-600 underline ml-1">Sign Up</Link>
+                            </span>
 
                             <div className="mx-auto py-3 text-center">
                                 <p className="text-sm">
-                                    © {new Date().getFullYear()}. Elevated Acts of Appreciation, <span className="text-purple-600 block">Tip by Tip.</span>
+                                    © {new Date().getFullYear()}. Elevated Acts of Appreciation, <span className="text-amber-600 block">Tip by Tip.</span>
                                 </p>
                             </div>
                         </div>
