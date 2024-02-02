@@ -26,7 +26,8 @@ export const Home = () => {
 
     let Identity: any = Crypto.decryptDataUsingAES256(storageObject)
     Identity = JSON.parse(Identity)
-
+    console.log('IDENTIY', Identity);
+    
     const dispatch: any = useDispatch();
 
     React.useEffect(() => {
