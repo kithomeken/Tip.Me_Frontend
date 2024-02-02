@@ -253,11 +253,18 @@ body {
     background-size: cover;
 }
 
+.block_strp {
+    background-image: url('../images/expressive-african-american-woman-with-copy-space.jpg');
+    background-repeat: repeat;
+    background-position: center;
+    background-size: cover;
+}
+
 .wrapper {
     -ms-flex-align: center;
     align-items: center;
-    background-color: #e9d5ff;
-    background-image: linear-gradient(135deg, #e9d5ff 0%, #ffffff 51%);
+    /* background-color: #e9d5ff; */
+    /* background-image: linear-gradient(135deg, #e9d5ff 0%, #ffffff 51%); */
     /* background: linear-gradient(135deg, #FFF 0%, #d6dbdf 100%); */
     display: -ms-flexbox;
     display: flex;
@@ -268,7 +275,7 @@ body {
 }
 
 .gx-container {
-    width: 380px !important;
+    width: 480px !important;
     margin: 0 auto;
     padding: 32px 0;
     z-index: 1;
@@ -289,17 +296,12 @@ body {
     -ms-flex-pack: justify;
     justify-content: space-between;
     overflow: hidden;
-    margin-bottom: 24px;
 }
 
 .odyssey {
-    font-size: 2rem;
-    margin-bottom: 1rem;
+    font-size: 2.25rem;
     font-weight: 700;
     line-height: 1.2;
-    margin-top: 0;
-    text-align: left;
-    margin-bottom: 0;
 }
 
 .text-theme,
