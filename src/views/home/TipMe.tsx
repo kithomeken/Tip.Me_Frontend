@@ -138,7 +138,7 @@ export const TipMe = () => {
                         <div className="px-5">
                             <header className="landing-header">
                                 <div className="landing pl-3 mb-0 text-left">
-                                    <h2 className="odyssey text-left text-purple-500 nunito">
+                                    <h2 className="odyssey text-left text-amber-500 nunito">
                                         {APPLICATION.NAME}
                                     </h2>
                                 </div>
@@ -161,7 +161,7 @@ export const TipMe = () => {
                                                             className={classNames(
                                                                 state.errors.msisdn.length > 0 ?
                                                                     'text-red-900 ring-slate-300 placeholder:text-red-400 focus:ring-red-600 border border-red-600 focus:outline-red-500' :
-                                                                    'text-gray-900 ring-slate-300 placeholder:text-gray-400 focus:border-0 focus:outline-none focus:ring-purple-600 focus:outline-purple-500 hover:border-gray-400',
+                                                                    'text-gray-900 ring-slate-300 placeholder:text-gray-400 focus:border-0 focus:outline-none focus:ring-amber-600 focus:outline-amber-500 hover:border-gray-400',
                                                                 'block w-full rounded-md py-2 pl-3 pr-8 border border-gray-300 text-m'
                                                             )} onChange={onChangeHandler} value={state.input.msisdn} onBlur={onInputBlur} required />
                                                         <div className="absolute inset-y-0 right-0 flex items-center w-8">
@@ -184,7 +184,7 @@ export const TipMe = () => {
                                                             className={classNames(
                                                                 state.errors.amount.length > 0 ?
                                                                     'text-red-900 ring-slate-300 placeholder:text-red-400 focus:ring-red-600 border border-red-600 focus:outline-red-500' :
-                                                                    'text-gray-900 ring-slate-300 placeholder:text-gray-400 focus:border-0 focus:outline-none focus:ring-purple-600 focus:outline-purple-500 hover:border-gray-400',
+                                                                    'text-gray-900 ring-slate-300 placeholder:text-gray-400 focus:border-0 focus:outline-none focus:ring-amber-600 focus:outline-amber-500 hover:border-gray-400',
                                                                 'block w-full rounded-md py-2 pl-3 pr-8 border border-gray-300 text-m'
                                                             )} onChange={onChangeHandler} value={state.input.amount} onBlur={onInputBlur} required />
                                                         <div className="absolute inset-y-0 right-0 flex items-center w-8">
@@ -198,7 +198,7 @@ export const TipMe = () => {
                                                 </div>
                                             </div>
 
-                                            <button type="submit" className="w-24 justify-center disabled:cursor-not-allowed text-sm rounded-md border border-transparent shadow-sm px-3 py-1-5 bg-purple-600 text-white disabled:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-0 focus:ring-offset-2 focus:ring-purple-500">
+                                            <button type="submit" className="w-24 justify-center disabled:cursor-not-allowed text-sm rounded-md border border-transparent shadow-sm px-3 py-1-5 bg-amber-600 text-white disabled:bg-amber-600 hover:bg-amber-700 focus:outline-none focus:ring-0 focus:ring-offset-2 focus:ring-amber-500">
                                                 Done
                                             </button>
                                         </form>

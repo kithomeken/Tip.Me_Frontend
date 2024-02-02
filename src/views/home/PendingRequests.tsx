@@ -123,7 +123,7 @@ export const PendingRequests = () => {
                                 <div className="w-full text-sm">
                                     <div className="flex flex-col md:flex-row md:items-center">
                                         <div className="flex-grow">
-                                            <p className="text-2xl leading-7 mb-4 flex-auto text-purple-600">
+                                            <p className="text-2xl leading-7 mb-4 flex-auto text-amber-600">
                                                 {state.data.artist.artist_name}
                                             </p>
                                         </div>

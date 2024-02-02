@@ -98,7 +98,7 @@ export const AdminstrativeHome = () => {
                 Header: '-',
                 id: 'ihbs87rvhb3298',
                 accessor: (data: { x_uuid: any }) => (
-                    <Link to={`${API_RouteReplace(viewPendingRequestRoute, ':uuid', data.x_uuid)}`} className="text-purple-600 m-auto hover:underline text-right float-right cursor-pointer hover:text-purple-900 text-xs">
+                    <Link to={`${API_RouteReplace(viewPendingRequestRoute, ':uuid', data.x_uuid)}`} className="text-amber-600 m-auto hover:underline text-right float-right cursor-pointer hover:text-amber-900 text-xs">
                         View
                     </Link>
                 )
@@ -120,7 +120,7 @@ export const AdminstrativeHome = () => {
                             <div className={`w-full mb-3`}>
                                 <div className="kiOAkj" style={CONFIG_MAX_WIDTH}>
                                     <div className="flex mb-4 items-center">
-                                        <p className="text-2xl flex-auto text-purple-600">
+                                        <p className="text-2xl flex-auto text-amber-600">
                                             Onboarding Requests
                                         </p>
                                     </div>

@@ -100,7 +100,7 @@ export const Home = () => {
                                 <div className="flex items-center justify-center h-screen p-4 w-full -mt-16">
                                     <section className="gx-container">
                                         <div className="flex flex-col align-middle mt-5 mb-6 h-5">
-                                            <span className="fad text-purple-500 fa-spinner-third fa-3x m-auto block fa-spin"></span>
+                                            <span className="fad text-amber-500 fa-spinner-third fa-3x m-auto block fa-spin"></span>
                                         </div>
                                     </section>
                                 </div>

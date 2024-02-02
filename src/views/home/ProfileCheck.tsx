@@ -265,6 +265,10 @@ export const ProfileCheck = () => {
         fetchArtistTypeData()
     }
 
+    const reloadWindow = () => {
+        window.location.reload();
+    }
+
     return (
         <React.Fragment>
             <Helmet>
@@ -276,7 +280,7 @@ export const ProfileCheck = () => {
                     <div className="kiOAkj p-6" style={CONFIG_MAX_WIDTH}>
                         {
                             idC_State.PRc0 !== 'META_00' ? (
-                                <span className="text-purple-600 mb-2 py-2 text-2xl block">
+                                <span className="text-amber-600 mb-2 py-2 text-2xl block">
                                     Complete Your Profile
                                 </span>
                             ) : null
@@ -292,11 +296,11 @@ export const ProfileCheck = () => {
 
                                         <div className="w-full md:basis-1/2">
                                             <div className="text-center md:text-start">
-                                                <span className="text-green-600 mb-2 py-1 md:px-3 text-right block text-sm">
+                                                <span className="text-amber-500 mb-2 py-1 md:px-3 text-right block text-sm">
                                                     1 OF 4 COMPLETE
                                                 </span>
 
-                                                <span className="text-purple-600 mb-3 text-2xl block">
+                                                <span className="text-amber-600 mb-3 text-2xl block">
                                                     Your Identity
                                                     <span className="text-sm text-slate-500 block">
                                                         Stand out from the crowd!
@@ -320,7 +324,7 @@ export const ProfileCheck = () => {
                                                                 className={classNames(
                                                                     state.errors.first_name.length > 0 ?
                                                                         'text-red-900 ring-slate-300 placeholder:text-red-400 focus:ring-red-600 border border-red-600 focus:outline-red-500' :
-                                                                        'text-stone-900 ring-slate-300 placeholder:text-stone-400 focus:border-0 focus:outline-none focus:ring-purple-600 focus:outline-purple-500 hover:border-stone-400 border border-stone-300',
+                                                                        'text-stone-900 ring-slate-300 placeholder:text-stone-400 focus:border-0 focus:outline-none focus:ring-amber-600 focus:outline-amber-500 hover:border-stone-400 border border-stone-300',
                                                                     'block w-full rounded-md py-2 pl-3 pr-8  text-sm'
                                                                 )} onChange={onChangeHandler} value={state.input.first_name} onBlur={onInputBlur} required />
                                                             <div className="absolute inset-y-0 right-0 flex items-center w-8">
@@ -349,7 +353,7 @@ export const ProfileCheck = () => {
                                                                 className={classNames(
                                                                     state.errors.last_name.length > 0 ?
                                                                         'text-red-900 ring-slate-300 placeholder:text-red-400 focus:ring-red-600 border border-red-600 focus:outline-red-500' :
-                                                                        'text-stone-900 ring-slate-300 placeholder:text-stone-400 focus:border-0 focus:outline-none focus:ring-purple-600 focus:outline-purple-500 hover:border-stone-400 border border-stone-300',
+                                                                        'text-stone-900 ring-slate-300 placeholder:text-stone-400 focus:border-0 focus:outline-none focus:ring-amber-600 focus:outline-amber-500 hover:border-stone-400 border border-stone-300',
                                                                     'block w-full rounded-md py-2 pl-3 pr-8  text-sm'
                                                                 )} onChange={onChangeHandler} value={state.input.last_name} onBlur={onInputBlur} required />
                                                             <div className="absolute inset-y-0 right-0 flex items-center w-8">
@@ -371,7 +375,7 @@ export const ProfileCheck = () => {
                                                     </div>
 
                                                     <div className="mb-3 pt-3 px-3 md:px-0">
-                                                        <button className="bg-purple-600 float-right relative w-28 py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white hover:bg-purple-700 focus:outline-none focus:ring-0 focus:ring-offset-2 focus:bg-purple-700" type="submit">
+                                                        <button className="bg-amber-600 float-right relative w-28 py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white hover:bg-amber-700 focus:outline-none focus:ring-0 focus:ring-offset-2 focus:bg-amber-700" type="submit">
                                                             {
                                                                 idC_State.processing ? (
                                                                     <div className="flex justify-center items-center py-3">
@@ -399,7 +403,7 @@ export const ProfileCheck = () => {
 
                                         <div className="w-full md:basis-1/2">
                                             <div className="text-center md:text-start">
-                                                <span className="text-green-600 mb-2 py-1 md:px-3 text-right block text-sm">
+                                                <span className="text-amber-600 mb-2 py-1 md:px-3 text-right block text-sm">
                                                     2 OF 4 COMPLETE
                                                 </span>
 
@@ -449,7 +453,7 @@ export const ProfileCheck = () => {
                                                 </div>
 
                                                 <div className="mb-3 pt-3 px-3 md:px-0">
-                                                    <button className="bg-purple-600 float-right relative w-28 py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white hover:bg-purple-700 focus:outline-none focus:ring-0 focus:ring-offset-2 focus:bg-purple-700" type="submit">
+                                                    <button className="bg-amber-600 float-right relative w-28 py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white hover:bg-amber-700 focus:outline-none focus:ring-0 focus:ring-offset-2 focus:bg-amber-700" type="submit">
                                                         {
                                                             idC_State.processing ? (
                                                                 <div className="flex justify-center items-center gap-3 py-2">
@@ -476,7 +480,7 @@ export const ProfileCheck = () => {
 
                                         <div className="w-full md:basis-1/2">
                                             <div className="text-center md:text-start">
-                                                <span className="text-green-600 mb-2 py-1 md:px-3 text-right block text-sm">
+                                                <span className="text-amber-600 mb-2 py-1 md:px-3 text-right block text-sm">
                                                     3 OF 4 COMPLETE
                                                 </span>
 
@@ -545,7 +549,7 @@ export const ProfileCheck = () => {
                                                                                             </span>
 
                                                                                             {selected ? (
-                                                                                                <span className="text-purple-600 absolute inset-y-0 right-0 flex items-center pr-4">
+                                                                                                <span className="text-amber-600 absolute inset-y-0 right-0 flex items-center pr-4">
                                                                                                     <i className="fad fa-check h-5 w-5"></i>
                                                                                                 </span>
                                                                                             ) : null}
@@ -575,7 +579,7 @@ export const ProfileCheck = () => {
                                                                                 className={classNames(
                                                                                     state.errors.entity.length > 0 ?
                                                                                         'text-red-900 ring-slate-300 placeholder:text-red-400 focus:ring-red-600 border border-red-600 focus:outline-red-500' :
-                                                                                        'text-stone-900 ring-slate-300 placeholder:text-stone-400 focus:border-0 focus:outline-none focus:ring-purple-600 focus:outline-purple-500 hover:border-stone-400 border border-stone-300',
+                                                                                        'text-stone-900 ring-slate-300 placeholder:text-stone-400 focus:border-0 focus:outline-none focus:ring-amber-600 focus:outline-amber-500 hover:border-stone-400 border border-stone-300',
                                                                                     'block w-full rounded-md py-2 pl-3 pr-8  text-sm'
                                                                                 )} onChange={onChangeHandler} value={state.input.entity} onBlur={onInputBlur} required />
                                                                             <div className="absolute inset-y-0 right-0 flex items-center w-8">
@@ -612,7 +616,7 @@ export const ProfileCheck = () => {
                                                             </div>
 
                                                             <div className="mb-3 pt-3 px-3 md:px-0">
-                                                                <button className="bg-purple-600 float-right relative w-28 py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white hover:bg-purple-700 focus:outline-none focus:ring-0 focus:ring-offset-2 focus:bg-purple-700" type="submit">
+                                                                <button className="bg-amber-600 float-right relative w-28 py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white hover:bg-amber-700 focus:outline-none focus:ring-0 focus:ring-offset-2 focus:bg-amber-700" type="submit">
                                                                     {
                                                                         idC_State.processing ? (
                                                                             <div className="flex justify-center items-center gap-3 py-2">
@@ -649,12 +653,12 @@ export const ProfileCheck = () => {
                                         </div>
 
                                         <div className="text-center w-full md:basis-1/2 md:text-start flex flex-col align-middle items-center justify-center">
-                                            <span className="text-green-600 mb-2 py-1 md:px-3 text-right block text-sm">
+                                            <span className="text-amber-600 mb-2 py-1 md:px-3 text-right block text-sm">
                                                 4 OF 4 COMPLETE
                                             </span>
 
                                             <div className="flex-none text-center">
-                                                <span className="text-purple-600 mb-3 text-2xl block">
+                                                <span className="text-amber-600 mb-3 text-2xl block">
                                                     You're officially registered!
                                                 </span>
 
@@ -666,11 +670,11 @@ export const ProfileCheck = () => {
                                             </div>
 
                                             <div className="mb-3 pt-3 px-3 md:px-0">
-                                                <Link to={'/home'} className="bg-purple-600 float-right relative w-40 py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white hover:bg-purple-700 focus:outline-none focus:ring-0 focus:ring-offset-2 focus:bg-purple-700">
+                                                <button type="button" onClick={reloadWindow} className="bg-amber-600 float-right relative w-40 py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white hover:bg-amber-700 focus:outline-none focus:ring-0 focus:ring-offset-2 focus:bg-amber-700">
                                                     <div className="flex justify-center items-center gap-3">
                                                         Take Me Home
                                                     </div>
-                                                </Link>
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
@@ -680,7 +684,7 @@ export const ProfileCheck = () => {
 
                         <div className="mx-auto py-3 text-center">
                             <p className="text-sm py-2">
-                                © {new Date().getFullYear()}. Elevated Acts of Appreciation, <span className="text-purple-600 block">Tip by Tip.</span>
+                                © {new Date().getFullYear()}. Elevated Acts of Appreciation, <span className="text-amber-600 block">Tip by Tip.</span>
                             </p>
                         </div>
                     </div>

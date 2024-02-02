@@ -287,7 +287,7 @@ export const WithdrawModal: FC<props> = ({ show, showOrHide, account }) => {
                                             className={classNames(
                                                 state.errors.amount.length > 0 ?
                                                     'text-red-900 ring-slate-300 placeholder:text-red-400 focus:ring-red-600 border border-red-600 focus:outline-red-500' :
-                                                    'text-gray-900 ring-slate-300 placeholder:text-gray-400 focus:border-0 focus:outline-none focus:ring-purple-600 focus:outline-purple-500 hover:border-gray-400',
+                                                    'text-gray-900 ring-slate-300 placeholder:text-gray-400 focus:border-0 focus:outline-none focus:ring-amber-600 focus:outline-amber-500 hover:border-gray-400',
                                                 'block w-full rounded-md py-2 pl-3 pr-8 border border-gray-300 text-m'
                                             )} onChange={onChangeHandler} value={state.input.amount} onBlur={onInputBlur} required />
                                         <div className="absolute inset-y-0 right-0 flex items-center w-8">
@@ -311,7 +311,7 @@ export const WithdrawModal: FC<props> = ({ show, showOrHide, account }) => {
                         }
 
                         <div className="w-full pt-2">
-                            <span onClick={showOrHideSummaryDescription} className="text-purple-600 py-1 text-sm md:flex cursor-pointer flex-row items-center hover:text-purple-700 focus:outline-none">
+                            <span onClick={showOrHideSummaryDescription} className="text-amber-600 py-1 text-sm md:flex cursor-pointer flex-row items-center hover:text-amber-700 focus:outline-none">
                                 <i className="fa-regular fa-plus mr-2 fa-lg" data-te-toggle="tooltip" title="Summary description is only visible to you"></i>
                                 {
                                     state.show ? 'Hide summary description' : 'Add summary description'
@@ -326,7 +326,7 @@ export const WithdrawModal: FC<props> = ({ show, showOrHide, account }) => {
                                                 className={classNames(
                                                     state.errors.description.length > 0 ?
                                                         'text-red-900 ring-slate-300 placeholder:text-red-400 focus:ring-red-600 border border-red-600 focus:outline-red-500' :
-                                                        'text-gray-900 ring-slate-300 placeholder:text-gray-400 focus:outline-none focus:border-0 focus:ring-purple-600 focus:outline-purple-500 hover:border-gray-400',
+                                                        'text-gray-900 ring-slate-300 placeholder:text-gray-400 focus:outline-none focus:border-0 focus:ring-amber-600 focus:outline-amber-500 hover:border-gray-400',
                                                     'block w-full rounded py-2 resize-none pl-3 pr-8 border border-gray-300 text-sm'
                                                 )} onChange={onChangeHandler} onBlur={onInputBlur} value={state.input.description}></textarea>
                                             <div className="absolute inset-y-0 right-0 top-0 pt-4 flex items-enter w-8">

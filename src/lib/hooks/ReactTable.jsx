@@ -48,14 +48,14 @@ export default function ReactTable({ columns, data, showPageSize = false }) {
                     <div className="w-12/12 mb-3 flex items-center align-middle">
                         <div className="">
                             <select
-                                className="relative bg-white border-0 border-gray-300 rounded-md shadow-none pl-3 pr-3 py-2 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-purple-500 focus:border-purple-500 sm:text-sm"
+                                className="relative bg-white border-0 border-gray-300 rounded-md shadow-none pl-3 pr-3 py-2 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-amber-500 focus:border-amber-500 sm:text-sm"
                                 value={pageSize}
                                 onChange={e => {
                                     setPageSize(Number(e.target.value))
                                 }}
                             >
                                 {[10, 20, 30, 40, 50].map(pageSize => (
-                                    <option key={`PG-${pageSize}`} value={pageSize} className="absolute z-10 mr-2 rounded-sm mt-1 w-full bg-white shadow-lg max-h-56 hover:bg-purple-400 py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm">
+                                    <option key={`PG-${pageSize}`} value={pageSize} className="absolute z-10 mr-2 rounded-sm mt-1 w-full bg-white shadow-lg max-h-56 hover:bg-amber-400 py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm">
                                         Show {pageSize}
                                     </option>
                                 ))}
@@ -73,7 +73,7 @@ export default function ReactTable({ columns, data, showPageSize = false }) {
                                 <th
                                     // {...column.getHeaderProps()}
                                     key={column.render("id")}
-                                    className={`px-3 py-3 text-left text-sm text-purple-600 font-semibold nunito tracking-wider `}>
+                                    className={`px-3 py-3 text-left text-sm text-amber-600 font-semibold nunito tracking-wider `}>
                                     {column.render("Header")}
                                 </th>
                             ))}
@@ -108,7 +108,7 @@ export default function ReactTable({ columns, data, showPageSize = false }) {
                             </p>
                         </div>
                         <div>
-                            <nav className="relative z-0 inline-flex rounded-md text-purple-600 text-sm" aria-label="Pagination">
+                            <nav className="relative z-0 inline-flex rounded-md text-amber-600 text-sm" aria-label="Pagination">
                                 <button
                                     onClick={() => previousPage()}
                                     disabled={!canPreviousPage}
@@ -136,7 +136,7 @@ export default function ReactTable({ columns, data, showPageSize = false }) {
                                                                 }}
                                                                 className={
                                                                     classNames(
-                                                                        (pageNumber - 1) === pageIndex ? 'bg-purple-50 border-purple-500 text-purple-600' : 'bg-white border-gray-300  hover:bg-gray-100',
+                                                                        (pageNumber - 1) === pageIndex ? 'bg-amber-50 border-amber-500 text-amber-600' : 'bg-white border-gray-300  hover:bg-gray-100',
                                                                         'z-10 relative px-3 py-1.5 border text-xs rounded mr-2'
                                                                     )
                                                                 }>
@@ -163,7 +163,7 @@ export default function ReactTable({ columns, data, showPageSize = false }) {
                                                                         }}
                                                                         className={
                                                                             classNames(
-                                                                                (pageNumber - 1) === pageIndex ? 'bg-purple-50 border-purple-500 text-purple-600' : 'bg-white border-gray-300  hover:bg-gray-100',
+                                                                                (pageNumber - 1) === pageIndex ? 'bg-amber-50 border-amber-500 text-amber-600' : 'bg-white border-gray-300  hover:bg-gray-100',
                                                                                 'z-10 relative px-3 py-1.5 border text-xs rounded mr-2'
                                                                             )
                                                                         }>
@@ -194,7 +194,7 @@ export default function ReactTable({ columns, data, showPageSize = false }) {
                                                                         }}
                                                                         className={
                                                                             classNames(
-                                                                                (pageNumber - 1) === pageIndex ? 'bg-purple-50 border-purple-500 text-purple-600' : 'bg-white border-gray-300  hover:bg-gray-100',
+                                                                                (pageNumber - 1) === pageIndex ? 'bg-amber-50 border-amber-500 text-amber-600' : 'bg-white border-gray-300  hover:bg-gray-100',
                                                                                 'z-10 relative px-3 py-1 border text-xs rounded mr-2'
                                                                             )
                                                                         }>

@@ -369,7 +369,7 @@ export const SignUp = () => {
 
                             <span className="text-ston text- block md:w-4/5 md:px-6 m-auto pb-4">
                                 <span>Already have an account?</span>
-                                <Link to={signInRoute} className="text-amber-600 underline ml-1">Sign Up</Link>
+                                <Link to={signInRoute} className="text-amber-600 underline ml-1">Sign In</Link>
                             </span>
 
                             <div className="mx-auto py-3 text-center">

@@ -72,7 +72,7 @@ export const MoneyIn = ({ account }: { account: string }) => {
                 id: 'TRC_R003',
                 accessor: (data: { amount: any }) => (
                     <span className="flex flex-row align-middle items-center">
-                        <span className="block text-green-600 text-sm py-1">
+                        <span className="block text-amber-600 text-sm py-1">
                             {formatAmount(parseInt(data.amount))}
                         </span>
                     </span>
@@ -98,7 +98,7 @@ export const MoneyIn = ({ account }: { account: string }) => {
                     null
                 ) : state.status === 'fulfilled' ? (
                     <div className="py-4">
-                        <h2 className="text-lg leading-7 text-green-600 sm:text-lg sm: mb-2">
+                        <h2 className="text-lg leading-7 text-amber-600 sm:text-lg sm: mb-2">
                             Money In
                         </h2>
 

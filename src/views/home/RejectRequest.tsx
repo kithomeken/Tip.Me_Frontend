@@ -129,7 +129,7 @@ export const RejectRequest: FC<Props> = ({ show, showOrHide, reloadRequestDetail
                             Kindly add reason for declining request:
                         </span>
 
-                        <div className="mb-2 flex flex-col md:flex-row md:space-x-4 border-b border-purple-300">
+                        <div className="mb-2 flex flex-col md:flex-row md:space-x-4 border-b border-amber-300">
                             <div className="w-12/12 rounded shadow-none space-y-px mb-4">
                                 <div className="relative mt-2 rounded shadow-sm">
                                     <textarea name="comment" id="comment" placeholder="Add Comment" autoComplete="off" rows={3}
