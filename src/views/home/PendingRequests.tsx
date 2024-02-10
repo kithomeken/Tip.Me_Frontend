@@ -18,7 +18,8 @@ export const PendingRequests = () => {
         posting: false,
         comment: '',
         data: {
-            artist: null,
+            entity: null,
+            artists: null,
             request: null,
             documents: null,
         }
@@ -40,8 +41,9 @@ export const PendingRequests = () => {
             const response: any = await HttpServices.httpGet(apiRoute)
 
             if (response.data.success) {
-                data.artist = response.data.payload.artist
+                data.artists = response.data.payload.nodes
                 data.request = response.data.payload.request
+                data.entity = response.data.payload.entity
                 data.documents = response.data.payload.documents
                 status = 'fulfilled'
             } else {
@@ -122,10 +124,17 @@ export const PendingRequests = () => {
                             ) : state.status === 'fulfilled' ? (
                                 <div className="w-full text-sm">
                                     <div className="flex flex-col md:flex-row md:items-center">
-                                        <div className="flex-grow">
-                                            <p className="text-2xl leading-7 mb-4 flex-auto text-amber-600">
-                                                {state.data.artist.artist_name}
+                                        <div className="flex-grow mb-4 ">
+                                            <p className="text-3xl mb-2 leading-7 text-amber-600">
+                                                {state.data.entity.name}
                                             </p>
+
+                                            <span className="block text-sm text-stone-600">
+                                                Account:
+                                                <span className="text-amber-600 ml-2">
+                                                    {state.data.entity.account}
+                                                </span>
+                                            </span>
                                         </div>
 
                                         {
@@ -163,19 +172,11 @@ export const PendingRequests = () => {
                                             )
                                         }
 
-                                        {
-                                            state.data.artist.type === 'I' ? (
-                                                <span className="bg-amber-300 text-slate-700 text-xs py-1 px-1.5 rounded">
-                                                    <span className="hidden md:inline-block">Individual Artist</span>
-                                                    <span className="md:hidden">Individual</span>
-                                                </span>
-                                            ) : (
-                                                <span className="bg-teal-300 text-slate-700 text-xs py-1 px-1.5 rounded">
-                                                    <span className="hidden md:inline-block">Band/Duet/Group</span>
-                                                    <span className="md:hidden">Band/Group</span>
-                                                </span>
-                                            )
-                                        }
+                                        <span className="bg-amber-300 text-slate-700 text-xs py-1 px-1.5 rounded">
+                                            <span className="hidden md:inline-block">{state.data.entity.type}</span>
+                                            <span className="md:hidden">{state.data.entity.type}</span>
+                                        </span>
+
 
                                         <span className="block text-xs">
                                             {DateFormating(state.data.request.created_at)}
@@ -185,7 +186,7 @@ export const PendingRequests = () => {
                                     <div className="w-full flex flex-col-reverse md:flex-row items- pt-3 border-b md:border-b-0">
                                         <div className="md:basis-2/5 w-full">
                                             <div className="bg-gray-100 rounded mr-4 h-44 mb-3 flex flex-col justify-center">
-                                                <img src={`${renderArtistDocuments(state.data.documents.location)}`} className="mb-3 h-36 m-auto rounded text-sm" alt={`${state.data.documents.location}`} />
+                                                {/* <img src={`${renderArtistDocuments(state.data.documents.location)}`} className="mb-3 h-36 m-auto rounded text-sm" alt={`${state.data.documents.location}`} /> */}
                                             </div>
                                         </div>
 
@@ -209,7 +210,7 @@ export const PendingRequests = () => {
                                                 ) : null
                                             }
 
-                                            <div className="flex flex-row w-full lg:w-10/12 border-b pb-3 mb-4">
+                                            {/* <div className="flex flex-row w-full lg:w-10/12 border-b pb-3 mb-4">
                                                 <div className="basis-1/3 text-slate-500">
                                                     <span className=" py-1 px-1.5 block mb-2">
                                                         First Name:
@@ -237,7 +238,7 @@ export const PendingRequests = () => {
                                                         {state.data.artist.email}
                                                     </span>
                                                 </div>
-                                            </div>
+                                            </div> */}
 
                                             <div className="flex flex-row w-full lg:w-10/12 pb-3 mb-4 border-b md:border-b-0">
                                                 <div className="basis-1/3 text-slate-500">
@@ -247,7 +248,7 @@ export const PendingRequests = () => {
                                                     </span>
 
                                                     <span className=" py-1 px-1.5 block mb-2">
-                                                        {
+                                                        {/* {
                                                             state.data.documents.type === 'ID' ? (
                                                                 <span>ID Number:</span>
                                                             ) : (
@@ -256,7 +257,7 @@ export const PendingRequests = () => {
                                                                     <span className="md:hidden">Passport:</span>
                                                                 </span>
                                                             )
-                                                        }
+                                                        } */}
                                                     </span>
 
                                                     <span className=" py-1 px-1.5 block mb-2">
@@ -267,21 +268,21 @@ export const PendingRequests = () => {
 
                                                 <div className="basis-2/3 text-slate-">
                                                     <span className=" py-1 px-1.5 block mb-2 capitalize">
-                                                        {
+                                                        {/* {
                                                             state.data.documents.type === 'ID' ? (
                                                                 <span>ID Card</span>
                                                             ) : (
                                                                 <span>Passport</span>
                                                             )
-                                                        }
+                                                        } */}
                                                     </span>
 
                                                     <span className=" py-1 px-1.5 block mb-2 capitalize">
-                                                        {state.data.documents.identifier}
+                                                        {/* {state.data.documents.identifier} */}
                                                     </span>
 
                                                     <span className=" py-1 px-1.5 block mb-2 lowercase">
-                                                        {state.data.documents.msisdn}
+                                                        {/* {state.data.documents.msisdn} */}
                                                     </span>
                                                 </div>
                                             </div>
@@ -314,7 +315,7 @@ export const PendingRequests = () => {
                         }
                     </div>
                 </div>
-            </div>
+            </div >
 
             <RejectRequest
                 uuid={params.uuid}
@@ -322,6 +323,6 @@ export const PendingRequests = () => {
                 showOrHide={showOrHideDeclineModal}
                 reloadRequestDetails={pendingRequestDetails}
             />
-        </React.Fragment>
+        </React.Fragment >
     )
 }
