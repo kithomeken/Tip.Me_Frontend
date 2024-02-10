@@ -40,7 +40,8 @@ export const identityCheckReducer = (state = identityState, action: any) => {
             const currPRc0State = StorageServices.getLocalStorage(STORAGE_KEYS.PRc0_STATE)
             const PRc0Code = currPRc0State.charAt(currPRc0State.length - 1);
             const nextPRc0 = 'META_0' + (parseInt(PRc0Code) + 1)
-            
+            StorageServices.setLocalStorage(STORAGE_KEYS.PRc0_STATE, nextPRc0)
+
             return {
                 ...state,
                 processing: false,
@@ -50,6 +51,7 @@ export const identityCheckReducer = (state = identityState, action: any) => {
 
         case IDENTITY_.PRc0_EXCEPTION:
             let metaErrMsg = action.response
+            console.log('PRc0_EXCEPTION: ', metaPRc0State);
 
             return {
                 ...state,
