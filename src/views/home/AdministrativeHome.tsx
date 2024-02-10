@@ -71,17 +71,9 @@ export const AdminstrativeHome = () => {
                 id: 'cle22tk3i',
                 accessor: (data: { type: any }) => (
                     <span>
-                        {
-                            data.type === 'I' ? (
-                                <span className="block mb-0 text-sm">
-                                    Solo Artist
-                                </span>
-                            ) : (
-                                <span className="block mb-0 text-sm">
-                                    Band/Duo/Group
-                                </span>
-                            )
-                        }
+                        <span className="block mb-0 text-sm capitalize">
+                            {data.type}
+                        </span>
                     </span>
                 ),
             },
