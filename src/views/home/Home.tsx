@@ -31,10 +31,6 @@ export const Home = () => {
     const dispatch: any = useDispatch();
 
     React.useEffect(() => {
-        /* 
-        * On refresh or load of the Sign In page
-        * reset the redux state to come a fresh
-        */
         metaIdentityCheck()
     }, [])
 
