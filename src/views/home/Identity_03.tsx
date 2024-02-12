@@ -90,8 +90,6 @@ export const Identity_03 = () => {
         }
     }
 
-
-
     const onChangeListBoxHandler = (e: any) => {
         let { input } = state
         input.artist_type = e
@@ -136,16 +134,21 @@ export const Identity_03 = () => {
         e.preventDefault()
 
         if (!idC_State.processing) {
-            let entity = state.input.artist_type === 'SOLO' ? state.input.artist_name : state.input.entity
+            const specificObject = state.data.artistTypes.find(
+                (item: { key: string }) => item.key === state.input.artist_type
+            );
+            
+            let entity = specificObject > 1 ? state.input.entity : state.input.artist_name
 
             const identProps = {
                 dataDump: {
                     artist: state.input.artist_name,
                     type: state.input.artist_type,
                     entity: entity,
+                    specificObject: JSON.stringify(specificObject),
                 }
             }
-
+            
             dispatch(artistEntityCreation(identProps))
         }
     }
