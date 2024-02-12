@@ -21,14 +21,12 @@ export const Home = () => {
         status: 'pending',
     })
 
+    const dispatch: any = useDispatch();
     const encryptedKeyString = StorageServices.getLocalStorage(STORAGE_KEYS.ACCOUNT_DATA)
     const storageObject = JSON.parse(encryptedKeyString)
 
     let Identity: any = Crypto.decryptDataUsingAES256(storageObject)
-    Identity = JSON.parse(Identity)
-    console.log('IDENTIY', Identity);
-    
-    const dispatch: any = useDispatch();
+    Identity = JSON.parse(Identity)    
 
     React.useEffect(() => {
         metaIdentityCheck()
