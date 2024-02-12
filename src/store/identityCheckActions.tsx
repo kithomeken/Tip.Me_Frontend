@@ -1,6 +1,7 @@
 import { AUTH } from "../api/API_Registry";
-import { AUTH_, IDENTITY_ } from "../global/ConstantsRegistry";
+import { AUTH_, IDENTITY_, STORAGE_KEYS } from "../global/ConstantsRegistry";
 import HttpServices from "../services/HttpServices";
+import StorageServices from "../services/StorageServices";
 
 interface IdentityProps {
     dataDump: any,
@@ -32,8 +33,11 @@ export function addIdentityToProfile(propsIn: IdentityProps) {
     
             formData.append('last_name', dataDump.last_name)
             formData.append('first_name', dataDump.first_name)
+            formData.append('identifier', dataDump.identifier)
+            formData.append('id_type', dataDump.id_type)
+            formData.append('docPhoto', dataDump.docPhoto)
     
-            const identityResponse: any = await HttpServices.httpPut(AUTH.ID_META_01, formData)
+            const identityResponse: any = await HttpServices.httpMultipartForm(AUTH.ID_META_01, formData)
             console.log(identityResponse);
             
             if (identityResponse.data.success) {
@@ -130,6 +134,9 @@ export function artistEntityCreation(propsIn: IdentityProps) {
             const identityResponse: any = await HttpServices.httpPost(AUTH.ID_META_03, formData)            
 
             if (identityResponse.data.success) {
+                // Save the entity type to local storage
+                StorageServices.setLocalStorage(STORAGE_KEYS.ENTITY_TYPE, dataDump.specificObject)
+
                 dispatch({
                     type: AUTH_.ID_META_03,
                     response: identityResponse.data.payload,
