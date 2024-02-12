@@ -8,10 +8,11 @@ import { getRedirectResult } from "firebase/auth";
 import { useAppSelector } from "../../store/hooks";
 import { authenticationRoutes } from "../../routes/authRoutes";
 import { firebaseAuth } from "../../firebase/firebaseConfigs";
-import { APPLICATION, AUTH_ } from "../../global/ConstantsRegistry";
+import { APPLICATION, AUTH_, STORAGE_KEYS } from "../../global/ConstantsRegistry";
 import { G_onInputChangeHandler, G_onInputBlurHandler } from "../../components/lib/InputHandlers";
 import { firebaseAuthActions, generateSanctumToken, resetAuth0 } from "../../store/auth/firebaseAuthActions";
 import { DeviceInfo, classNames, emailValidator, passwordValidator } from "../../lib/modules/HelperFunctions";
+import StorageServices from "../../services/StorageServices";
 
 export const SignUp = () => {
     const [state, setstate] = useState({
@@ -31,6 +32,22 @@ export const SignUp = () => {
     const location = useLocation()
     const dispatch: any = useDispatch();
 
+    function parseQueryString(search) {
+        const params = {};
+
+        if (search) {
+            search
+                .slice(1) // Remove the leading '?'
+                .split('&') // Split by '&' to get individual key-value pairs
+                .forEach(pair => {
+                    const [key, value] = pair.split('='); // Split each pair by '=' to get key and value
+                    params[key] = decodeURIComponent(value || ''); // Decode URI component and assign to params
+                });
+        }
+
+        return params;
+    }
+
     const locationState: any = location.state
     const auth0: any = useAppSelector(state => state.auth0)
 
@@ -41,6 +58,11 @@ export const SignUp = () => {
     )?.path
 
     React.useEffect(() => {
+        if (location.search !== null || location.search !==  undefined) {
+            const searchParams:any  = parseQueryString(location.search);
+            StorageServices.setLocalStorage(STORAGE_KEYS.eede, searchParams.hash)
+        }
+        
         authRedirectResult()
             .then(async (result) => {
                 if (!result) {
@@ -69,7 +91,7 @@ export const SignUp = () => {
                 dispatch(resetAuth0())
                 return null;
             });
-    }, [])
+    }, [location])
 
     const onChangeHandler = (e: any) => {
         if (!auth0.processing) {
