@@ -25,6 +25,7 @@ export const STORAGE_KEYS = {
     ENCRYPTION_KEY: '__utmeKYBSE',
 
     FIREBASE_RFSH: '__RfhS',
+    ENTITY_TYPE: '__eNTY'
 }
 
 
