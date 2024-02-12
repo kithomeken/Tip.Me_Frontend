@@ -78,12 +78,7 @@ class HttpServices {
 
     async httpMultipartForm(url: string, data: any, options: any = null) {
         try {
-            const headers = {
-                'Content-Type': 'multipart/form-data',
-                Authorization: "Bearer " + this.decryptSanctumTokenCookie(),
-            }
-
-            const finalOptions = Object.assign(headers, options)
+            const finalOptions = Object.assign(this.axiosInstanceMultipartHeaders(), options)
             const POST_API_URL = API_DOMAIN + url
 
             return await axios.post(POST_API_URL, data, finalOptions);
@@ -238,6 +233,15 @@ class HttpServices {
         return {
             headers: {
                 'Content-Type': 'application/json',
+                Authorization: "Bearer " + this.decryptSanctumTokenCookie(),
+            }
+        }
+    }
+
+    axiosInstanceMultipartHeaders() {
+        return {
+            headers: {
+                'Content-Type': 'multipart/form-data',
                 Authorization: "Bearer " + this.decryptSanctumTokenCookie(),
             }
         }
