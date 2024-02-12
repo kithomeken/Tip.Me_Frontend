@@ -23,9 +23,7 @@ export const AccountSubHeader: FC<headerProps> = ({ errorMode = false }) => {
     const storageObject = JSON.parse(encryptedKeyString)
 
     let Identity: any = Crypto.decryptDataUsingAES256(storageObject)
-    Identity = JSON.parse(Identity)
-    console.log('ededede', Identity.photo_url);
-    
+    Identity = JSON.parse(Identity)    
 
     const IdentityRoute: any = (
         standardRoutes.find(

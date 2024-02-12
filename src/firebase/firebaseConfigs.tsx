@@ -21,4 +21,4 @@ export const firebaseApp = initializeApp(firebaseConfig);
 export const firebaseAuth = getAuth(firebaseApp)
 
 
-onAuthStateChanged(firebaseAuth, user => { console.log('000000000000', user); });
+// onAuthStateChanged(firebaseAuth, user => { console.log('000000000000', user); });

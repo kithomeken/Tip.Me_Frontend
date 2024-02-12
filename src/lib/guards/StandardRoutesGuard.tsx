@@ -15,8 +15,6 @@ export default function StandardRoutesGuard() {
 
     const auth0: any = useAppSelector(state => state.auth0)
     const sessionState = Auth.checkAuthentication(auth0)
-
-    console.log('StandardRoutesGuard', sessionState);
     
     const state = {
         from: currentLocation

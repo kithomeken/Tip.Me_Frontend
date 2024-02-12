@@ -14,8 +14,6 @@ export default function AuthRoutesGuard() {
     const auth0: any = useAppSelector(state => state.auth0)
     const sessionState = Auth.checkAuthentication(auth0)
 
-    console.log('AuthRoutesGuard', sessionState);
-
     if (sessionState.authenticated) {
         if (!sessionState.identity) {
             /* 
