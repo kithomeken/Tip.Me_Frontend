@@ -24,8 +24,7 @@ export const MoneyIn = ({ account }: { account: string }) => {
         let { data } = state
 
         try {
-            const apiRoute = API_RouteReplace(ACCOUNT.MONEY_IN_TRANSACTIONS, ':auid', account)
-            const response: any = await HttpServices.httpGet(apiRoute)
+            const response: any = await HttpServices.httpGet(ACCOUNT.MONEY_IN_TRANSACTIONS)
 
             if (response.data.success) {
                 status = 'fulfilled'
@@ -111,7 +110,7 @@ export const MoneyIn = ({ account }: { account: string }) => {
                         {
                             state.data.money_in.length < 1 ? (
                                 <div className="py-4">
-                                    <Empty title="No Transactions Found" description={"We're sure some coins will come trickling in soon..."} />
+                                    <Empty title="No transactions found" description={"We're sure some coins will come trickling in soon..."} />
                                 </div>
                             ) : (
                                 <div className="w-full">
