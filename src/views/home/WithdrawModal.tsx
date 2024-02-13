@@ -61,15 +61,8 @@ export const WithdrawModal: FC<props> = ({ show, showOrHide, account }) => {
                 data.bal = formatAmount(parseFloat(data.bal))
             } else {
                 status = 'rejected'
-                data.locked = response.data.payload.locked
-                data.pending = response.data.payload.pending
-                modal.errorTitle = 'Withdrawal Disabled'
-
-                if (data.locked === 'Y') {
-                    modal.errorMessage = 'Withdrawal process has temporarily been disabled for your account. Please contact the admin for further details and assistance'
-                } else if (data.pending) {
-                    modal.errorMessage = 'A pending withdrawal request already exists'
-                }
+                modal.errorTitle = 'Could not process request'
+                modal.errorMessage = response.data.error.message
             }
         } catch (error) {
             console.log(error);
