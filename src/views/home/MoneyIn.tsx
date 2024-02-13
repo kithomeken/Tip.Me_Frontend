@@ -16,7 +16,7 @@ export const MoneyIn = ({ account }: { account: string }) => {
     })
 
     React.useEffect(() => {
-        moneyInTransactions()
+        // moneyInTransactions()
     }, [])
 
     const moneyInTransactions = async () => {
