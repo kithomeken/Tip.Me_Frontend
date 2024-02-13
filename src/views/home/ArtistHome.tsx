@@ -215,7 +215,7 @@ export const ArtistHome = () => {
 
                                         <div className="md:flex-none cursor-pointer basis-1/2 border-b" onClick={() => activateTab('out')}>
                                             <button className={classNames(
-                                                state.activeTab === 'out' ? 'text-red-700 bg-red-200 border-red-400' : 'hover:text-gray-700 text-gray-500 hover:bg-gray-100 ',
+                                                state.activeTab === 'out' ? 'text-amber-700 bg-amber-200 border-amber-400' : 'hover:text-gray-700 text-gray-500 hover:bg-gray-100 ',
                                                 "text-sm items-center block p-2 px-6 rounded-t rounded-b-none text-center w-full md:w-auto"
                                             )}>
                                                 <span className="lolrtn robot">Money Out</span>
