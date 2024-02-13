@@ -45,46 +45,49 @@ export const MoneyIn = ({ account }: { account: string }) => {
     const columns = React.useMemo(
         () => [
             {
-                Header: 'Receipt',
-                id: 'TRC_R001',
-                accessor: (data: { receipt: any }) => (
-                    <span className="flex flex-row align-middle items-center">
-                        <span className="block text-slate-700 text-sm py-1">
-                            {data.receipt}
+                Header: 'Paid Out',
+                id: 'FXd-Wc00',
+                accessor: (data: any) => (
+                    <div className="px-0 w-full">
+                        <div className="flex flex-col md:flex-row">
+                            <div className="w-full flex flex-row md:pr-3 align-middle items-center pb-2 md:py-0.5 md:basis-1/2">
+                                <span className=" py-1 px-1.5 text-stone-500 text-xs">
+                                    Ksh.
+                                </span>
+
+                                <span className=" py-1 px-1.5 text-2xl">
+                                    <span className="text-stone-700">{data.amount.split('.')[0]}</span>
+                                    <span className="text-stone-400">.{data.amount.split('.')[1]}</span>
+                                </span>
+
+                                <span className="block mb-0 text-sm text-slate-500 basis-1/2 text-right md:hidden">
+                                    {humanReadableDate(data.tran_date)}
+                                </span>
+                            </div>
+
+                            <div className="w-full flex flex-row align-middle items-center pb-2 md:pl-3 md:py-1 md:basis-1/2">
+                                <div className="flex flex-row align-middle items-center w-full">
+                                    <div className="basis-1/2">
+                                        <span className="inline-flex items-center text-sm font-medium text-amber-600">
+                                            <span className="text-amber-600 mr-2 pr-2 md:mr-4 md:pr-4 border-r">
+                                                {data.receipt}
+                                            </span>
+
+                                            <span className="text-stone-600">
+                                                {data.msisdn}
+                                            </span>
+
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <span className="md:block mb-0 text-sm text-slate-500 basis-1/2 text-start hidden px-1.5">
+                            {humanReadableDate(data.tran_date)}
                         </span>
-                    </span>
+                    </div>
                 ),
-            },
-            {
-                Header: 'Phone',
-                id: 'TRC_R002',
-                accessor: (data: { msisdn: any }) => (
-                    <span className="flex flex-row align-middle items-center">
-                        <span className="block text-slate-500 text-sm py-1">
-                            {data.msisdn}
-                        </span>
-                    </span>
-                ),
-            },
-            {
-                Header: 'Amount',
-                id: 'TRC_R003',
-                accessor: (data: { amount: any }) => (
-                    <span className="flex flex-row align-middle items-center">
-                        <span className="block text-amber-600 text-sm py-1">
-                            {formatAmount(parseInt(data.amount))}
-                        </span>
-                    </span>
-                )
-            },
-            {
-                Header: 'Date',
-                id: 'TRC_R004',
-                accessor: (data: { tran_date: any }) => (
-                    <span className="block mb-0 text-sm text-slate-500">
-                        {humanReadableDate(data.tran_date)}
-                    </span>
-                )
             },
         ],
         []
