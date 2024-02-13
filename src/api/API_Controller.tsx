@@ -1,13 +1,12 @@
-export function API_Controller () {
+export function API_Controller() {
     let FQDN = null
     let API = null
     let APP = null
     let connectToUbuntuBangalore01 = true
 
     if (process.env.NODE_ENV === 'production') {
-        APP = ''
-        FQDN = 'https://beska.kennedykitho.me' 
-        API = 'https://beska.kennedykitho.me/api' 
+        FQDN = 'https://api.theapplication.online'
+        API = 'https://api.theapplication.online/api'
     } else {
         APP = 'http://localhost:3000'
 
