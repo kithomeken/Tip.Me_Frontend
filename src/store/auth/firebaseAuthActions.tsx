@@ -7,9 +7,10 @@ import {
 } from "firebase/auth";
 
 import { AUTH } from "../../api/API_Registry";
-import { AUTH_ } from "../../global/ConstantsRegistry";
+import { AUTH_, STORAGE_KEYS } from "../../global/ConstantsRegistry";
 import AxiosServices from "../../services/AxiosServices";
 import { firebaseAuth } from "../../firebase/firebaseConfigs";
+import StorageServices from "../../services/StorageServices";
 
 interface FirebaseProps {
     identity: any,
@@ -158,11 +159,13 @@ async function emailPasswordSignUp(dispatch: any, firebaseProps: any) {
         });
 }
 
-export async function generateSanctumToken(dispatch: any, accessToken: any, firebaseProps: any) {
+export async function generateSanctumToken(dispatch: any, accessToken: any, firebaseProps: any) {    
     try {
         let formData = new FormData()
         formData.append('idToken', accessToken)
         formData.append('device_name', firebaseProps.deviceInfo)
+        formData.append('hash', StorageServices.getLocalStorage(STORAGE_KEYS.ENTITY_HASH))
+
         const apiResponse: any = await AxiosServices.httpPost(AUTH.FIREBASE_SSO, formData)
 
         if (apiResponse.data.success) {
