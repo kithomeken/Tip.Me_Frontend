@@ -58,11 +58,6 @@ export const SignUp = () => {
     )?.path
 
     React.useEffect(() => {
-        if (location.search !== null || location.search !==  undefined) {
-            const searchParams:any  = parseQueryString(location.search);
-            StorageServices.setLocalStorage(STORAGE_KEYS.eede, searchParams.hash)
-        }
-        
         authRedirectResult()
             .then(async (result) => {
                 if (!result) {
