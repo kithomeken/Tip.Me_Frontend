@@ -52,7 +52,7 @@ export const ArtistHome = () => {
                 const qrCodeText = APPLICATION.URL + '/artist/' + data.craft.account                
                 GenerateQRCode(qrCodeText)
 
-                data.craft.bal = formatAmount(parseFloat(data.craft.bal))
+                data.entity.bal = formatAmount(parseFloat(data.entity.bal))
                 data.qrCodeImageName = 'qrcode_' + data.craft.account + '.png'
             } else {
                 status = 'rejected'
