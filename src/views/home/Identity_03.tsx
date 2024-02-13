@@ -17,7 +17,8 @@ export const Identity_03 = () => {
     const [state, setstate] = useState({
         status: 'pending',
         data: {
-            artistTypes: null
+            artistTypes: null,
+            entity: null,
         },
         input: {
             entity: '',
@@ -137,7 +138,7 @@ export const Identity_03 = () => {
             const specificObject = state.data.artistTypes.find(
                 (item: { key: string }) => item.key === state.input.artist_type
             );
-            
+
             let entity = specificObject > 1 ? state.input.entity : state.input.artist_name
 
             const identProps = {
@@ -148,13 +149,14 @@ export const Identity_03 = () => {
                     specificObject: JSON.stringify(specificObject),
                 }
             }
-            
+
             dispatch(artistEntityCreation(identProps))
         }
     }
 
     const fetchArtistTypeData = async () => {
         let { status } = state
+        let { input } = state
         let { data } = state
 
         try {
@@ -163,6 +165,12 @@ export const Identity_03 = () => {
             if (typesResponse.data.success) {
                 status = 'fulfilled'
                 data.artistTypes = typesResponse.data.payload.types
+                data.entity = typesResponse.data.payload.entity
+
+                if (data.entity !== null || data.entity !== undefined) {
+                    input.artist_type = data.entity.type
+                    input.entity = data.entity.name
+                }
             } else {
                 status = 'rejected'
             }
@@ -171,7 +179,7 @@ export const Identity_03 = () => {
         }
 
         setstate({
-            ...state, status, data
+            ...state, status, data, input
         })
     }
 
@@ -210,102 +218,146 @@ export const Identity_03 = () => {
                                     </>
                                 ) : state.status === 'fulfilled' ? (
                                     <form className="space-y-4 shadow-none px- mb-3 w-full md:w-2/3 text-sm" onSubmit={artistEntityFormHandler}>
-                                        <div className="w-full pb-2 px-3 md:px-0">
-                                            <ListBoxZero
-                                                onChangeListBoxHandler={(e: any) => onChangeListBoxHandler(e)}
-                                                state={state}
-                                                label="Artist Type:"
-                                                listButton={
-                                                    <>
-                                                        {state.data.artistTypes.map((artistType: any, index: any) => (
-                                                            <span key={`kP${index}YxL7Zu`}>
+                                        {
+                                            state.data.entity === null || state.data.entity === undefined ? (
+                                                <>
+                                                    <div className="w-full pb-2 px-3 md:px-0">
+                                                        <ListBoxZero
+                                                            onChangeListBoxHandler={(e: any) => onChangeListBoxHandler(e)}
+                                                            state={state}
+                                                            label="Artist Type:"
+                                                            listButton={
+                                                                <>
+                                                                    {state.data.artistTypes.map((artistType: any, index: any) => (
+                                                                        <span key={`kP${index}YxL7Zu`}>
+                                                                            {
+                                                                                state.input.artist_type === artistType.key ? (
+                                                                                    <span className="flex items-center py-1">
+                                                                                        <span className="ml-2 text-sm text-gray-700 truncate">{artistType.value}</span>
+                                                                                    </span>
+                                                                                ) : null
+                                                                            }
+                                                                        </span>
+                                                                    ))}
+
+                                                                    <span className="ml-3 absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                                                                        <i className="far fa-chevron-down text-emerald-500"></i>
+                                                                    </span>
+                                                                </>
+                                                            }
+                                                            listOptions={
+                                                                <>
+                                                                    {state.data.artistTypes.map((artistType: any, index: any) => (
+                                                                        <Listbox.Option
+                                                                            key={`28LbWz${index}XqFp`}
+                                                                            className={({ active }) =>
+                                                                                classNames(
+                                                                                    active ? 'text-white bg-gray-100' : 'text-gray-900',
+                                                                                    'cursor-default select-none relative py-2 pl-3 pr-9'
+                                                                                )
+                                                                            }
+                                                                            value={artistType.key}
+                                                                        >
+                                                                            {({ selected }) => (
+                                                                                <>
+                                                                                    <span className="flex items-center">
+                                                                                        <span className="ml-2 text-sm text-gray-700 truncate">{artistType.value}</span>
+                                                                                    </span>
+
+                                                                                    {selected ? (
+                                                                                        <span className="text-amber-600 absolute inset-y-0 right-0 flex items-center pr-4">
+                                                                                            <i className="fad fa-check h-5 w-5"></i>
+                                                                                        </span>
+                                                                                    ) : null}
+                                                                                </>
+                                                                            )}
+                                                                        </Listbox.Option>
+                                                                    ))}
+                                                                </>
+                                                            }
+                                                        />
+                                                    </div>
+
+                                                    {
+                                                        state.input.artist_type !== 'SOLO' ? (
+                                                            <div className="shadow-none space-y-px mb-4 px-3 md:px-0">
+                                                                <label htmlFor="entity" className="block text-sm leading-6 text-stone-600 mb-1">
+                                                                    {
+                                                                        (state.data.artistTypes.find(
+                                                                            (typeValue: any) => typeValue.key === state.input.artist_type
+                                                                        )
+                                                                        )?.value
+                                                                    } Name:
+                                                                </label>
+
+                                                                <div className="relative mt-2 rounded shadow-sm">
+                                                                    <input type="text" name="entity" id="entity" placeholder="Name" autoComplete="off"
+                                                                        className={classNames(
+                                                                            state.errors.entity.length > 0 ?
+                                                                                'text-red-900 ring-slate-300 placeholder:text-red-400 focus:ring-red-600 border border-red-600 focus:outline-red-500' :
+                                                                                'text-stone-900 ring-slate-300 placeholder:text-stone-400 focus:border-0 focus:outline-none focus:ring-amber-600 focus:outline-amber-500 hover:border-stone-400 border border-stone-300',
+                                                                            'block w-full rounded-md py-2 pl-3 pr-8  text-sm'
+                                                                        )} onChange={onChangeHandler} value={state.input.entity} onBlur={onInputBlur} required />
+                                                                    <div className="absolute inset-y-0 right-0 flex items-center w-8">
+                                                                        {
+                                                                            state.errors.entity.length > 0 ? (
+                                                                                <span className="fa-duotone text-red-500 fa-circle-exclamation fa-lg"></span>
+                                                                            ) : null
+                                                                        }
+                                                                    </div>
+                                                                </div>
+
                                                                 {
-                                                                    state.input.artist_type === artistType.key ? (
-                                                                        <span className="flex items-center py-1">
-                                                                            <span className="ml-2 text-sm text-gray-700 truncate">{artistType.value}</span>
+                                                                    state.errors.entity.length > 0 ? (
+                                                                        <span className='invalid-feedback text-xs text-red-600 pl-0'>
+                                                                            {state.errors.entity}
+                                                                        </span>
+                                                                    ) : null
+                                                                }
+                                                            </div>
+                                                        ) : null
+                                                    }
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <hr />
+
+                                                    <span className="block text-sm text-stone-600">
+                                                        <span className="mr-3">
+                                                            Artist Type:
+                                                        </span>
+
+                                                        {state.data.artistTypes.map((artistType: any, index: any) => (
+                                                            <span key={`duehbP${index}YxL7Zu`}>
+                                                                {
+                                                                    state.data.entity.type === artistType.key ? (
+                                                                        <span className="">
+                                                                            <span className="ml-2 text- text-gray-700 truncate">{artistType.value}</span>
                                                                         </span>
                                                                     ) : null
                                                                 }
                                                             </span>
                                                         ))}
+                                                    </span>
 
-                                                        <span className="ml-3 absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                                                            <i className="far fa-chevron-down text-emerald-500"></i>
+                                                    <span className="block text-sm text-stone-600">
+                                                        <span className="mr-3">
+                                                            Group Name:
                                                         </span>
-                                                    </>
-                                                }
-                                                listOptions={
-                                                    <>
-                                                        {state.data.artistTypes.map((artistType: any, index: any) => (
-                                                            <Listbox.Option
-                                                                key={`28LbWz${index}XqFp`}
-                                                                className={({ active }) =>
-                                                                    classNames(
-                                                                        active ? 'text-white bg-gray-100' : 'text-gray-900',
-                                                                        'cursor-default select-none relative py-2 pl-3 pr-9'
-                                                                    )
-                                                                }
-                                                                value={artistType.key}
-                                                            >
-                                                                {({ selected }) => (
-                                                                    <>
-                                                                        <span className="flex items-center">
-                                                                            <span className="ml-2 text-sm text-gray-700 truncate">{artistType.value}</span>
-                                                                        </span>
 
-                                                                        {selected ? (
-                                                                            <span className="text-amber-600 absolute inset-y-0 right-0 flex items-center pr-4">
-                                                                                <i className="fad fa-check h-5 w-5"></i>
-                                                                            </span>
-                                                                        ) : null}
-                                                                    </>
-                                                                )}
-                                                            </Listbox.Option>
-                                                        ))}
-                                                    </>
-                                                }
-                                            />
-                                        </div>
-
-                                        {
-                                            state.input.artist_type !== 'SOLO' ? (
-                                                <div className="shadow-none space-y-px mb-4 px-3 md:px-0">
-                                                    <label htmlFor="entity" className="block text-sm leading-6 text-stone-600 mb-1">
-                                                        {
-                                                            (state.data.artistTypes.find(
-                                                                (typeValue: any) => typeValue.key === state.input.artist_type
-                                                            )
-                                                            )?.value
-                                                        } Name:
-                                                    </label>
-
-                                                    <div className="relative mt-2 rounded shadow-sm">
-                                                        <input type="text" name="entity" id="entity" placeholder="Name" autoComplete="off"
-                                                            className={classNames(
-                                                                state.errors.entity.length > 0 ?
-                                                                    'text-red-900 ring-slate-300 placeholder:text-red-400 focus:ring-red-600 border border-red-600 focus:outline-red-500' :
-                                                                    'text-stone-900 ring-slate-300 placeholder:text-stone-400 focus:border-0 focus:outline-none focus:ring-amber-600 focus:outline-amber-500 hover:border-stone-400 border border-stone-300',
-                                                                'block w-full rounded-md py-2 pl-3 pr-8  text-sm'
-                                                            )} onChange={onChangeHandler} value={state.input.entity} onBlur={onInputBlur} required />
-                                                        <div className="absolute inset-y-0 right-0 flex items-center w-8">
-                                                            {
-                                                                state.errors.entity.length > 0 ? (
-                                                                    <span className="fa-duotone text-red-500 fa-circle-exclamation fa-lg"></span>
-                                                                ) : null
-                                                            }
-                                                        </div>
-                                                    </div>
-
-                                                    {
-                                                        state.errors.entity.length > 0 ? (
-                                                            <span className='invalid-feedback text-xs text-red-600 pl-0'>
-                                                                {state.errors.entity}
+                                                        <span className="">
+                                                            <span className="ml-2 text- text-gray-700 truncate">
+                                                                {state.data.entity.name}
                                                             </span>
-                                                        ) : null
-                                                    }
-                                                </div>
-                                            ) : null
+                                                        </span>
+                                                    </span>
+
+                                                    <hr />
+                                                </>
+                                            )
                                         }
+
+
 
                                         <div className="shadow-none space-y-px mb-4 px-3 md:px-0">
                                             <InputWithLoadingIcon
