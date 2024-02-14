@@ -209,7 +209,7 @@ export const MoneyOut = ({ account }: { account: string }) => {
                                         <div className="space-y-6 text-center">
                                             <div className="text-sm w-full text-stone-600">
                                                 <p className="pb-3 text-lg">
-                                                    No withdrawal requests found
+                                                    No pending withdrawal requests found
                                                 </p>
                                                 <p className="text-sm text-gray-500 pb-1">
                                                     Consider making a withdrawal today to access your hard-earned funds.
