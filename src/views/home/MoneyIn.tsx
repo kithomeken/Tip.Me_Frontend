@@ -45,7 +45,7 @@ export const MoneyIn = ({ account }: { account: string }) => {
     const columns = React.useMemo(
         () => [
             {
-                Header: 'Paid Out',
+                Header: 'Paid In',
                 id: 'FXd-Wc00',
                 accessor: (data: any) => (
                     <div className="px-0 w-full">
