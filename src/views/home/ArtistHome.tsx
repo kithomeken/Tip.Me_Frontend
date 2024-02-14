@@ -13,7 +13,7 @@ import { WithdrawModal } from './WithdrawModal';
 import { ERR_500 } from '../errors/ERR_500';
 
 export const ArtistHome = () => {
-    
+
     const [qrCode, setQRCode] = useState({
         lowQuality: '',
         highQuality: ''
@@ -49,7 +49,7 @@ export const ArtistHome = () => {
                 data.craft = response.data.payload.craft
                 data.entity = response.data.payload.entity
 
-                const qrCodeText = APPLICATION.URL + '/artist/' + data.craft.account                
+                const qrCodeText = APPLICATION.URL + '/artist/' + data.craft.account
                 GenerateQRCode(qrCodeText)
 
                 data.entity.bal = formatAmount(parseFloat(data.entity.bal))
@@ -252,11 +252,16 @@ export const ArtistHome = () => {
                 )
             }
 
-            <WithdrawModal
-                show={state.show}
-                account={'wdiuhwoid'}
-                showOrHide={showOrHideWithdrawModal}
-            />
+            {
+                state.status === 'fulfilled' ? (
+                    <WithdrawModal
+                        show={state.show}
+                        entity={state.data.entity}
+                        account={'wdiuhwoid'}
+                        showOrHide={showOrHideWithdrawModal}
+                    />
+                ) : null
+            }
         </React.Fragment >
     )
 }
