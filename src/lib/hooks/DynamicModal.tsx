@@ -165,7 +165,7 @@ export const DynamicModal: FC<Props> = ({ show, size, showOrHideModal, title, on
                                                             </button>
                                                         ) : (
                                                             <>
-                                                                <button type="submit" className="w-20 justify-center disabled:cursor-not-allowed text-sm rounded-md border border-transparent shadow-sm px-3 py-1-5 bg-amber-600 text-white disabled:bg-amber-600 hover:bg-amber-700 focus:outline-none" disabled={posting}>
+                                                                <button type="submit" className="w-auto min-w-24 justify-center disabled:cursor-not-allowed text-sm rounded-md border border-transparent shadow-sm px-3 py-1-5 bg-amber-600 text-white disabled:bg-amber-600 hover:bg-amber-700 focus:outline-none" disabled={posting}>
                                                                     {
                                                                         posting ? (
                                                                             <span className="flex flex-row items-center h-5 justify-center">
