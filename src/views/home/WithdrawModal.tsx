@@ -1,18 +1,20 @@
+import { toast } from "react-toastify"
 import React, { FC, useState } from "react"
 
+import { ACCOUNT } from "../../api/API_Registry"
+import HttpServices from "../../services/HttpServices"
 import { DynamicModal } from "../../lib/hooks/DynamicModal"
 import { API_RouteReplace, classNames, formatAmount } from "../../lib/modules/HelperFunctions"
 import { G_onInputBlurHandler, G_onInputChangeHandler } from "../../components/lib/InputHandlers"
-import { ACCOUNT } from "../../api/API_Registry"
-import HttpServices from "../../services/HttpServices"
 
 interface props {
-    account: string,
     show: boolean,
+    entity: any,
+    account: string,
     showOrHide: any,
 }
 
-export const WithdrawModal: FC<props> = ({ show, showOrHide, account }) => {
+export const WithdrawModal: FC<props> = ({ show, showOrHide, account, entity }) => {
     const [state, setstate] = useState({
         posting: false,
         show: false,
@@ -21,11 +23,17 @@ export const WithdrawModal: FC<props> = ({ show, showOrHide, account }) => {
             errorTitle: '',
             errorMessage: '',
         },
+        summary: {
+            fee: '0',
+            receipt: '0',
+        },
         data: {
             pending: '',
             locked: '',
             bal: '',
             max: '',
+            min: '',
+            fee: '',
         },
         input: {
             amount: '',
@@ -44,6 +52,10 @@ export const WithdrawModal: FC<props> = ({ show, showOrHide, account }) => {
     }, [show])
 
     const cashWithdrawalValidation = async () => {
+        setstate({
+            ...state, status: 'pending'
+        })
+
         let { status } = state
         let { data } = state
         let { modal } = state
@@ -55,9 +67,10 @@ export const WithdrawModal: FC<props> = ({ show, showOrHide, account }) => {
 
             if (response.data.success) {
                 status = 'fulfilled'
-                data.locked = response.data.payload.locked
                 data.bal = response.data.payload.bal
                 data.max = response.data.payload.max
+                data.min = response.data.payload.min
+                data.fee = response.data.payload.fee
                 data.bal = formatAmount(parseFloat(data.bal))
             } else {
                 status = 'rejected'
@@ -65,12 +78,14 @@ export const WithdrawModal: FC<props> = ({ show, showOrHide, account }) => {
                 modal.errorMessage = response.data.error.message
             }
         } catch (error) {
-            console.log(error);
             status = 'rejected'
+            modal.errorTitle = "Oops! Something Went Wrong"
+            modal.errorMessage = "We're sorry, but we're experiencing some technical difficulties. Please try again later..."
         }
 
         setstate({
             ...state, status, data, posting: false, modal,
+            summary: { fee: '0', receipt: '0' },
             input: { amount: '', description: '' },
             errors: { amount: '', description: '' },
         })
@@ -87,27 +102,43 @@ export const WithdrawModal: FC<props> = ({ show, showOrHide, account }) => {
 
     const onChangeHandler = (e: any) => {
         let output: any = G_onInputChangeHandler(e, state.posting)
+        let { data } = state
         let { input } = state
-        let { errors }: any = state
+        let { errors } = state
+        let { summary } = state
 
         input[e.target.name] = output.value
         errors[e.target.name] = output.error
 
+        let theAmount = output.value.replace(',', '')
+        theAmount = theAmount.length < 1 ? '0' : theAmount
+
+        let processingFees = parseFloat(theAmount) * parseFloat(data.fee) / 100
+        let receiptAmount = parseFloat(theAmount) - processingFees
+
+        summary.fee = processingFees.toString()
+        summary.receipt = receiptAmount.toString()
+
         setstate({
-            ...state, input, errors
+            ...state, input, errors, summary
         })
     }
 
     const onInputBlur = (e: any) => {
         let output: any = G_onInputBlurHandler(e, state.posting, '')
+        let { data } = state
         let { input } = state
-        let { errors }: any = state
+        let { errors } = state
+        let { summary } = state
 
         switch (e.target.name) {
             case 'amount':
                 const withdrawalAmount = output.value.replace(',', '')
                 const walletBalanace = state.data.bal.replace(',', '')
                 const transactionMaxAmount = state.data.max
+
+                let theAmount = output.value.replace(',', '')
+                theAmount = theAmount.length < 1 ? '0' : theAmount
 
                 if (output.error.length < 1) {
                     if (parseFloat(withdrawalAmount) > parseFloat(transactionMaxAmount)) {
@@ -118,10 +149,15 @@ export const WithdrawModal: FC<props> = ({ show, showOrHide, account }) => {
                         // Maximum withdrawable amount as per wallet
                         output.value = walletBalanace
                         output.error = 'Maximum withdrawal amount is KSh. ' + formatAmount(parseFloat(walletBalanace))
+                    } else {
+                        let processingFees = parseFloat(theAmount) * parseFloat(data.fee) / 100
+                        let receiptAmount = parseFloat(theAmount) - processingFees
+
+                        summary.fee = processingFees.toString()
+                        summary.receipt = receiptAmount.toString()
                     }
                 }
 
-                const theAmount = output.value.replace(',', '')
                 input[e.target.name] = formatAmount(parseFloat(theAmount))
                 errors[e.target.name] = output.error
                 break;
@@ -133,13 +169,14 @@ export const WithdrawModal: FC<props> = ({ show, showOrHide, account }) => {
         }
 
         setstate({
-            ...state, input, errors
+            ...state, input, errors, summary
         })
     }
 
     function formValidation() {
         let valid = true
 
+        let { data } = state
         let { input } = state
         let { errors } = state
 
@@ -152,12 +189,13 @@ export const WithdrawModal: FC<props> = ({ show, showOrHide, account }) => {
 
             const walletBalanace = state.data.bal.replace(',', '')
             const transactionMaxAmount = state.data.max
+            const transactionMinAmount = state.data.min
 
             if (!isValidAmount) {
                 errors.amount = "Invalid amount format"
                 valid = false
             } else {
-                if (parseFloat(amount) < 100) {
+                if (parseFloat(amount) < parseFloat(transactionMinAmount)) {
                     errors.amount = "Minimum withdrawal amount per transaction is KSh. 100"
                     valid = false
                 } else if (parseFloat(amount) > parseFloat(transactionMaxAmount)) {
@@ -207,26 +245,31 @@ export const WithdrawModal: FC<props> = ({ show, showOrHide, account }) => {
         try {
             let { input } = state
             let formData = new FormData()
-
             formData.append("amount", input.amount.replace(',', ''))
-            formData.append("description", input.description)
+            
+            const withdrawResponse: any = await HttpServices.httpPost(ACCOUNT.REQUEST_WITHDRAWAL, formData)
 
-            const cashWithdrawalRoute = API_RouteReplace(ACCOUNT.REQUEST_WITHDRAWAL, ':auid', account)
-            const apiResponse: any = await HttpServices.httpPost(cashWithdrawalRoute, formData)
+            if (withdrawResponse.data.success) {
+                toast.success(withdrawResponse.data.payload.message, {
+                    position: "top-right",
+                    autoClose: 7000,
+                    hideProgressBar: true,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                });
 
-            if (apiResponse.data.success) {
                 showOrHide()
             } else {
                 status = 'rejected'
-                modal.errorTitle = 'Action Failed'
-                modal.errorMessage = apiResponse.data.payload.message
+                modal.errorTitle = 'Could not process request'
+                modal.errorMessage = withdrawResponse.data.error.message
             }
         } catch (error) {
-            console.log(error);
             status = 'rejected'
-
-            modal.errorTitle = 'Action Failed'
-            modal.errorMessage = "Something went wrong. Kindly try again later"
+            modal.errorTitle = "Oops! Something Went Wrong"
+            modal.errorMessage = "We're sorry, but we're experiencing some technical difficulties. Please try again later..."
         }
 
         setstate({
@@ -237,13 +280,13 @@ export const WithdrawModal: FC<props> = ({ show, showOrHide, account }) => {
     return (
         <React.Fragment>
             <DynamicModal
-                size={"md"}
+                size={"sm"}
                 title={'Cash Withdrawal'}
                 status={state.status}
                 show={show}
                 posting={state.posting}
                 showOrHideModal={showOrHide}
-                actionButton={"Request"}
+                actionButton={"Submit For Approval"}
                 error={{
                     title: state.modal.errorTitle,
                     message: state.modal.errorMessage
@@ -252,14 +295,14 @@ export const WithdrawModal: FC<props> = ({ show, showOrHide, account }) => {
                 formComponents={
                     <>
 
-                        <div className="flex flex-col md:flex-row">
-                            <div className="pb-2 md:basis-1/2 w-full py-2">
+                        <div className="flex flex-col md:flex-col">
+                            <div className="pb-2 md:basis-1/2 w-full py-1">
                                 <span className="py-1 px-1.5 block text-xs text-stone-500">
                                     <i className="fa-light fa-wallet text-stone-500 fa-lg mr-2"></i>
                                     Available
                                 </span>
 
-                                <div className="w-full flex flex-row align-middle items-center py-4">
+                                <div className="w-full flex flex-row align-middle items-center py-">
                                     <span className="pc-1 px-1.5 text-stone-500 text-xs">
                                         Ksh.
                                     </span>
@@ -271,7 +314,7 @@ export const WithdrawModal: FC<props> = ({ show, showOrHide, account }) => {
                                 </div>
                             </div>
 
-                            <div className="pb-2 md:basis-1/2 w-full pt-1 md:border-l md:border-t-0 border-t md:px-4">
+                            <div className="pb-2 md:basis-1/2 w-full md:border-t-0 border-t-0">
                                 <div className="shadow-none mb-4">
                                     <label htmlFor="amount" className="block text-xs leading-6 py-1 text-stone-500 mb-2">Withdrawal Amount:</label>
 
@@ -291,56 +334,60 @@ export const WithdrawModal: FC<props> = ({ show, showOrHide, account }) => {
                                             }
                                         </div>
                                     </div>
+
+                                    {
+                                        state.errors.amount.length > 0 ? (
+                                            <span className='invalid-feedback text-xs text-red-600'>
+                                                {state.errors.amount}
+                                            </span>
+                                        ) : null
+                                    }
                                 </div>
                             </div>
-                        </div>
 
-                        {
-                            state.errors.amount.length > 0 ? (
-                                <span className='invalid-feedback text-xs text-red-600 py-2'>
-                                    {state.errors.amount}
+                            <div className="py-3 px-3 mb-2 md:basis-1/2 w-full border-2 border-gray-300 border-dashed rounded-md">
+                                <span className="text-amber-600 pb-2 block text-sm md:flex flex-row items-center">
+                                    Summary
                                 </span>
-                            ) : null
-                        }
 
-                        <div className="w-full pt-2">
-                            <span onClick={showOrHideSummaryDescription} className="text-amber-600 py-1 text-sm md:flex cursor-pointer flex-row items-center hover:text-amber-700 focus:outline-none">
-                                <i className="fa-regular fa-plus mr-2 fa-lg" data-te-toggle="tooltip" title="Summary description is only visible to you"></i>
+                                <div className="flex flex-row w-full align-middle items-center">
+                                    <div className="basis-2/3 text-stone-500 text-sm">
+                                        <span className=" py-1 block mb-2">
+                                            <span className="hidden md:inline-block">Processing Fee ({state.data.fee}%):</span>
+                                            <span className="md:hidden">Processing Fee ({state.data.fee}%):</span>
+                                        </span>
+
+                                        <span className=" py-1 block mb-2">
+                                            <span className="hidden md:inline-block">Amount to Receive:</span>
+                                            <span className="md:hidden">You'll Receive:</span>
+                                        </span>
+                                    </div>
+
+                                    <div className="basis-1/3 text-stone-600 text-right">
+                                        <span className=" py-1 block mb-2 capitalize">
+                                            {formatAmount(parseFloat(state.summary.fee))}
+                                        </span>
+
+                                        <span className=" py-1 block mb-2 capitalize">
+                                            {formatAmount(parseFloat(state.summary.receipt))}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="py-3 w-full ">
                                 {
-                                    state.show ? 'Hide summary description' : 'Add summary description'
+                                    entity.max > 1 ? (
+                                        <span className="text-stone-500 pb-2 block text-xs md:flex flex-row items-center">
+                                            By submitting, this request will be sent for approval by your members and administrator before paying out.
+                                        </span>
+                                    ) : (
+                                        <span className="text-stone-500 pb-2 block text-xs md:flex flex-row items-center">
+                                            By submitting, this request will be sent for approval the administrator before paying out.
+                                        </span>
+                                    )
                                 }
-                            </span>
-
-                            {
-                                state.show ? (
-                                    <>
-                                        <div className="py-2 rounded shadow-sm pr-4">
-                                            <textarea name="description" id="description" placeholder="Summary description" autoComplete="off" rows={3}
-                                                className={classNames(
-                                                    state.errors.description.length > 0 ?
-                                                        'text-red-900 ring-slate-300 placeholder:text-red-400 focus:ring-red-600 border border-red-600 focus:outline-red-500' :
-                                                        'text-gray-900 ring-slate-300 placeholder:text-gray-400 focus:outline-none focus:border-0 focus:ring-amber-600 focus:outline-amber-500 hover:border-gray-400',
-                                                    'block w-full rounded py-2 resize-none pl-3 pr-8 border border-gray-300 text-sm'
-                                                )} onChange={onChangeHandler} onBlur={onInputBlur} value={state.input.description}></textarea>
-                                            <div className="absolute inset-y-0 right-0 top-0 pt-4 flex items-enter w-8">
-                                                {
-                                                    state.errors.description.length > 0 ? (
-                                                        <span className="fa-duotone text-red-500 fa-circle-exclamation fa-lg"></span>
-                                                    ) : null
-                                                }
-                                            </div>
-                                        </div>
-
-                                        {
-                                            state.errors.description.length > 0 ? (
-                                                <span className='invalid-feedback text-xs text-red-600 pl-0'>
-                                                    {state.errors.description}
-                                                </span>
-                                            ) : null
-                                        }
-                                    </>
-                                ) : null
-                            }
+                            </div>
                         </div>
                     </>
                 }
