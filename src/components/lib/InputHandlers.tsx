@@ -44,7 +44,15 @@ export function G_onInputBlurHandler(event: any, posting: boolean, title: any, m
             /* 
              * Mandatory inputs should not be empty
             */
-            input.error = head + ' cannot be empty'
+            switch (tName) {
+                case 'amount':
+                    input.error = 'Kindly add an amount'
+                    break;
+
+                default:
+                    input.error = head + ' cannot be empty'
+                    break
+            }
 
             return input
         }
