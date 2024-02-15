@@ -110,12 +110,16 @@ export const ArtistHome = () => {
     }
 
     const showOrHideWithdrawModal = () => {
-        let { show } = state
-        show = !state.show
+        let { data } = state
 
-        setstate({
-            ...state, show
-        })
+        if (data.entity.nominated === 'Y') {
+            let { show } = state
+            show = !state.show
+
+            setstate({
+                ...state, show
+            })
+        }
     }
 
     const loadRespectiveTab = (tab: string = 'in') => {
@@ -161,10 +165,15 @@ export const ArtistHome = () => {
                                                     {state.data.entity.name}
                                                 </span>
 
-                                                <button type="button" onClick={showOrHideWithdrawModal} className="bg-amber-600 flex-none w-40 py-2 px-4 float-right hidden text-sm md:flex flex-row items-center justify-center text-center rounded-md text-white hover:bg-amber-700 focus:outline-none">
-                                                    <i className="fa-light fa-money-bill-wave mr-2 fa-lg"></i>
-                                                    Withdraw
-                                                </button>
+                                                {
+                                                    state.data.entity.nominated === 'Y' ? (
+                                                        <button type="button" onClick={showOrHideWithdrawModal} className="bg-amber-600 flex-none w-40 py-2 px-4 float-right hidden text-sm md:flex flex-row items-center justify-center text-center rounded-md text-white hover:bg-amber-700 focus:outline-none">
+                                                            <i className="fa-light fa-money-bill-wave mr-2 fa-lg"></i>
+                                                            Withdraw
+                                                        </button>
+                                                    ) : null
+                                                }
+
                                             </div>
 
                                             <span className=" py-1 px-1.5 block text-sm text-slate-700">
@@ -183,12 +192,16 @@ export const ArtistHome = () => {
                                                 </span>
                                             </div>
 
-                                            <div className="flex flex-col justify-center py-2">
-                                                <button type="button" onClick={showOrHideWithdrawModal} className="text-amber-600 py-2 px-4 sm:hidden text-sm flex flex-row border border-amber-600 items-center justify-center text-center rounded-md bg-white hover:bg-amber-700 focus:outline-none">
-                                                    <i className="fa-light fa-money-bill-wave mr-2 fa-lg"></i>
-                                                    Withdraw
-                                                </button>
-                                            </div>
+                                            {
+                                                state.data.entity.nominated === 'Y' ? (
+                                                    <div className="flex flex-col justify-center py-2">
+                                                        <button type="button" onClick={showOrHideWithdrawModal} className="text-amber-600 py-2 px-4 sm:hidden text-sm flex flex-row border border-amber-600 items-center justify-center text-center rounded-md bg-white hover:bg-amber-700 focus:outline-none">
+                                                            <i className="fa-light fa-money-bill-wave mr-2 fa-lg"></i>
+                                                            Withdraw
+                                                        </button>
+                                                    </div>
+                                                ) : null
+                                            }
 
                                             <div className="flex flex-col justify-center md:py-2">
                                                 <a className="bg-amber-600 w-40 py-2 px-4 hidden text-sm md:flex flex-row items-center justify-center text-center rounded-md text-white hover:bg-amber-700 focus:outline-none" href={qrCode.highQuality} download={state.data.qrCodeImageName}>
