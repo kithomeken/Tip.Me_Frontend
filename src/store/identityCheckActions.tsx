@@ -126,10 +126,12 @@ export function artistEntityCreation(propsIn: IdentityProps) {
         try {
             let formData = new FormData()
             const dataDump = IdentityProps.dataDump
+            const entityHash = StorageServices.getLocalStorage(STORAGE_KEYS.ENTITY_HASH)
     
             formData.append('artist', dataDump.artist)
             formData.append('type', dataDump.type)
             formData.append('entity', dataDump.entity)
+            formData.append('hash', entityHash)
     
             const identityResponse: any = await HttpServices.httpPost(AUTH.ID_META_03, formData)            
 
