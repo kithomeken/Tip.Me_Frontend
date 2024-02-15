@@ -139,7 +139,7 @@ export const Identity_03 = () => {
                 (item: { key: string }) => item.key === state.input.artist_type
             );
 
-            let entity = specificObject > 1 ? state.input.entity : state.input.artist_name
+            let entity = parseInt(specificObject.max) > 1 ? state.input.entity : state.input.artist_name
 
             const identProps = {
                 dataDump: {
@@ -167,7 +167,7 @@ export const Identity_03 = () => {
                 data.artistTypes = typesResponse.data.payload.types
                 data.entity = typesResponse.data.payload.entity
 
-                if (data.entity !== null || data.entity !== undefined) {
+                if (data.entity !== null) {
                     input.artist_type = data.entity.type
                     input.entity = data.entity.name
                 }
@@ -175,12 +175,14 @@ export const Identity_03 = () => {
                 status = 'rejected'
             }
         } catch (error) {
+            console.log(error);
+            
             status = 'rejected'
         }
 
         setstate({
             ...state, status, data, input
-        })
+        })        
     }
 
     return (
@@ -219,7 +221,7 @@ export const Identity_03 = () => {
                                 ) : state.status === 'fulfilled' ? (
                                     <form className="space-y-4 shadow-none px- mb-3 w-full md:w-2/3 text-sm" onSubmit={artistEntityFormHandler}>
                                         {
-                                            state.data.entity === null || state.data.entity === undefined ? (
+                                            state.data.entity === null ? (
                                                 <>
                                                     <div className="w-full pb-2 px-3 md:px-0">
                                                         <ListBoxZero
