@@ -35,6 +35,10 @@ export const MoneyOut = ({ account }: { account: string }) => {
                 Object.keys(data.money_out).forEach(function (key) {
                     data.money_out[key].amount = formatAmount(parseFloat(data.money_out[key].amount))
                 })
+
+                Object.keys(data.requests).forEach(function (key) {
+                    data.requests[key].gross = formatAmount(parseFloat(data.requests[key].gross))
+                })
             } else {
                 status = 'rejected'
             }
@@ -48,85 +52,137 @@ export const MoneyOut = ({ account }: { account: string }) => {
         })
     }
 
-
-
     const columns = React.useMemo(
         () => [
             {
-                Header: '',
+                Header: 'Pending',
                 id: 'TRC_R001',
                 accessor: (data: any) => (
-                    <div className="px- py-2">
+                    <div className="px-0 w-full">
                         <div className="flex flex-col md:flex-row">
-                            <div className="w-full flex flex-row md:border-r align-middle items-center pb-5 md:py-1 md:basis-1/3">
+                            <div className="w-full flex flex-row md:pr-3 align-middle items-center md:basis-1/2">
                                 <span className=" py-1 px-1.5 text-stone-500 text-xs">
                                     Ksh.
                                 </span>
 
-                                <span className=" py-1 px-1.5 text-3xl">
-                                    <span className="text-stone-700">{formatAmount(parseFloat(data.amount))}</span>
+                                <span className=" py-1 px-1.5 text-2xl">
+                                    <span className="text-stone-700">{data.gross.split('.')[0]}</span>
+                                    <span className="text-stone-400">.{data.gross.split('.')[1]}</span>
+                                </span>
+
+                                <span className="block mb-0 text-sm text-slate-500 basis-1/2 text-right md:hidden">
+                                    {humanReadableDate(data.created_at)}
                                 </span>
                             </div>
 
-                            <div className="w-full max-w-screen-sm md:basis-2/3 md:pl-4">
+                            <div className="w-full flex flex-row align-middle items-center md:pl-3 md:basis-1/2">
                                 <div className="flex flex-row align-middle items-center w-full">
                                     <div className="basis-1/2">
-                                        {
-                                            data.status === 'N' ? (
-                                                <span className="inline-flex items-center mr-2 rounded-lg bg-amber-100 px-3 text-sm font-medium text-amber-600 ring-1 ring-inset ring-amber-500/20">
-                                                    Pending
-                                                </span>
-                                            ) : data.status === 'Y' ? (
-                                                <span className="inline-flex items-center mr-2 rounded-lg bg-emerald-100 px-3 text-sm font-medium text-emerald-600 ring-1 ring-inset ring-emerald-500/20">
-                                                    Approved
-                                                </span>
-                                            ) : (
-                                                <span className="inline-flex items-center mr-2 rounded-lg bg-red-100 px-3 text-sm font-medium text-red-600 ring-1 ring-inset ring-red-500/10">
-                                                    Rejected
-                                                </span>
-                                            )
-                                        }
+                                        <div className="basis-1/2">
+                                            {
+                                                data.status === 'N' ? (
+                                                    <span className="inline-flex items-center mr-2 rounded-md bg-amber-100 px-3 text-sm text-amber-600 ring-1 ring-inset ring-amber-500/20">
+                                                        Pending
+                                                    </span>
+                                                ) : data.status === 'Y' ? (
+                                                    <span className="inline-flex items-center mr-2 rounded-lg bg-emerald-100 px-3 text-sm text-emerald-600 ring-1 ring-inset ring-emerald-500/20">
+                                                        Approved
+                                                    </span>
+                                                ) : (
+                                                    <span className="inline-flex items-center mr-2 rounded-lg bg-red-100 px-3 text-sm text-red-600 ring-1 ring-inset ring-red-500/10">
+                                                        Rejected
+                                                    </span>
+                                                )
+                                            }
+                                        </div>
+
+                                        <span className="inline-flex items-center text-sm font-medium text-amber-600">
+                                            <span className="text-amber-600 mr-2 pr-2 md:mr-4 md:pr-4 border-r">
+                                                {data.receipt}
+                                            </span>
+
+                                            <span className="text-stone-600">
+                                                {data.msisdn}
+                                            </span>
+
+                                        </span>
                                     </div>
-
-                                    <span className="block mb-0 text-sm text-slate-500 basis-1/2 text-right">
-                                        {humanReadableDate(data.created_at)}
-                                    </span>
                                 </div>
-
-                                {
-                                    data.description === null ? (
-                                        <span className="py-3 block text-sm text-stone-500">
-                                            <span className="md:block hidden">
-                                                No summary description has been added for this withdrawal
-                                            </span>
-                                            <span className="md:hidden block">
-                                                No summary description
-                                            </span>
-                                        </span>
-                                    ) : (
-                                        <>
-                                            <span className="py-3 block text-sm text-stone-700">
-                                                Summary Description:
-                                            </span>
-
-                                            <span className="block text-sm text-stone-500">
-                                                {data.description}
-                                            </span>
-                                        </>
-                                    )
-                                }
-
-                                {/* {
-                                    authState.uaid === data.acid ? (
-                                        <span className=" py-1 px-1.5 block text-sm text-red-500 float-right">
-                                            <i className="fa-light fa-trash fa-lg mr-2"></i>
-                                            Delete Request
-                                        </span>
-                                    ) : null
-                                } */}
-
                             </div>
                         </div>
+
+                        <span className="md:block mb-0 text-sm text-slate-500 basis-1/2 text-start hidden px-1.5">
+                            {humanReadableDate(data.created_at)}
+                        </span>
+                    </div>
+                ),
+            },
+        ],
+        []
+    )
+
+    const pendingApproval = React.useMemo(
+        () => [
+            {
+                Header: 'Pending',
+                id: 'TRC_R001',
+                accessor: (data: any) => (
+                    <div className="px-0 w-full">
+                        <div className="flex flex-col md:flex-row">
+                            <div className="w-full flex flex-row md:pr-3 align-middle items-center md:basis-1/2">
+                                <span className=" py-1 px-1.5 text-stone-500 text-xs">
+                                    Ksh.
+                                </span>
+
+                                <span className=" py-1 px-1.5 text-2xl">
+                                    <span className="text-stone-700">{data.gross.split('.')[0]}</span>
+                                    <span className="text-stone-400">.{data.gross.split('.')[1]}</span>
+                                </span>
+
+                                <span className="block mb-0 text-sm text-slate-500 basis-1/2 text-right md:hidden">
+                                    {humanReadableDate(data.created_at)}
+                                </span>
+                            </div>
+
+                            <div className="w-full flex flex-row align-middle items-center md:pl-3 md:basis-1/2">
+                                <div className="flex flex-row align-middle items-center w-full">
+                                    <div className="basis-1/2">
+                                        <div className="basis-1/2">
+                                            {
+                                                data.status === 'N' ? (
+                                                    <span className="inline-flex items-center mr-2 rounded-md bg-amber-100 px-3 text-sm text-amber-600 ring-1 ring-inset ring-amber-500/20">
+                                                        Pending
+                                                    </span>
+                                                ) : data.status === 'Y' ? (
+                                                    <span className="inline-flex items-center mr-2 rounded-lg bg-emerald-100 px-3 text-sm text-emerald-600 ring-1 ring-inset ring-emerald-500/20">
+                                                        Approved
+                                                    </span>
+                                                ) : (
+                                                    <span className="inline-flex items-center mr-2 rounded-lg bg-red-100 px-3 text-sm text-red-600 ring-1 ring-inset ring-red-500/10">
+                                                        Rejected
+                                                    </span>
+                                                )
+                                            }
+                                        </div>
+
+                                        <span className="inline-flex items-center text-sm font-medium text-amber-600">
+                                            <span className="text-amber-600 mr-2 pr-2 md:mr-4 md:pr-4 border-r">
+                                                {data.receipt}
+                                            </span>
+
+                                            <span className="text-stone-600">
+                                                {data.msisdn}
+                                            </span>
+
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <span className="md:block mb-0 text-sm text-slate-500 basis-1/2 text-start hidden px-1.5">
+                            {humanReadableDate(data.created_at)}
+                        </span>
                     </div>
                 ),
             },
@@ -157,7 +213,7 @@ export const MoneyOut = ({ account }: { account: string }) => {
                                 </span>
                             </div>
 
-                            <div className="w-full flex flex-row align-middle items-center pb-2 md:pl-3 md:py-1 md:basis-1/2">
+                            <div className="w-full flex flex-row align-middle items-center md:pl-3 md:py-1 md:basis-1/2">
                                 <div className="flex flex-row align-middle items-center w-full">
                                     <div className="basis-1/2">
                                         <span className="inline-flex items-center text-sm font-medium text-amber-600">
@@ -202,6 +258,7 @@ export const MoneyOut = ({ account }: { account: string }) => {
                             </p>
                         </div>
 
+
                         {
                             state.data.requests.length < 1 ? (
                                 <div className="py-2 mb-3">
@@ -225,7 +282,7 @@ export const MoneyOut = ({ account }: { account: string }) => {
                             )
                         }
 
-                        <div className="w-12/12 pt-6 border-t">
+                        <div className="w-12/12">
                             <p className="text-sm form-group text-gray-500">
                                 Paid out withdrawal requets
                             </p>
