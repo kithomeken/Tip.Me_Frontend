@@ -41,6 +41,8 @@ export const ACCOUNT: any = {
     MONEY_OUT_TRANSACTIONS: '/v1/account/entity/mpesa/transactions/list/money-out',
     VALIDATE_WITHDRAWAL:    '/v1/account/entity/mpesa/transactions/withdrawal/check',
     REQUEST_WITHDRAWAL:     '/v1/account/entity/mpesa/transactions/withdrawal/request',
+    REQUEST_APPROVAL:       '/v1/account/entity/mpesa/transactions/withdrawal/request/:request/approve',
+    REQUEST_DENIAL:         '/v1/account/entity/mpesa/transactions/withdrawal/request/:request/decline',
 
     /* 
      TODO: 
