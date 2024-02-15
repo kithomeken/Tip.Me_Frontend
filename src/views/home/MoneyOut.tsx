@@ -9,6 +9,7 @@ import { Empty } from "../errors/Empty"
 
 export const MoneyOut = ({ account }: { account: string }) => {
     const [state, setstate] = useState({
+        posting: false,
         status: 'pending',
         data: {
             requests: null,
@@ -52,138 +53,314 @@ export const MoneyOut = ({ account }: { account: string }) => {
         })
     }
 
+    const approvePendingRequest = async () => {
+        let { data } = state
+        let { posting } = state
+
+        if (!posting) {
+            posting = true
+
+            setstate({
+                ...state, posting
+            })
+
+            try {
+                const requestApprovalRoute = API_RouteReplace(ACCOUNT.REQUEST_APPROVAL, ':request', data.requests.r_uuid)
+                const approvalResponse = await HttpServices.httpPost(requestApprovalRoute, null)
+
+                if (approvalResponse) {
+
+                } else {
+
+                }
+
+                posting = false
+            } catch (error) {
+                posting = false
+            }
+
+            setstate({
+                ...state, posting
+            })
+        }
+    }
+
+    const declinePendingRequest = async () => {
+        let { posting } = state
+
+        if (!posting) {
+            try {
+
+            } catch (error) {
+
+            }
+        }
+    }
+
     const columns = React.useMemo(
         () => [
             {
                 Header: 'Pending',
                 id: 'TRC_R001',
                 accessor: (data: any) => (
-                    <div className="px-0 w-full">
-                        <div className="flex flex-col md:flex-row">
-                            <div className="w-full flex flex-row md:pr-3 align-middle items-center md:basis-1/2">
-                                <span className=" py-1 px-1.5 text-stone-500 text-xs">
-                                    Ksh.
-                                </span>
+                    data.a_uuid ? (
+                        <div className="px-0 w-full">
+                            <div className="flex flex-col md:flex-row gap-y-4 md:gap-x-4 pt-2">
+                                <div className="w-full flex-grow flex flex-col md:pr-3 align-middle gap-y-3 md:pl-4 md:basis-1/2">
+                                    <div className="w-full flex flex-row md:pr-3 align-middle items-center gap-x-3 md:pl-4 md:basis-1/2">
+                                        <div className="basis-1/2">
+                                            <span className=" py-0 px-1.5 text-stone-500 text-xs">
+                                                Ksh.
+                                            </span>
 
-                                <span className=" py-1 px-1.5 text-2xl">
-                                    <span className="text-stone-700">{data.gross.split('.')[0]}</span>
-                                    <span className="text-stone-400">.{data.gross.split('.')[1]}</span>
-                                </span>
+                                            <span className="py- px-1.5 text-2xl">
+                                                <span className="text-stone-700">{data.gross.split('.')[0]}</span>
+                                                <span className="text-stone-400">.{data.gross.split('.')[1]}</span>
+                                            </span>
+                                        </div>
 
-                                <span className="block mb-0 text-sm text-slate-500 basis-1/2 text-right md:hidden">
-                                    {humanReadableDate(data.created_at)}
-                                </span>
-                            </div>
+                                        <div className="basis-1/2">
+                                            <span className="block mb-0 text-sm text-slate-500 basis-1/2 text-right md:">
+                                                {humanReadableDate(data.created_at)}
+                                            </span>
+                                        </div>
+                                    </div>
 
-                            <div className="w-full flex flex-row align-middle items-center md:pl-3 md:basis-1/2">
-                                <div className="flex flex-row align-middle items-center w-full">
+                                    <div className="w-full md:block hidden flex-row align-middle items-center md:pl-3 md:basis-1/2">
+                                        <div className="basis-1/2">
+                                            <div className="basis-1/2">
+                                                {
+                                                    data.status === 'N' ? (
+                                                        <span className="inline-flex items-center mr-2 rounded-md bg-orange-100 px-3 text-sm text-orange-600 ring-1 ring-inset ring-orange-500/20">
+                                                            Pending your approval
+                                                        </span>
+                                                    ) : data.status === 'Y' ? (
+                                                        <span className="inline-flex items-center mr-2 rounded bg-emerald-100 px-3 text-sm text-emerald-600 ring-1 ring-inset ring-emerald-500/20">
+                                                            Approved
+                                                        </span>
+                                                    ) : (
+                                                        <span className="inline-flex items-center mr-2 rounded bg-red-100 px-3 text-sm text-red-600 ring-1 ring-inset ring-red-500/10">
+                                                            Rejected
+                                                        </span>
+                                                    )
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="w-full flex-row align-middle hidden md:block px-3 items-center">
+                                        {
+                                            data.status === 'N' ? (
+                                                <div className="w-full flex flex-row gap-x-4 pt-1 align-middle items-center">
+                                                    <div className="basis-1/2">
+                                                        <button type="button" className="text-green-600 w-full py-2 px-4 text-sm flex flex-row border border-green-600 items-center justify-center text-center rounded-md bg-white hover:bg-green-200 focus:outline-none">
+                                                            <i className="fa-duotone fa-badge-check mr-2 fa-lg"></i>
+                                                            Approve
+                                                        </button>
+                                                    </div>
+
+                                                    <div className="basis-1/2">
+                                                        <button type="button" className="text-red-600 w-full py-2 px-4 text-sm flex flex-row border border-red-600 items-center justify-center text-center rounded-md bg-white hover:bg-red-200 focus:outline-none">
+                                                            <i className="fa-duotone fa-ban mr-2 fa-lg"></i>
+                                                            Decline
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            ) : data.status === 'Y' ? (
+                                                <>
+                                                    edeouje
+                                                </>
+                                            ) : (
+                                                <>
+                                                    wdok
+                                                </>
+                                            )
+                                        }
+                                    </div>
+                                </div>
+
+                                <div className="w-full md:hidden flex flex-row align-middle items-center md:pl-3 md:basis-1/2">
                                     <div className="basis-1/2">
                                         <div className="basis-1/2">
                                             {
                                                 data.status === 'N' ? (
-                                                    <span className="inline-flex items-center mr-2 rounded-md bg-amber-100 px-3 text-sm text-amber-600 ring-1 ring-inset ring-amber-500/20">
-                                                        Pending
+                                                    <span className="inline-flex items-center mr-2 rounded-md bg-orange-100 px-3 text-sm text-orange-600 ring-1 ring-inset ring-orange-500/20">
+                                                        Pending your approval
                                                     </span>
                                                 ) : data.status === 'Y' ? (
-                                                    <span className="inline-flex items-center mr-2 rounded-lg bg-emerald-100 px-3 text-sm text-emerald-600 ring-1 ring-inset ring-emerald-500/20">
+                                                    <span className="inline-flex items-center mr-2 rounded bg-emerald-100 px-3 text-sm text-emerald-600 ring-1 ring-inset ring-emerald-500/20">
                                                         Approved
                                                     </span>
                                                 ) : (
-                                                    <span className="inline-flex items-center mr-2 rounded-lg bg-red-100 px-3 text-sm text-red-600 ring-1 ring-inset ring-red-500/10">
+                                                    <span className="inline-flex items-center mr-2 rounded bg-red-100 px-3 text-sm text-red-600 ring-1 ring-inset ring-red-500/10">
+                                                        Rejected
+                                                    </span>
+                                                )
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="py-3 px-3 md:basis-1/2 w-full border-2 border-gray-300 border-dashed rounded-md">
+                                    <div className="flex flex-row w-full align-middle items-center">
+                                        <div className="basis-2/3 text-stone-500 text-sm">
+                                            <span className=" py-1 block mb-2">
+                                                <span className="hidden md:inline-block">Amount to Receive:</span>
+                                                <span className="md:hidden">You'll Receive:</span>
+                                            </span>
+
+                                            <span className=" py-1 block mb-2">
+                                                <span className="hidden md:inline-block">Processing Fee ({data.comm_rate}%):</span>
+                                                <span className="md:hidden">Processing Fee ({data.comm_rate}%):</span>
+                                            </span>
+                                        </div>
+
+                                        <div className="basis-1/3 text-stone-600 text-right">
+                                            <span className=" py-1 block mb-2 capitalize">
+                                                {formatAmount(parseFloat(data.amount_payable))}
+                                            </span>
+
+                                            <span className=" py-1 block mb-2 capitalize">
+                                                {formatAmount(parseFloat(data.comm_amount))}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="flex flex-col md:flex-row gap-y-4 pt-4">
+                                {
+                                    data.status === 'N' ? (
+                                        <div className="w-full flex flex-row md:pr-3 gap-x-4 mb-4 align-middle items-center md:basis-1/2">
+                                            <div className="basis-1/2">
+                                                <button type="button" className="text-green-600 w-full py-2 px-4 sm:hidden text-sm flex flex-row border border-green-600 items-center justify-center text-center rounded-md bg-white hover:bg-green-200 focus:outline-none">
+                                                    <i className="fa-duotone fa-badge-check mr-2 fa-lg"></i>
+                                                    Approve
+                                                </button>
+                                            </div>
+
+                                            <div className="basis-1/2">
+                                                <button type="button" className="text-red-600 w-full py-2 px-4 sm:hidden text-sm flex flex-row border border-red-600 items-center justify-center text-center rounded-md bg-white hover:bg-red-200 focus:outline-none">
+                                                    <i className="fa-duotone fa-ban mr-2 fa-lg"></i>
+                                                    Decline
+                                                </button>
+                                            </div>
+                                        </div>
+                                    ) : data.status === 'Y' ? (
+                                        <></>
+                                    ) : (
+                                        <>
+
+                                        </>
+                                    )
+                                }
+                            </div>
+                        </div>
+                    ) : (
+                        <div className="px-0 w-full">
+                            <div className="flex flex-col md:flex-row gap-y-4 md:gap-x-4 pt-2">
+                                <div className="w-full flex-grow flex flex-col md:pr-3 align-middle gap-y-3 md:pl-4 md:basis-1/2">
+                                    <div className="w-full flex flex-row align-middle items-center gap-x-3 md:px-3 md:basis-1/2">
+                                        <div className="basis-1/2">
+                                            <span className=" py-0 px-1.5 text-stone-500 text-xs">
+                                                Ksh.
+                                            </span>
+
+                                            <span className="py- px-1.5 text-2xl">
+                                                <span className="text-stone-700">{data.gross.split('.')[0]}</span>
+                                                <span className="text-stone-400">.{data.gross.split('.')[1]}</span>
+                                            </span>
+                                        </div>
+
+                                        <div className="basis-1/2">
+                                            <span className="block mb-0 text-sm text-slate-500 basis-1/2 text-right md:">
+                                                {humanReadableDate(data.created_at)}
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div className="w-full md:flex hidden flex-row align-middle gap-x-3 items-center md:px-3 md:basis-1/2">
+                                        <div className="basis-1/2">
+                                            {
+                                                data.status === 'N' ? (
+                                                    <span className="inline-flex items-center mr-2 rounded bg-orange-100 px-3 text-sm text-orange-600 ring-1 ring-inset ring-orange-500/20">
+                                                        Pending
+                                                    </span>
+                                                ) : data.status === 'Y' ? (
+                                                    <span className="inline-flex items-center mr-2 rounded bg-emerald-100 px-3 text-sm text-emerald-600 ring-1 ring-inset ring-emerald-500/20">
+                                                        Approved
+                                                    </span>
+                                                ) : (
+                                                    <span className="inline-flex items-center mr-2 rounded bg-red-100 px-3 text-sm text-red-600 ring-1 ring-inset ring-red-500/10">
                                                         Rejected
                                                     </span>
                                                 )
                                             }
                                         </div>
 
-                                        <span className="inline-flex items-center text-sm font-medium text-amber-600">
-                                            <span className="text-amber-600 mr-2 pr-2 md:mr-4 md:pr-4 border-r">
-                                                {data.receipt}
+                                        <div className="basis-1/2">
+                                            <span className="ml-3 text-sm text-orange-500">
+                                                {data.meta.app}/{data.meta.all} members approved
                                             </span>
+                                        </div>
+                                    </div>
+                                </div>
 
-                                            <span className="text-stone-600">
-                                                {data.msisdn}
-                                            </span>
+                                <div className="w-full md:hidden flex flex-row align-middle items-center md:pl-3 md:basis-1/2">
+                                    <div className="basis-1/2">
+                                        {
+                                            data.status === 'N' ? (
+                                                <span className="inline-flex items-center mr-2 rounded bg-orange-100 px-3 text-sm text-orange-600 ring-1 ring-inset ring-orange-500/20">
+                                                    Pending
+                                                </span>
+                                            ) : data.status === 'Y' ? (
+                                                <span className="inline-flex items-center mr-2 rounded bg-emerald-100 px-3 text-sm text-emerald-600 ring-1 ring-inset ring-emerald-500/20">
+                                                    Approved
+                                                </span>
+                                            ) : (
+                                                <span className="inline-flex items-center mr-2 rounded bg-red-100 px-3 text-sm text-red-600 ring-1 ring-inset ring-red-500/10">
+                                                    Rejected
+                                                </span>
+                                            )
+                                        }
+                                    </div>
 
+                                    <div className="basis-1/2">
+                                        <span className="ml-3 text-sm text-orange-500">
+                                            {data.meta.app}/{data.meta.all} members approved
                                         </span>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
 
-                        <span className="md:block mb-0 text-sm text-slate-500 basis-1/2 text-start hidden px-1.5">
-                            {humanReadableDate(data.created_at)}
-                        </span>
-                    </div>
-                ),
-            },
-        ],
-        []
-    )
+                                <div className="py-3 px-3 md:basis-1/2 w-full border-2 mb-3 border-gray-300 border-dashed rounded-md">
+                                    <div className="flex flex-row w-full align-middle items-center">
+                                        <div className="basis-2/3 text-stone-500 text-sm">
+                                            <span className=" py-1 block mb-2">
+                                                <span className="hidden md:inline-block">Amount to Receive:</span>
+                                                <span className="md:hidden">You'll Receive:</span>
+                                            </span>
 
-    const pendingApproval = React.useMemo(
-        () => [
-            {
-                Header: 'Pending',
-                id: 'TRC_R001',
-                accessor: (data: any) => (
-                    <div className="px-0 w-full">
-                        <div className="flex flex-col md:flex-row">
-                            <div className="w-full flex flex-row md:pr-3 align-middle items-center md:basis-1/2">
-                                <span className=" py-1 px-1.5 text-stone-500 text-xs">
-                                    Ksh.
-                                </span>
-
-                                <span className=" py-1 px-1.5 text-2xl">
-                                    <span className="text-stone-700">{data.gross.split('.')[0]}</span>
-                                    <span className="text-stone-400">.{data.gross.split('.')[1]}</span>
-                                </span>
-
-                                <span className="block mb-0 text-sm text-slate-500 basis-1/2 text-right md:hidden">
-                                    {humanReadableDate(data.created_at)}
-                                </span>
-                            </div>
-
-                            <div className="w-full flex flex-row align-middle items-center md:pl-3 md:basis-1/2">
-                                <div className="flex flex-row align-middle items-center w-full">
-                                    <div className="basis-1/2">
-                                        <div className="basis-1/2">
-                                            {
-                                                data.status === 'N' ? (
-                                                    <span className="inline-flex items-center mr-2 rounded-md bg-amber-100 px-3 text-sm text-amber-600 ring-1 ring-inset ring-amber-500/20">
-                                                        Pending
-                                                    </span>
-                                                ) : data.status === 'Y' ? (
-                                                    <span className="inline-flex items-center mr-2 rounded-lg bg-emerald-100 px-3 text-sm text-emerald-600 ring-1 ring-inset ring-emerald-500/20">
-                                                        Approved
-                                                    </span>
-                                                ) : (
-                                                    <span className="inline-flex items-center mr-2 rounded-lg bg-red-100 px-3 text-sm text-red-600 ring-1 ring-inset ring-red-500/10">
-                                                        Rejected
-                                                    </span>
-                                                )
-                                            }
+                                            <span className=" py-1 block mb-2">
+                                                <span className="hidden md:inline-block">Processing Fee ({data.comm_rate}%):</span>
+                                                <span className="md:hidden">Processing Fee ({data.comm_rate}%):</span>
+                                            </span>
                                         </div>
 
-                                        <span className="inline-flex items-center text-sm font-medium text-amber-600">
-                                            <span className="text-amber-600 mr-2 pr-2 md:mr-4 md:pr-4 border-r">
-                                                {data.receipt}
+                                        <div className="basis-1/3 text-stone-600 text-right">
+                                            <span className=" py-1 block mb-2 capitalize">
+                                                {formatAmount(parseFloat(data.amount_payable))}
                                             </span>
 
-                                            <span className="text-stone-600">
-                                                {data.msisdn}
+                                            <span className=" py-1 block mb-2 capitalize">
+                                                {formatAmount(parseFloat(data.comm_amount))}
                                             </span>
-
-                                        </span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                    )
 
-                        <span className="md:block mb-0 text-sm text-slate-500 basis-1/2 text-start hidden px-1.5">
-                            {humanReadableDate(data.created_at)}
-                        </span>
-                    </div>
                 ),
             },
         ],
