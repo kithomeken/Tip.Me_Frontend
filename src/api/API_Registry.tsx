@@ -42,7 +42,7 @@ export const ACCOUNT: any = {
     VALIDATE_WITHDRAWAL:    '/v1/account/entity/mpesa/transactions/withdrawal/check',
     REQUEST_WITHDRAWAL:     '/v1/account/entity/mpesa/transactions/withdrawal/request',
     REQUEST_APPROVAL:       '/v1/account/entity/mpesa/transactions/withdrawal/request/:request/approve',
-    REQUEST_DENIAL:         '/v1/account/entity/mpesa/transactions/withdrawal/request/:request/decline',
+    REQUEST_REJECTION:      '/v1/account/entity/mpesa/transactions/withdrawal/request/:request/reject',
 
     /* 
      TODO: 
