@@ -1,14 +1,17 @@
+import { toast } from "react-toastify"
 import React, { useState } from "react"
 
+import { Empty } from "../errors/Empty"
 import { ACCOUNT } from "../../api/API_Registry"
 import ReactTable from "../../lib/hooks/ReactTable"
 import HttpServices from "../../services/HttpServices"
 import { Loading } from "../../components/modules/Loading"
-import { API_RouteReplace, formatAmount, humanReadableDate } from "../../lib/modules/HelperFunctions"
-import { Empty } from "../errors/Empty"
+import { API_RouteReplace, classNames, formatAmount, humanReadableDate } from "../../lib/modules/HelperFunctions"
 
 export const MoneyOut = ({ account }: { account: string }) => {
     const [state, setstate] = useState({
+        action: '',
+        show: false,
         posting: false,
         status: 'pending',
         data: {
@@ -16,6 +19,12 @@ export const MoneyOut = ({ account }: { account: string }) => {
             money_out: null,
         }
     })
+
+    const [isPosting, setIsPosting] = useState(false);
+    const [actionMode, setActionMode] = useState({
+        action: '',
+        posting: false,
+    });
 
     React.useEffect(() => {
         moneyOutTransactions()
@@ -53,48 +62,53 @@ export const MoneyOut = ({ account }: { account: string }) => {
         })
     }
 
-    const approvePendingRequest = async () => {
+    const approveOrRejectRequestCheck = async (actionR: string) => {
         let { data } = state
-        let { posting } = state
 
-        if (!posting) {
-            posting = true
-
-            setstate({
-                ...state, posting
-            })
-
+        if (!isPosting) {
             try {
-                const requestApprovalRoute = API_RouteReplace(ACCOUNT.REQUEST_APPROVAL, ':request', data.requests.r_uuid)
-                const approvalResponse = await HttpServices.httpPost(requestApprovalRoute, null)
+                let actionApiRoute = actionR === 'A' ? ACCOUNT.REQUEST_APPROVAL : ACCOUNT.REQUEST_REJECTION
+                actionApiRoute = API_RouteReplace(actionApiRoute, ':request', data.requests[0].r_uuid)
 
-                if (approvalResponse) {
+                console.log('WXW223', data);
 
+
+                const actionResponse: any = await HttpServices.httpPostWithoutData(actionApiRoute)
+                console.log('EUB_3435', actionMode);
+
+                if (actionResponse.data.success) {
+                    moneyOutTransactions()
                 } else {
-
+                    toast.error(actionResponse.data.error.message, {
+                        position: "top-right",
+                        autoClose: 7000,
+                        hideProgressBar: true,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                    });
                 }
-
-                posting = false
             } catch (error) {
-                posting = false
+                console.log(error);
+                toast.error('Something went wrong. Could not process request', {
+                    position: "top-right",
+                    autoClose: 7000,
+                    hideProgressBar: true,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                });
             }
 
-            setstate({
-                ...state, posting
-            })
+            // setIsPosting(false)
         }
     }
 
-    const declinePendingRequest = async () => {
-        let { posting } = state
 
-        if (!posting) {
-            try {
-
-            } catch (error) {
-
-            }
-        }
+    const approvePendingRequest = async (actionR: string) => {
+        console.log('IU3D30', 'posting');
     }
 
     const columns = React.useMemo(
@@ -105,8 +119,8 @@ export const MoneyOut = ({ account }: { account: string }) => {
                 accessor: (data: any) => (
                     data.a_uuid ? (
                         <div className="px-0 w-full">
-                            <div className="flex flex-col md:flex-row gap-y-4 md:gap-x-4 pt-2">
-                                <div className="w-full flex-grow flex flex-col md:pr-3 align-middle gap-y-3 md:pl-4 md:basis-1/2">
+                            <div className="flex flex-col md:flex-row gap-y-3 md:gap-x-4 pt-2">
+                                <div className="w-full flex-grow flex flex-col md:pr-3 align-middle gap-y-2 md:pl-4 md:basis-1/2">
                                     <div className="w-full flex flex-row md:pr-3 align-middle items-center gap-x-3 md:pl-4 md:basis-1/2">
                                         <div className="basis-1/2">
                                             <span className=" py-0 px-1.5 text-stone-500 text-xs">
@@ -131,16 +145,16 @@ export const MoneyOut = ({ account }: { account: string }) => {
                                             <div className="basis-1/2">
                                                 {
                                                     data.status === 'N' ? (
-                                                        <span className="inline-flex items-center mr-2 rounded-md bg-orange-100 px-3 text-sm text-orange-600 ring-1 ring-inset ring-orange-500/20">
+                                                        <span className="inline-flex items-center mr-2 rounded-md px-2 text-sm text-orange-600">
                                                             Pending your approval
                                                         </span>
                                                     ) : data.status === 'Y' ? (
-                                                        <span className="inline-flex items-center mr-2 rounded bg-emerald-100 px-3 text-sm text-emerald-600 ring-1 ring-inset ring-emerald-500/20">
-                                                            Approved
+                                                        <span className="inline-flex items-center mr-2 rounded-md px-2 text-sm text-emerald-600">
+                                                            You approved the withdrawal request
                                                         </span>
                                                     ) : (
-                                                        <span className="inline-flex items-center mr-2 rounded bg-red-100 px-3 text-sm text-red-600 ring-1 ring-inset ring-red-500/10">
-                                                            Rejected
+                                                        <span className="inline-flex items-center mr-2 rounded-md px-2 text-sm text-red-600">
+                                                            You rejected the request
                                                         </span>
                                                     )
                                                 }
@@ -153,28 +167,42 @@ export const MoneyOut = ({ account }: { account: string }) => {
                                             data.status === 'N' ? (
                                                 <div className="w-full flex flex-row gap-x-4 pt-1 align-middle items-center">
                                                     <div className="basis-1/2">
-                                                        <button type="button" className="text-green-600 w-full py-2 px-4 text-sm flex flex-row border border-green-600 items-center justify-center text-center rounded-md bg-white hover:bg-green-200 focus:outline-none">
-                                                            <i className="fa-duotone fa-badge-check mr-2 fa-lg"></i>
-                                                            Approve
-                                                        </button>
+                                                        <span onClick={() => approveOrRejectRequestCheck('A')} className="text-green-600 w-full py-2 px-4 text-sm flex flex-row border border-green-600 items-center justify-center text-center rounded-md cursor-pointer bg-white hover:bg-green-200 focus:outline-none">
+                                                            {
+                                                                actionMode.posting && actionMode.action === 'A' ? (
+                                                                    <span>
+                                                                        <i className="fa-duotone fa-spinner-third animate-spin mr-2 fa-lg"></i>
+                                                                        Approving
+                                                                    </span>
+                                                                ) : (
+                                                                    <span>
+                                                                        <i className="fa-duotone fa-badge-check mr-2 fa-lg"></i>
+                                                                        Approve --- M
+                                                                    </span>
+                                                                )
+                                                            }
+                                                        </span>
                                                     </div>
 
                                                     <div className="basis-1/2">
-                                                        <button type="button" className="text-red-600 w-full py-2 px-4 text-sm flex flex-row border border-red-600 items-center justify-center text-center rounded-md bg-white hover:bg-red-200 focus:outline-none">
-                                                            <i className="fa-duotone fa-ban mr-2 fa-lg"></i>
-                                                            Decline
-                                                        </button>
+                                                        <span onClick={() => approveOrRejectRequestCheck('D')} className="text-red-600 w-full py-2 px-4 text-sm flex flex-row border border-red-600 items-center justify-center text-center rounded-md bg-white hover:bg-red-200 focus:outline-none">
+                                                            {
+                                                                !isPosting && state.action === 'R' ? (
+                                                                    <span>
+                                                                        <i className="fa-duotone fa-spinner-third animate-spin mr-2 fa-lg"></i>
+                                                                        Rejecting
+                                                                    </span>
+                                                                ) : (
+                                                                    <span>
+                                                                        <i className="fa-duotone fa-ban mr-2 fa-lg"></i>
+                                                                        Reject
+                                                                    </span>
+                                                                )
+                                                            }
+                                                        </span>
                                                     </div>
                                                 </div>
-                                            ) : data.status === 'Y' ? (
-                                                <>
-                                                    edeouje
-                                                </>
-                                            ) : (
-                                                <>
-                                                    wdok
-                                                </>
-                                            )
+                                            ) : null
                                         }
                                     </div>
                                 </div>
@@ -184,16 +212,16 @@ export const MoneyOut = ({ account }: { account: string }) => {
                                         <div className="basis-1/2">
                                             {
                                                 data.status === 'N' ? (
-                                                    <span className="inline-flex items-center mr-2 rounded-md bg-orange-100 px-3 text-sm text-orange-600 ring-1 ring-inset ring-orange-500/20">
+                                                    <span className="inline-flex items-center mr-2 rounded-md px-2 text-sm text-orange-600">
                                                         Pending your approval
                                                     </span>
                                                 ) : data.status === 'Y' ? (
-                                                    <span className="inline-flex items-center mr-2 rounded bg-emerald-100 px-3 text-sm text-emerald-600 ring-1 ring-inset ring-emerald-500/20">
-                                                        Approved
+                                                    <span className="inline-flex items-center mr-2 rounded-md px-2 text-sm text-emerald-600">
+                                                        You approved the withdrawal request
                                                     </span>
                                                 ) : (
-                                                    <span className="inline-flex items-center mr-2 rounded bg-red-100 px-3 text-sm text-red-600 ring-1 ring-inset ring-red-500/10">
-                                                        Rejected
+                                                    <span className="inline-flex items-center mr-2 rounded-md px-2 text-sm text-red-600">
+                                                        You rejected the request
                                                     </span>
                                                 )
                                             }
@@ -233,33 +261,38 @@ export const MoneyOut = ({ account }: { account: string }) => {
                                     data.status === 'N' ? (
                                         <div className="w-full flex flex-row md:pr-3 gap-x-4 mb-4 align-middle items-center md:basis-1/2">
                                             <div className="basis-1/2">
-                                                <button type="button" className="text-green-600 w-full py-2 px-4 sm:hidden text-sm flex flex-row border border-green-600 items-center justify-center text-center rounded-md bg-white hover:bg-green-200 focus:outline-none">
-                                                    <i className="fa-duotone fa-badge-check mr-2 fa-lg"></i>
-                                                    Approve
-                                                </button>
+                                                <span onClick={() => approvePendingRequest('A')} className="text-green-600 w-full py-2 px-4 sm:hidden text-sm flex flex-row border border-green-600 items-center justify-center text-center rounded-md bg-white hover:bg-green-200 focus:outline-none">
+                                                    {
+                                                        state.show ? (
+                                                            <span>
+                                                                <i className="fa-duotone fa-spinner-third animate-spin mr-2 fa-lg"></i>
+                                                                Approving
+                                                            </span>
+                                                        ) : (
+                                                            <span>
+                                                                <i className="fa-duotone fa-badge-check mr-2 fa-lg"></i>
+                                                                Approve
+                                                            </span>
+                                                        )
+                                                    }
+                                                </span>
                                             </div>
 
                                             <div className="basis-1/2">
                                                 <button type="button" className="text-red-600 w-full py-2 px-4 sm:hidden text-sm flex flex-row border border-red-600 items-center justify-center text-center rounded-md bg-white hover:bg-red-200 focus:outline-none">
                                                     <i className="fa-duotone fa-ban mr-2 fa-lg"></i>
-                                                    Decline
+                                                    Reject
                                                 </button>
                                             </div>
                                         </div>
-                                    ) : data.status === 'Y' ? (
-                                        <></>
-                                    ) : (
-                                        <>
-
-                                        </>
-                                    )
+                                    ) : null
                                 }
                             </div>
                         </div>
                     ) : (
                         <div className="px-0 w-full">
                             <div className="flex flex-col md:flex-row gap-y-4 md:gap-x-4 pt-2">
-                                <div className="w-full flex-grow flex flex-col md:pr-3 align-middle gap-y-3 md:pl-4 md:basis-1/2">
+                                <div className="w-full flex-grow flex flex-col md:pr-3 align-middle gap-y-2 md:pl-4 md:basis-1/2">
                                     <div className="w-full flex flex-row align-middle items-center gap-x-3 md:px-3 md:basis-1/2">
                                         <div className="basis-1/2">
                                             <span className=" py-0 px-1.5 text-stone-500 text-xs">
@@ -284,7 +317,13 @@ export const MoneyOut = ({ account }: { account: string }) => {
                                             {
                                                 data.status === 'N' ? (
                                                     <span className="inline-flex items-center mr-2 rounded bg-orange-100 px-3 text-sm text-orange-600 ring-1 ring-inset ring-orange-500/20">
-                                                        Pending
+                                                        {
+                                                            data.meta.app < data.meta.all ? (
+                                                                <span>Pending approval from members</span>
+                                                            ) : (
+                                                                <span>Pending approval from administrator</span>
+                                                            )
+                                                        }
                                                     </span>
                                                 ) : data.status === 'Y' ? (
                                                     <span className="inline-flex items-center mr-2 rounded bg-emerald-100 px-3 text-sm text-emerald-600 ring-1 ring-inset ring-emerald-500/20">
@@ -299,19 +338,36 @@ export const MoneyOut = ({ account }: { account: string }) => {
                                         </div>
 
                                         <div className="basis-1/2">
-                                            <span className="ml-3 text-sm text-orange-500">
-                                                {data.meta.app}/{data.meta.all} members approved
+                                            <span className={
+                                                classNames(
+                                                    data.meta.app < data.meta.all ? 'text-orange-500' : 'text-emerald-500',
+                                                    'text-sm ml-3'
+                                                )
+                                            }>
+                                                {
+                                                    data.meta.app < data.meta.all ? (
+                                                        <span>{data.meta.app}/{data.meta.all}</span>
+                                                    ) : (
+                                                        <span>All</span>
+                                                    )
+                                                } members approved
                                             </span>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div className="w-full md:hidden flex flex-row align-middle items-center md:pl-3 md:basis-1/2">
+                                <div className="w-full md:hidden flex flex-col align-middle items-ceter gap-y-2 md:pl-3 md:basis-1/2">
                                     <div className="basis-1/2">
                                         {
                                             data.status === 'N' ? (
                                                 <span className="inline-flex items-center mr-2 rounded bg-orange-100 px-3 text-sm text-orange-600 ring-1 ring-inset ring-orange-500/20">
-                                                    Pending
+                                                    {
+                                                        data.meta.app < data.meta.all ? (
+                                                            <span>Pending approval from members</span>
+                                                        ) : (
+                                                            <span>Pending approval from administrator</span>
+                                                        )
+                                                    }
                                                 </span>
                                             ) : data.status === 'Y' ? (
                                                 <span className="inline-flex items-center mr-2 rounded bg-emerald-100 px-3 text-sm text-emerald-600 ring-1 ring-inset ring-emerald-500/20">
@@ -326,13 +382,24 @@ export const MoneyOut = ({ account }: { account: string }) => {
                                     </div>
 
                                     <div className="basis-1/2">
-                                        <span className="ml-3 text-sm text-orange-500">
-                                            {data.meta.app}/{data.meta.all} members approved
+                                        <span className={
+                                            classNames(
+                                                data.meta.app < data.meta.all ? 'text-orange-500' : 'text-emerald-500',
+                                                'text-sm'
+                                            )
+                                        }>
+                                            {
+                                                data.meta.app < data.meta.all ? (
+                                                    <span>{data.meta.app}/{data.meta.all}</span>
+                                                ) : (
+                                                    <span>All</span>
+                                                )
+                                            } members approved
                                         </span>
                                     </div>
                                 </div>
 
-                                <div className="py-3 px-3 md:basis-1/2 w-full border-2 mb-3 border-gray-300 border-dashed rounded-md">
+                                <div className="py- px-3 md:basis-1/2 w-full border-2 mb-3 border-gray-300 border-dashed rounded-md">
                                     <div className="flex flex-row w-full align-middle items-center">
                                         <div className="basis-2/3 text-stone-500 text-sm">
                                             <span className=" py-1 block mb-2">
