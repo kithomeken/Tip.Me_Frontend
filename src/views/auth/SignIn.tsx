@@ -43,7 +43,6 @@ export const SignIn = () => {
                     return;
                 }
 
-                console.log('KAPUCHAD', result);
                 const firebaseUser: any = result.user;
                 const accessToken = firebaseUser.accessToken;
 
