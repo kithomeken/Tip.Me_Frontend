@@ -64,7 +64,7 @@ function App() {
     }
 
     return (
-        <Router>
+        <Router basename='/'>
             <Sanctum config={sanctumConfig}>
                 <RouterProvider>
                     <ToastContainer />
