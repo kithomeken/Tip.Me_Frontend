@@ -5,17 +5,19 @@ export function API_Controller() {
     let connectToUbuntuBangalore01 = true
 
     if (process.env.NODE_ENV === 'production') {
-        FQDN = 'https://api.theapplication.online'
-        API = 'https://api.theapplication.online/api'
-    } else {
         APP = 'http://localhost:3000'
+        FQDN = 'https://api.theapplication.online'
+        API = 'https://bigfan.theapplication.online/api'
+    } else {
 
         if (connectToUbuntuBangalore01) {
             FQDN = 'https://api.theapplication.online'
             API = 'https://api.theapplication.online/api'
+            APP = 'https://bigfan.theapplication.online'
         } else {
             FQDN = 'http://localhost:81/tippy/public'
             API = 'http://localhost:81/tippy/public/api'
+            APP = 'http://localhost:3000'
         }
     }
 
