@@ -84,8 +84,6 @@ export function G_onInputBlurHandler(event: any, posting: boolean, title: any, m
 
                 if (!isValidAmount) {
                     input.error = isValidAmount ? '' : 'Invalid amount format';
-                } else if (tValue < 100) {
-                    input.error = 'Minimum withdrawal amount per transaction is KSh. 100';
                 }
                 break
 
