@@ -24,6 +24,8 @@ import ErrorRoutesGuard from "./lib/guards/ErrorRoutesGuard"
 import StandardRoutesGuard from "./lib/guards/StandardRoutesGuard"
 
 import './firebase/firebaseConfigs'
+import { useDispatch } from "react-redux"
+import { revokeAuthSession } from "./store/auth/firebaseAuthActions"
 
 interface RouteContextType {
     currentpage: string,
@@ -63,15 +65,33 @@ function App() {
         </RoutingContext.Provider>
     }
 
-    React.useEffect(() => {
-        // artistDetailsApiCall()
-    }, [])
+    const SESSION_TIMEOUT = 30 * 60 * 1000;
 
-    // const 
+    function isSessionExpired() {
+        const lastActivityTime: any = localStorage.getItem('lastActivityTime');
+
+        if (!lastActivityTime) return true; // No session activity recorded
+        const currentTime = Date.now();
+        return currentTime - lastActivityTime > SESSION_TIMEOUT;
+    }
+
+    function refreshSessionActivity() {
+        const dateTimeNow: any = Date.now()
+        localStorage.setItem('lastActivityTime', dateTimeNow);
+    }
+
+    setInterval(() => {
+        if (isSessionExpired()) {
+            const dispatch: any = useDispatch()
+            dispatch(revokeAuthSession())
+        } else {
+            refreshSessionActivity()
+        }
+    }, 60000);
 
     return (
         <Router basename='/'>
-            {/* <Sanctum config={sanctumConfig}> */}
+            <Sanctum config={sanctumConfig}>
                 <RouterProvider>
                     <ToastContainer />
 
@@ -135,7 +155,7 @@ function App() {
 
                     </Routes>
                 </RouterProvider>
-            {/* </Sanctum> */}
+            </Sanctum>
         </Router>
     )
 }

@@ -25,7 +25,7 @@ export default function ErrorRoutesGuard() {
              * Reset session and start all-over again
             */
 
-            // dispatch(revokeAuthSession())
+            dispatch(revokeAuthSession())
             return
         } else {
             // Redirect to sign-in
