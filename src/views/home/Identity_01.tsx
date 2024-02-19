@@ -1,13 +1,17 @@
+import Compressor from 'compressorjs';
 import React, { useState } from "react"
 import { useDispatch } from "react-redux"
+import { Listbox } from "@headlessui/react"
 
+import { AUTH } from "../../api/API_Registry"
 import { useAppSelector } from "../../store/hooks"
+import HttpServices from "../../services/HttpServices"
+import { ListBoxZero } from "../../lib/hooks/ListBoxZero"
 import { classNames } from "../../lib/modules/HelperFunctions"
 import smallAsset from "../../assets/images/12704367_5037373.svg"
+import { InputWithLoadingIcon } from "../../components/lib/InputWithLoadingIcon"
 import { addIdentityToProfile, resetIdentity } from "../../store/identityCheckActions"
 import { G_onInputBlurHandler, G_onInputChangeHandler } from "../../components/lib/InputHandlers"
-import { Listbox } from "@headlessui/react"
-import { ListBoxZero } from "../../lib/hooks/ListBoxZero"
 
 export const Identity_01 = () => {
     const [state, setstate] = useState({
@@ -27,6 +31,10 @@ export const Identity_01 = () => {
             docPhoto: '',
             docFile: '',
         },
+        identifier: {
+            checking: false,
+            exists: false
+        }
     })
 
     React.useEffect(() => {
@@ -47,6 +55,15 @@ export const Identity_01 = () => {
             let { input } = state
             let { errors }: any = state
 
+            switch (e.target.name) {
+                case 'identifier':
+                    output.value = output.value.toUpperCase()
+                    break;
+
+                default:
+                    break;
+            }
+
             input[e.target.name] = output.value
             errors[e.target.name] = output.error
 
@@ -62,6 +79,26 @@ export const Identity_01 = () => {
             let { input } = state
             let { errors }: any = state
 
+            switch (e.target.name) {
+                case 'identifier':
+                    output.value = output.value.toUpperCase()
+
+                    if (output.error === '') {
+                        let { identifier } = state
+                        identifier.checking = true
+
+                        checkIdentifierAvailability()
+                    } else {
+                        let { identifier } = state
+                        identifier.checking = false
+                        output.error = input.id_type === 'ID' ? 'ID number cannot be empty' : 'Passport number cannot be empty';
+                    }
+                    break;
+
+                default:
+                    break;
+            }
+
             input[e.target.name] = output.value
             errors[e.target.name] = output.error
 
@@ -73,12 +110,15 @@ export const Identity_01 = () => {
 
     const onChangeListBoxHandler = (e: any) => {
         let { input } = state
+        let { errors } = state
 
         if (!idC_State.processing) {
             input.id_type = e
+            input.identifier = ''
+            errors.identifier = ''
 
             setstate({
-                ...state, input
+                ...state, input, errors
             })
         }
     }
@@ -113,7 +153,18 @@ export const Identity_01 = () => {
                 return
             }
 
-            input.docPhoto = e.target.files[0]
+            const uncompressedImage = e.target.files[0];
+            new Compressor(uncompressedImage, {
+                quality: 0.8, // 0.6 can also be used, but its not recommended to go below.
+                success: (compressedResult) => {
+                    // compressedResult has the compressed file.
+                    // Use the compressed file to upload the images to your server.        
+                    // setCompressedFile(res)
+                    // console.log('COM34-31x', compressedResult);
+                    input.docPhoto = compressedResult
+                },
+            });
+
             input.docFile = e.target.files[0].name
             errors[e.target.name] = ''
 
@@ -123,21 +174,94 @@ export const Identity_01 = () => {
         }
     }
 
+    const checkIdentifierAvailability = async () => {
+        let { identifier } = state
+        let { errors } = state
+        let { input } = state
+
+        try {
+            let formData = new FormData()
+            formData.append('identifier', input.identifier)
+
+            const identifierCheckResp: any = await HttpServices.httpPost(AUTH.PRE_META_01, formData)
+
+            if (identifierCheckResp.data.available) {
+                errors.identifier = ''
+                identifier.exists = false
+            } else {
+                errors.identifier = input.id_type === 'ID' ? 'ID number already exists' : 'Passport number already exists';
+                identifier.exists = true
+            }
+        } catch (error) {
+            errors.identifier = input.id_type === 'ID' ? 'ID number already exists' : 'Passport number already exists';
+            identifier.exists = true
+        }
+
+        identifier.checking = false
+
+        setstate({
+            ...state, identifier, errors
+        })
+    }
+
+    function formValidation() {
+        let valid = true;
+
+        let { input } = state
+        let { errors } = state
+        let { identifier } = state
+
+        if (!input.first_name.trim()) {
+            errors.first_name = 'First name cannot be empty';
+            valid = false
+        }
+
+        if (!input.last_name.trim()) {
+            errors.last_name = 'Last name cannot be empty';
+            valid = false
+        }
+
+        if (!input.identifier.trim()) {
+            errors.identifier = input.id_type === 'ID' ? 'ID number cannot be empty' : 'Passport number cannot be empty';
+            valid = false
+        }
+
+        if (!input.docPhoto === null) {
+            errors.docFile = 'Kindly upload ID/Passport photo'
+            valid = false
+        }
+
+        if (identifier.exists) {
+            errors.identifier = input.id_type === 'ID' ? 'ID number already exists' : 'Passport number already exists';
+            valid = false
+        }
+
+        return valid
+    }
+
     const onFormSubmitHandler = (e: any) => {
         e.preventDefault()
 
         if (!idC_State.processing) {
-            const identProps = {
-                dataDump: {
-                    last_name: state.input.last_name,
-                    first_name: state.input.first_name,
-                    identifier: state.input.identifier,
-                    id_type: state.input.id_type,
-                    docPhoto: state.input.docPhoto,
+            let { identifier } = state
+
+            if (!identifier.checking) {
+                let validity = formValidation()
+
+                if (validity) {
+                    const identProps = {
+                        dataDump: {
+                            last_name: state.input.last_name,
+                            first_name: state.input.first_name,
+                            identifier: state.input.identifier,
+                            id_type: state.input.id_type,
+                            docPhoto: state.input.docPhoto,
+                        }
+                    }
+
+                    dispatch(addIdentityToProfile(identProps))
                 }
             }
-
-            dispatch(addIdentityToProfile(identProps))
         }
     }
 
@@ -170,7 +294,7 @@ export const Identity_01 = () => {
                         </div>
 
                         <div className="flex flex-col mb-3 md:w-4/ w-full">
-                            <form className="space-y-4 shadow-none px-2 mb-3" onSubmit={onFormSubmitHandler}>
+                            <form className="md:space-y-4 shadow-none px-2 mb-3" onSubmit={onFormSubmitHandler}>
                                 <div className="md:mb-2 flex flex-col md:flex-row md:space-x-4 pt-1 px-3">
                                     <div className="w-full md:w-1/2 mb-3">
                                         <label htmlFor="first_name" className="block text-sm leading-6 text-stone-600 mb-1">First Name:</label>
@@ -290,26 +414,16 @@ export const Identity_01 = () => {
                                     </div>
 
                                     <div className="w-full md:w-1/2">
-                                        <label htmlFor="identifier" className="block text-sm leading-6 text-stone-700 mb-1">
-                                            {state.input.id_type === 'ID' ? 'ID Number' : 'Passport Number'}
-                                        </label>
-
-                                        <div className="relative mt-2 rounded shadow-sm">
-                                            <input type="text" name="identifier" id="identifier" placeholder={state.input.id_type === 'ID' ? 'ID Number' : 'Passport Number'} autoComplete="off"
-                                                className={classNames(
-                                                    state.errors.identifier.length > 0 ?
-                                                        'text-red-900 ring-slate-300 placeholder:text-red-400 focus:ring-red-600 border border-red-600 focus:outline-red-500' :
-                                                        'text-stone-900 ring-slate-300 placeholder:text-stone-400 focus:border-0 focus:outline-none focus:ring-amber-600 focus:outline-amber-500 hover:border-stone-400 border border-stone-300',
-                                                    'block w-full rounded-md py-2 pl-3 pr-8  text-sm'
-                                                )} onChange={onChangeHandler} value={state.input.identifier} onBlur={onInputBlur} required />
-                                            <div className="absolute inset-y-0 right-0 flex items-center w-8">
-                                                {
-                                                    state.errors.identifier.length > 0 ? (
-                                                        <span className="fa-duotone text-red-500 fa-circle-exclamation fa-lg"></span>
-                                                    ) : null
-                                                }
-                                            </div>
-                                        </div>
+                                        <InputWithLoadingIcon
+                                            name={'identifier'}
+                                            label={state.input.id_type === 'ID' ? 'ID Number' : 'Passport Number'}
+                                            placeHolder={state.input.id_type === 'ID' ? 'ID Number' : 'Passport Number'}
+                                            onInputBlurHandler={onInputBlur}
+                                            onChangeHandler={onChangeHandler}
+                                            inputValue={state.input.identifier}
+                                            errorsName={state.errors.identifier}
+                                            checkForStatus={state.identifier.checking}
+                                        />
                                     </div>
                                 </div>
 
