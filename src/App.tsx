@@ -63,9 +63,15 @@ function App() {
         </RoutingContext.Provider>
     }
 
+    React.useEffect(() => {
+        // artistDetailsApiCall()
+    }, [])
+
+    // const 
+
     return (
         <Router basename='/'>
-            <Sanctum config={sanctumConfig}>
+            {/* <Sanctum config={sanctumConfig}> */}
                 <RouterProvider>
                     <ToastContainer />
 
@@ -129,7 +135,7 @@ function App() {
 
                     </Routes>
                 </RouterProvider>
-            </Sanctum>
+            {/* </Sanctum> */}
         </Router>
     )
 }
