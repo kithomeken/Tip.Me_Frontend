@@ -110,7 +110,7 @@ export const Identity_03 = () => {
             let formData = new FormData()
             formData.append('artist_name', input.artist_name)
 
-            const responsecheck: any = await HttpServices.httpPost(AUTH.PRE_META_01, formData)
+            const responsecheck: any = await HttpServices.httpPost(AUTH.PRE_META_03, formData)
 
             if (responsecheck.data.available) {
                 errors.artist_name = ''
