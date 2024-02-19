@@ -1,4 +1,4 @@
-import { TipMe } from "../views/home/TipMe";
+import { EntityPayIn } from "../views/home/EntityPayIn";
 import { SignIn } from "../views/auth/SignIn";
 import { SignUp } from "../views/auth/SignUp";
 import { Yeat } from "../views/home/Yeat";
@@ -11,7 +11,7 @@ export const authenticationRoutes: Array<Routes_Interface> = [
     { path: "/auth/invitation/:hash", element: <Invitation />, caseSensitive: true, name: 'AUTH_INVITE_' },
 
 
-    { path: "/artist/:acid", element: <TipMe />, caseSensitive: true, name: 'de' },
+    { path: "/entity/:uuid", element: <EntityPayIn />, caseSensitive: true, name: 'ENTITY_0_' },
 
     { path: "/yeat", element: <Yeat />, caseSensitive: true, name: 'YEAT_' },
 ]
