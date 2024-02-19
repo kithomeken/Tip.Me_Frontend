@@ -65,30 +65,6 @@ function App() {
         </RoutingContext.Provider>
     }
 
-    const SESSION_TIMEOUT = 30 * 60 * 1000;
-
-    function isSessionExpired() {
-        const lastActivityTime: any = localStorage.getItem('lastActivityTime');
-
-        if (!lastActivityTime) return true; // No session activity recorded
-        const currentTime = Date.now();
-        return currentTime - lastActivityTime > SESSION_TIMEOUT;
-    }
-
-    function refreshSessionActivity() {
-        const dateTimeNow: any = Date.now()
-        localStorage.setItem('lastActivityTime', dateTimeNow);
-    }
-
-    setInterval(() => {
-        if (isSessionExpired()) {
-            const dispatch: any = useDispatch()
-            dispatch(revokeAuthSession())
-        } else {
-            refreshSessionActivity()
-        }
-    }, 60000);
-
     return (
         <Router basename='/'>
             <Sanctum config={sanctumConfig}>
