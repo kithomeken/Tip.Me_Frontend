@@ -2,18 +2,18 @@ import QRCode from 'qrcode'
 import { Helmet } from "react-helmet"
 import React, { useState } from "react"
 
-import { Loading } from "../../components/modules/Loading"
-import { APPLICATION, CONFIG_MAX_WIDTH } from "../../global/ConstantsRegistry"
-import { ACCOUNT } from '../../api/API_Registry';
-import HttpServices from '../../services/HttpServices';
-import { API_RouteReplace, classNames, formatAmount } from '../../lib/modules/HelperFunctions';
 import { MoneyIn } from './MoneyIn';
 import { MoneyOut } from './MoneyOut';
-import { WithdrawModal } from './WithdrawModal';
 import { ERR_500 } from '../errors/ERR_500';
+import { WithdrawModal } from './WithdrawModal';
+import { ACCOUNT } from '../../api/API_Registry';
+import HttpServices from '../../services/HttpServices';
+import { Loading } from "../../components/modules/Loading"
+import { authenticationRoutes } from '../../routes/authRoutes'
+import { APPLICATION, CONFIG_MAX_WIDTH } from "../../global/ConstantsRegistry"
+import { API_RouteReplace, classNames, formatAmount } from '../../lib/modules/HelperFunctions';
 
 export const ArtistHome = () => {
-
     const [qrCode, setQRCode] = useState({
         lowQuality: '',
         highQuality: ''
@@ -49,11 +49,21 @@ export const ArtistHome = () => {
                 data.craft = response.data.payload.craft
                 data.entity = response.data.payload.entity
 
-                const qrCodeText = APPLICATION.URL + '/artist/' + data.craft.account
+                let entity0Route: any = (
+                    authenticationRoutes.find(
+                        (routeName) => routeName.name === 'ENTITY_0_'
+                    )
+                )?.path
+
+                entity0Route = API_RouteReplace(entity0Route, ':uuid', data.entity.uuid)
+                const qrCodeText = APPLICATION.URL + entity0Route
                 GenerateQRCode(qrCodeText)
 
+                console.log(qrCodeText);
+                
+
                 data.entity.bal = formatAmount(parseFloat(data.entity.bal))
-                data.qrCodeImageName = 'qrcode_' + data.craft.account + '.png'
+                data.qrCodeImageName = 'qrcode_' + data.entity.uuid + '.png'
             } else {
                 status = 'rejected'
             }
