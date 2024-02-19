@@ -4,7 +4,8 @@
 export const AUTH = {
     FIREBASE_SSO: '/v1/identity/auth/firebase-sso',
     META_CHECK:   '/v1/identity/account/meta/check',
-    PRE_META_01:  '/v1/identity/account/meta/artist_name/check',
+    PRE_META_01:  '/v1/identity/account/meta/identifier/check',
+    PRE_META_03:  '/v1/identity/account/meta/artist_name/check',
     ID_META_01:   '/v1/identity/account/meta/display_name',
     ID_META_02:   '/v1/identity/account/meta/msisdn',
     ARTIST_TYPES: '/v1/identity/account/meta/artist/types',
@@ -56,6 +57,9 @@ export const ACCOUNT: any = {
     PREFERENCES: '/v1/account/auth/preferences',
     SET_TIMEZONE: '/v1/account/auth/preferences/timezone/set',
     TEAM_RIGHTS: '/v1/account/auth/team/rights',
+
+
+    ENTITY_CONTR_DATA: '/v1/entity/contr/:uuid',
 }
 
 
