@@ -59,7 +59,9 @@ export const ACCOUNT: any = {
     TEAM_RIGHTS: '/v1/account/auth/team/rights',
 
 
-    ENTITY_CONTR_DATA: '/v1/entity/contr/:uuid',
+    ENTITY_CONTR_DATA:      '/v1/entity/contr/:uuid',
+    GET_DESIGNATED:         '/v1/account/entity/settings/profile/designated/member',
+    SET_DESIGNATED:         '/v1/account/entity/settings/profile/designated/member/set',
 }
 
 
