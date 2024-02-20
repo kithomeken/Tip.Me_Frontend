@@ -1,11 +1,14 @@
 import React, { useState } from "react"
 import { Helmet } from "react-helmet"
+
+import { EntityProfile } from "./EntityProfile"
 import { classNames } from "../../lib/modules/HelperFunctions"
+import { CONFIG_MAX_WIDTH } from "../../global/ConstantsRegistry"
 
 export const AccountManagement = () => {
     const [state, setstate] = useState({
         status: 'pending',
-        activeTab: 'recent',
+        activeTab: 'profile',
         data: {
             email: null,
         },
@@ -16,6 +19,16 @@ export const AccountManagement = () => {
             ...state,
             activeTab: tabName
         })
+    }
+
+    const loadRespectiveTab = (tabName = 'poc') => {
+        switch (tabName) {
+            case 'profile':
+                return <EntityProfile />
+
+            default:
+                return null
+        }
     }
 
     return (
@@ -35,12 +48,12 @@ export const AccountManagement = () => {
             </div>
 
             <div className={`md:px-6 w-full form-group mb-3`}>
-                <div className="kiOAkj">
+                <div className="kiOAkj" style={CONFIG_MAX_WIDTH}>
                     <div className="flex flex-row mb-4 w-full">
-                        <div className="md:w-52 lg:w-60 md:pr-4 pt-4 pb-4 md:border-r">
+                        <div className="w-52 flex-none lg:w-60 md:pr-4 px-4 pt-4 pb-4 md:border-r">
                             <div className="w-full">
-                                <button type="button" onClick={() => setActivateTab('recent')} className={classNames(
-                                    state.activeTab === 'recent' ? 'text-amber-700 bg-amber-100' : 'text-slate-700 hover:bg-slate-100',
+                                <button type="button" onClick={() => setActivateTab('profile')} className={classNames(
+                                    state.activeTab === 'profile' ? 'text-amber-700 bg-amber-100' : 'text-slate-700 hover:bg-slate-100',
                                     "text-sm items-center w-full text-left py-2 px-4 rounded"
                                 )}>
                                     <span className="flex flex-row align-middle items-center">
@@ -76,8 +89,8 @@ export const AccountManagement = () => {
 
                         </div>
 
-                        <div className="flex-auto rounded pl-4 pt-4 pb-4">
-                            {/* {loadRespectiveTab(state.activeTab)} */}
+                        <div className="flex-auto rounded px-4 pt-4 pb-4">
+                            {loadRespectiveTab(state.activeTab)}
                         </div>
                     </div>
                 </div>
