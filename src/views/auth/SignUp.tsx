@@ -58,11 +58,11 @@ export const SignUp = () => {
     )?.path
 
     React.useEffect(() => {
-        if (location.search !== null || location.search !==  undefined) {
-            const searchParams:any  = parseQueryString(location.search);
+        if (location.search !== null || location.search !== undefined) {
+            const searchParams: any = parseQueryString(location.search);
             // StorageServices.setLocalStorage(STORAGE_KEYS.eede, searchParams.hash)
         }
-        
+
         authRedirectResult()
             .then(async (result) => {
                 if (!result) {
@@ -374,6 +374,14 @@ export const SignUp = () => {
                                             )} onChange={onChangeHandler} onBlur={onInputBlur} value={state.input.confirm} required style={{ height: '3rem' }} />
                                     </div>
                                 </div>
+
+                                <span className="px-1.5 block text-sm text-stone-500 mb-2 capitalize">
+                                    Our password policy:
+                                    <span className="block pl-4">• One upper case letter</span>
+                                    <span className="block pl-4">• One lower case letter</span>
+                                    <span className="block pl-4">• One numberic character</span>
+                                    <span className="block pl-4">• One special character</span>
+                                </span>
 
                                 <div className="pb-3 pt-3 flex justify-center">
                                     <button type="submit" className="w-44 disabled:cursor-not-allowed text-sm rounded-md border border-transparent shadow-sm px-4 py-2 bg-amber-500 text-white disabled:bg-amber-600 hover:bg-amber-600 focus:outline-none flex items-center justify-center" disabled={auth0.processing} style={{ height: '3rem' }}>
