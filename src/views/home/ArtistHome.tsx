@@ -60,7 +60,7 @@ export const ArtistHome = () => {
                 GenerateQRCode(qrCodeText)
 
                 console.log(qrCodeText);
-                
+
 
                 data.entity.bal = formatAmount(parseFloat(data.entity.bal))
                 data.qrCodeImageName = 'qrcode_' + data.entity.uuid + '.png'
@@ -185,6 +185,10 @@ export const ArtistHome = () => {
                                                 }
 
                                             </div>
+
+                                            <span className="px-1.5 block text-sm text-stone-500 mb-2 capitalize">
+                                                {state.data.entity.account}
+                                            </span>
 
                                             <span className=" py-1 px-1.5 block text-sm text-slate-700">
                                                 <i className="fa-light fa-wallet text-slate-500 fa-lg mr-2"></i>
