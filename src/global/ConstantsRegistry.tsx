@@ -45,7 +45,7 @@ export const STYLE = {
 }
 
 export const CONFIG_MAX_WIDTH = { maxWidth: '1024px' }
-export const CONFIG_MARGIN_TOP = { marginTop: '64px' }
+export const CONFIG_MARGIN_TOP = { marginTop: '56px' }
 
 export const AUTH_ = {
     RESET_: 'RESET',
