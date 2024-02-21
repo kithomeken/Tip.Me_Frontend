@@ -60,8 +60,9 @@ export const ACCOUNT: any = {
 
 
     ENTITY_CONTR_DATA:      '/v1/entity/contr/:uuid',
-    GET_DESIGNATED:         '/v1/account/entity/settings/profile/designated/member',
-    SET_DESIGNATED:         '/v1/account/entity/settings/profile/designated/member/set',
+    GET_NOMINATED:          '/v1/account/settings/entity/nominated/member',
+    SET_NOMINATED:          '/v1/account/settings/entity/nominated/member/set-own',
+    NMNTD_MMBR_ACTION:      '/v1/account/settings/entity/nominated/member/action',
 }
 
 
