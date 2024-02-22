@@ -13,9 +13,13 @@ import { G_onInputChangeHandler, G_onInputBlurHandler } from "../../components/l
 import { firebaseAuthActions, generateSanctumToken, resetAuth0 } from "../../store/auth/firebaseAuthActions";
 import { DeviceInfo, classNames, emailValidator, passwordValidator } from "../../lib/modules/HelperFunctions";
 import StorageServices from "../../services/StorageServices";
+import { TermsAndConditions } from "./TermsAndConditions";
+import { toast } from "react-toastify";
 
 export const SignUp = () => {
     const [state, setstate] = useState({
+        show: false,
+        acceptTerms: false,
         pwdVisibility: false,
         input: {
             email: '',
@@ -168,8 +172,23 @@ export const SignUp = () => {
 
         if (!auth0.processing) {
             let passedValidation = validateForm()
+            let {acceptTerms} = state
 
             if (passedValidation) {
+                if (!acceptTerms) {
+                    toast.warning("Kindly accept the terms and conditions before signing up", {
+                        position: "top-right",
+                        autoClose: 7000,
+                        hideProgressBar: true,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                    });
+    
+                    return
+                }
+
                 dispatch(resetAuth0())
                 setstate({
                     ...state, errors: {
@@ -195,6 +214,22 @@ export const SignUp = () => {
 
     const signUpWithGoogle = () => {
         if (!auth0.processing) {
+            let {acceptTerms} = state
+
+            if (!acceptTerms) {
+                toast.warning("Kindly accept the terms and conditions before signing up", {
+                    position: "top-right",
+                    autoClose: 7000,
+                    hideProgressBar: true,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                });
+
+                return
+            }
+
             dispatch(resetAuth0())
             setstate({
                 ...state, errors: {
@@ -205,7 +240,6 @@ export const SignUp = () => {
                     email: '',
                     confirm: '',
                     password: '',
-
                 }
             })
 
@@ -266,6 +300,27 @@ export const SignUp = () => {
         }
     };
 
+    const showOrHideTC = () => {
+        if (!auth0.processing) {
+            let { show } = state
+            show = !state.show
+
+            setstate({
+                ...state, show
+            })
+        }
+    }
+
+    const acceptTermsAndConditions = () => {
+        if (!auth0.processing) {
+            let { acceptTerms } = state
+            acceptTerms = !state.acceptTerms
+
+            setstate({
+                ...state, acceptTerms
+            })
+        }
+    }
 
     return (
         <React.Fragment>
@@ -383,6 +438,24 @@ export const SignUp = () => {
                                     <span className="block pl-4">• One special character</span>
                                 </span>
 
+                                <div className="relative flex gap-x-3">
+                                    <div className="flex h-6 items-center">
+                                        <input
+                                            id="offers"
+                                            name="offers"
+                                            type="checkbox"
+                                            checked={state.acceptTerms}
+                                            onChange={acceptTermsAndConditions}
+                                            className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                                        />
+                                    </div>
+                                    <div className="text-sm leading-6">
+                                        <p className="text-gray-500">
+                                            I have read, understood, and agree to the <span className="text-amber-600 cursor-pointer" onClick={showOrHideTC}>terms and conditions.</span>
+                                        </p>
+                                    </div>
+                                </div>
+
                                 <div className="pb-3 pt-3 flex justify-center">
                                     <button type="submit" className="w-44 disabled:cursor-not-allowed text-sm rounded-md border border-transparent shadow-sm px-4 py-2 bg-amber-500 text-white disabled:bg-amber-600 hover:bg-amber-600 focus:outline-none flex items-center justify-center" disabled={auth0.processing} style={{ height: '3rem' }}>
                                         {auth0.processing ? (
@@ -411,6 +484,11 @@ export const SignUp = () => {
                     </section>
                 </div>
             </div>
+
+            <TermsAndConditions
+                show={state.show}
+                showOrHide={showOrHideTC}
+            />
         </React.Fragment>
     )
 }
