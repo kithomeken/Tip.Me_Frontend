@@ -26,6 +26,7 @@ export function firebaseAuthActions(propsIn: FirebaseProps) {
         dispatch({
             type: AUTH_.PROCESSING,
             response: {
+                provider: firebaseProps.identity,
                 redirect: false,
             },
         });
@@ -49,6 +50,7 @@ export function firebaseSSO_SignIn(propsIn: FirebaseProps) {
         dispatch({
             type: AUTH_.PROCESSING,
             response: {
+                provider: firebaseProps.identity,
                 redirect: false,
             },
         });

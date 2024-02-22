@@ -6,10 +6,11 @@ import CookieServices from "../../services/CookieServices";
 import StorageServices from "../../services/StorageServices";
 
 const initialState = {
+    error: null,
+    provider: '',
+    identity: null,
     processing: false,
     authenticated: false,
-    error: null,
-    identity: null,
 }
 
 export const firebaseAuthReducer = (state = initialState, action: any) => {
@@ -29,6 +30,7 @@ export const firebaseAuthReducer = (state = initialState, action: any) => {
                 error: null,
                 processing: true,
                 authenticated: false,
+                provider: action.response.provider,
             }
 
         case AUTH_.FIREBASE_TOKEN:
