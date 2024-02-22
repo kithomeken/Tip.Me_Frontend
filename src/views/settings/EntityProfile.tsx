@@ -7,11 +7,13 @@ import { ACCOUNT } from "../../api/API_Registry"
 import HttpServices from "../../services/HttpServices"
 import { Loading } from "../../components/modules/Loading"
 import { classNames } from "../../lib/modules/HelperFunctions"
+import { MemberNominations } from "./MemberNominations"
 
 export const EntityProfile = () => {
     const [state, setstate] = useState({
-        status: 'pending',
+        show: false,
         posting: false,
+        status: 'pending',
         data: {
             Fb0C: null,
             meta: null,
@@ -114,7 +116,7 @@ export const EntityProfile = () => {
 
     const approveNominatedMember = async () => {
         let { posting } = state
-        
+
         try {
             const response: any = await HttpServices.httpPost(ACCOUNT.NMNTD_MMBR_ACTION, null)
 
@@ -147,7 +149,7 @@ export const EntityProfile = () => {
 
     const rejectNominatedMember = async () => {
         let { posting } = state
-        
+
         try {
             const response: any = await HttpServices.httpDelete(ACCOUNT.NMNTD_MMBR_ACTION, null)
 
@@ -175,6 +177,19 @@ export const EntityProfile = () => {
                 draggable: true,
                 progress: undefined,
             });
+        }
+    }
+
+    const showOrHideNominationModal = () => {
+        let { data } = state
+
+        if (state.data.Nm0T === 'N' && state.data.enTT.max > 1 && state.data.Fb0C === 'Y') {
+            let { show } = state
+            show = !state.show
+
+            setstate({
+                ...state, show
+            })
         }
     }
 
@@ -323,7 +338,7 @@ export const EntityProfile = () => {
                                                         </div>
 
                                                         <div className="flex flex-row-reverse align-middle items-center pt-3">
-                                                            <span className="text-sm flex-none shadow-none px-3 py-1 bg-inherit text-stone-600 hover:underline hover:cursor-pointer mr-2 sm:w-auto sm:text-sm">
+                                                            <span onClick={showOrHideNominationModal} className="text-sm flex-none shadow-none px-3 py-1 bg-inherit text-stone-600 hover:underline hover:cursor-pointer mr-2 sm:w-auto sm:text-sm">
                                                                 Nominate another
                                                             </span>
 
@@ -338,32 +353,6 @@ export const EntityProfile = () => {
                                     </div>
                                 )
                             }
-
-
-                            {/* <div className="mb-2 bg-sky-00 px-2">
-                                <div className="flex flex-row align-middle items-center text-sky-700 px-2">
-                                    <i className="fa-duotone fa-phone fa-2x mt-1 text-stone-400 flex-none"></i>
-
-                                    <div className="flex-auto ml-1 mt-1">
-                                        <span className="text-sm pl-3 block py- text-blue-700">
-                                            {state.data.designated.display_name}
-                                        </span>
-
-                                        <span className="text-sm pl-3 block py-2 text-blue-700">
-                                            <PhoneInput
-                                                international
-                                                readOnly={true}
-                                                disabled={true}
-                                                defaultCountry="KE"
-                                                onChange={emptyOnChangeHandler}
-                                                value={state.data.designated.msisdn}
-                                            />
-                                        </span>
-                                    </div>
-                                </div>
-                            </div> */}
-
-
                         </div >
                     ) : (
                         <div className="w-full h-full flex flex-col justify-center">
@@ -374,6 +363,17 @@ export const EntityProfile = () => {
                     )
                 }
 
+                {
+                    state.status === 'fulfilled' ? (
+                        state.data.Nm0T === 'N' && state.data.enTT.max > 1 && state.data.Fb0C === 'Y' ? (
+                            <MemberNominations
+                                show={state.show}
+                                reload={fetchDesignatedMember}
+                                showOrHide={showOrHideNominationModal}
+                            />
+                        ) : null
+                    ) : null
+                }
             </div >
         </React.Fragment >
     )
