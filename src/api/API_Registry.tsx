@@ -63,6 +63,7 @@ export const ACCOUNT: any = {
     GET_NOMINATED:          '/v1/account/settings/entity/nominated/member',
     SET_NOMINATED:          '/v1/account/settings/entity/nominated/member/set-own',
     NMNTD_MMBR_ACTION:      '/v1/account/settings/entity/nominated/member/action',
+    MEMBER_NOMINTATION:     '/v1/account/settings/entity/nominated/member/set-other'
 }
 
 
