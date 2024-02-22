@@ -40,6 +40,7 @@ export const SignIn = () => {
         authRedirectResult()
             .then(async (result) => {
                 if (!result) {
+                    dispatch(resetAuth0())
                     return;
                 }
 
@@ -248,7 +249,15 @@ export const SignIn = () => {
                                 <div className="flex items-center pt-1 justify-center dark:bg-gray-800">
                                     <button type="button" onClick={signInWithGoogle} className="gap-2 w-64 border-slate-300 dark:border-slate-700 text-stone-700 dark:text-stone-200 hover:border-stone-400 hover:text-slate-900 dark:hover:text-slate-300 transition duration-150 disabled:cursor-not-allowed text-sm rounded-md border shadow-sm px-4 py-2.5 focus:outline-none flex items-center justify-center" disabled={auth0.processing} style={{ height: '3rem' }}>
                                         <img className="w-6 h-6" src="https://www.svgrepo.com/show/475656/google-color.svg" loading="lazy" alt="google logo" />
-                                        <span className="pl-2">Sign in with Google</span>
+                                        <span className="pl-2">
+                                            {
+                                                auth0.processing && auth0.provider === 'google' ? (
+                                                    <span>Sign up with Google</span>
+                                                ) : (
+                                                    <span>Sign up with Google</span>
+                                                )
+                                            }
+                                        </span>
                                     </button>
                                 </div>
                             </div>
@@ -319,14 +328,16 @@ export const SignIn = () => {
 
                                 <div className="pb-3 pt-3 flex justify-center">
                                     <button type="submit" className="w-44 disabled:cursor-not-allowed text-sm rounded-md border border-transparent shadow-sm px-4 py-2 bg-amber-500 text-white disabled:bg-amber-600 hover:bg-amber-600 focus:outline-none flex items-center justify-center" disabled={auth0.processing} style={{ height: '3rem' }}>
-                                        {auth0.processing ? (
-                                            <span className="flex flex-row items-center">
-                                                <i className="fad fa-spinner-third fa-xl fa-spin mr-2"></i>
-                                                <span>Signing In...</span>
-                                            </span>
-                                        ) : (
-                                            <span>Sign In</span>
-                                        )}
+                                        {
+                                            auth0.processing && auth0.provider === 'password' ? (
+                                                <span className="flex flex-row items-center">
+                                                    <i className="fad fa-spinner-third fa-xl fa-spin mr-2"></i>
+                                                    <span>Signing In...</span>
+                                                </span>
+                                            ) : (
+                                                <span>Sign In</span>
+                                            )
+                                        }
                                     </button>
                                 </div>
                             </form>

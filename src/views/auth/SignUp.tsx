@@ -70,6 +70,7 @@ export const SignUp = () => {
         authRedirectResult()
             .then(async (result) => {
                 if (!result) {
+                    dispatch(resetAuth0())
                     return;
                 }
 
@@ -172,7 +173,7 @@ export const SignUp = () => {
 
         if (!auth0.processing) {
             let passedValidation = validateForm()
-            let {acceptTerms} = state
+            let { acceptTerms } = state
 
             if (passedValidation) {
                 if (!acceptTerms) {
@@ -185,7 +186,7 @@ export const SignUp = () => {
                         draggable: true,
                         progress: undefined,
                     });
-    
+
                     return
                 }
 
@@ -214,7 +215,7 @@ export const SignUp = () => {
 
     const signUpWithGoogle = () => {
         if (!auth0.processing) {
-            let {acceptTerms} = state
+            let { acceptTerms } = state
 
             if (!acceptTerms) {
                 toast.warning("Kindly accept the terms and conditions before signing up", {
@@ -347,7 +348,15 @@ export const SignUp = () => {
                                 <div className="flex items-center pt-1 justify-center dark:bg-gray-800">
                                     <button type="button" onClick={signUpWithGoogle} className="gap-2 w-64 border-slate-300 dark:border-slate-700 text-stone-700 dark:text-stone-200 hover:border-stone-400 hover:text-slate-900 dark:hover:text-slate-300 transition duration-150 disabled:cursor-not-allowed text-sm rounded-md border shadow-sm px-4 py-2.5 focus:outline-none flex items-center justify-center" disabled={auth0.processing} style={{ height: '3rem' }}>
                                         <img className="w-6 h-6" src="https://www.svgrepo.com/show/475656/google-color.svg" loading="lazy" alt="google logo" />
-                                        <span className="pl-2">Sign up with Google</span>
+                                        <span className="pl-2">
+                                            {
+                                                auth0.processing && auth0.provider === 'google' ? (
+                                                    <span>Sign up with Google</span>
+                                                ) : (
+                                                    <span>Sign up with Google</span>
+                                                )
+                                            }
+                                        </span>
                                     </button>
                                 </div>
                             </div>
@@ -458,14 +467,16 @@ export const SignUp = () => {
 
                                 <div className="pb-3 pt-3 flex justify-center">
                                     <button type="submit" className="w-44 disabled:cursor-not-allowed text-sm rounded-md border border-transparent shadow-sm px-4 py-2 bg-amber-500 text-white disabled:bg-amber-600 hover:bg-amber-600 focus:outline-none flex items-center justify-center" disabled={auth0.processing} style={{ height: '3rem' }}>
-                                        {auth0.processing ? (
-                                            <span className="flex flex-row items-center">
-                                                <i className="fad fa-spinner-third fa-xl fa-spin mr-2"></i>
-                                                <span>Signing Up...</span>
-                                            </span>
-                                        ) : (
-                                            <span>Sign Up</span>
-                                        )}
+                                        {
+                                            auth0.processing && auth0.provider === 'password' ? (
+                                                <span className="flex flex-row items-center">
+                                                    <i className="fad fa-spinner-third fa-xl fa-spin mr-2"></i>
+                                                    <span>Signing Up...</span>
+                                                </span>
+                                            ) : (
+                                                <span>Sign Up</span>
+                                            )
+                                        }
                                     </button>
                                 </div>
                             </form>
