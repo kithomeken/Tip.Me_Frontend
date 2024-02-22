@@ -1,20 +1,19 @@
 import { Helmet } from "react-helmet";
+import { toast } from "react-toastify";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { Navigate, useLocation } from "react-router";
 
+import { useDispatch } from "react-redux";
 import { getRedirectResult } from "firebase/auth";
 import { useAppSelector } from "../../store/hooks";
+import { Navigate, useLocation } from "react-router";
+import { TermsAndConditions } from "./TermsAndConditions";
 import { authenticationRoutes } from "../../routes/authRoutes";
 import { firebaseAuth } from "../../firebase/firebaseConfigs";
-import { APPLICATION, AUTH_, STORAGE_KEYS } from "../../global/ConstantsRegistry";
+import { APPLICATION, AUTH_ } from "../../global/ConstantsRegistry";
 import { G_onInputChangeHandler, G_onInputBlurHandler } from "../../components/lib/InputHandlers";
 import { firebaseAuthActions, generateSanctumToken, resetAuth0 } from "../../store/auth/firebaseAuthActions";
 import { DeviceInfo, classNames, emailValidator, passwordValidator } from "../../lib/modules/HelperFunctions";
-import StorageServices from "../../services/StorageServices";
-import { TermsAndConditions } from "./TermsAndConditions";
-import { toast } from "react-toastify";
 
 export const SignUp = () => {
     const [state, setstate] = useState({
@@ -54,6 +53,9 @@ export const SignUp = () => {
 
     const locationState: any = location.state
     const auth0: any = useAppSelector(state => state.auth0)
+
+    console.log('auth0', auth0);
+
 
     const signInRoute: any = (
         authenticationRoutes.find(
@@ -177,7 +179,7 @@ export const SignUp = () => {
 
             if (passedValidation) {
                 if (!acceptTerms) {
-                    toast.warning("Kindly accept the terms and conditions before signing up", {
+                    toast.warning("Kindly read through and accept the terms and conditions", {
                         position: "top-right",
                         autoClose: 7000,
                         hideProgressBar: true,
@@ -218,7 +220,7 @@ export const SignUp = () => {
             let { acceptTerms } = state
 
             if (!acceptTerms) {
-                toast.warning("Kindly accept the terms and conditions before signing up", {
+                toast.warning("Kindly read through and accept the terms and conditions", {
                     position: "top-right",
                     autoClose: 7000,
                     hideProgressBar: true,
@@ -346,14 +348,19 @@ export const SignUp = () => {
 
                             <div className="px-3 py-4 text-sm mb-2">
                                 <div className="flex items-center pt-1 justify-center dark:bg-gray-800">
-                                    <button type="button" onClick={signUpWithGoogle} className="gap-2 w-64 border-slate-300 dark:border-slate-700 text-stone-700 dark:text-stone-200 hover:border-stone-400 hover:text-slate-900 dark:hover:text-slate-300 transition duration-150 disabled:cursor-not-allowed text-sm rounded-md border shadow-sm px-4 py-2.5 focus:outline-none flex items-center justify-center" disabled={auth0.processing} style={{ height: '3rem' }}>
-                                        <img className="w-6 h-6" src="https://www.svgrepo.com/show/475656/google-color.svg" loading="lazy" alt="google logo" />
-                                        <span className="pl-2">
+                                    <button type="button" onClick={signUpWithGoogle} className="w-64 border-slate-300 dark:border-slate-700 text-stone-700 dark:text-stone-200 hover:border-stone-400 hover:text-slate-900 dark:hover:text-slate-300 transition duration-150 disabled:cursor-not-allowed text-sm rounded-md border shadow-sm focus:outline-none " disabled={auth0.processing} style={{ height: '3rem' }}>
+                                        <span className="pl-2 block">
                                             {
                                                 auth0.processing && auth0.provider === 'google' ? (
-                                                    <span>Sign up with Google</span>
+                                                    <span className="flex flex-row items-center text-stone-600">
+                                                        <i className="fad fa-spinner-third fa-xl fa-spin mr-2"></i>
+                                                        <span>Signing up with Google</span>
+                                                    </span>
                                                 ) : (
-                                                    <span>Sign up with Google</span>
+                                                    <span className="flex items-center gap-x-3 px-4 justify-center align-middle text-stone-600">
+                                                        <img className="w-6 h-6" src="https://www.svgrepo.com/show/475656/google-color.svg" loading="lazy" alt="google logo" />
+                                                        Sign up with Google
+                                                    </span>
                                                 )
                                             }
                                         </span>
