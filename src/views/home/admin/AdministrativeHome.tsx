@@ -9,6 +9,7 @@ import { Loading } from "../../../components/modules/Loading"
 import { standardRoutes } from "../../../routes/standardRoutes"
 import { CONFIG_MAX_WIDTH } from "../../../global/ConstantsRegistry"
 import { API_RouteReplace, humanReadableDate } from "../../../lib/modules/HelperFunctions"
+import { RequestDetails } from "./RequestDetails"
 
 export const AdminstrativeHome = () => {
     const [state, setstate] = useState({
@@ -17,11 +18,23 @@ export const AdminstrativeHome = () => {
         data: {
             pending: null,
         },
+        show: {
+            requestPanel: false,
+        }
     })
 
     React.useEffect(() => {
         pendingOnboardingRequests()
     }, [])
+
+    const showOrHideRequestDetailsPanel = () => {
+        let {show} = state
+        show.requestPanel = !state.show.requestPanel
+
+        setstate({
+            ...state, show
+        })
+    }
 
     const pendingOnboardingRequests = async () => {
         let { data } = state
@@ -88,14 +101,16 @@ export const AdminstrativeHome = () => {
                 Header: '-',
                 id: 'ihbs87rvhb3298',
                 accessor: (data: { x_uuid: any }) => (
-                    <Link to={`${API_RouteReplace(viewPendingRequestRoute, ':uuid', data.x_uuid)}`} className="text-amber-600 m-auto hover:underline text-right float-right cursor-pointer hover:text-amber-900 text-xs">
+                    <button onClick={showOrHideRequestDetailsPanel} type="button" className="text-amber-600 m-auto hover:underline text-right float-right cursor-pointer hover:text-amber-900 text-xs">
                         View
-                    </Link>
+                    </button>
                 )
             },
         ],
         []
     )
+
+
 
     return (
         <React.Fragment>
@@ -139,6 +154,11 @@ export const AdminstrativeHome = () => {
                     )
                 }
             </div>
+
+            <RequestDetails
+                show={state.show.requestPanel}
+                showOrHide={showOrHideRequestDetailsPanel}
+            />
         </React.Fragment>
     )
 }
