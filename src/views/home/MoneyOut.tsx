@@ -177,7 +177,7 @@ export const MoneyOut = ({ account }: { account: string }) => {
                                                                 ) : (
                                                                     <span>
                                                                         <i className="fa-duotone fa-badge-check mr-2 fa-lg"></i>
-                                                                        Approve --- M
+                                                                        Approve
                                                                     </span>
                                                                 )
                                                             }
@@ -241,6 +241,11 @@ export const MoneyOut = ({ account }: { account: string }) => {
                                                 <span className="hidden md:inline-block">Processing Fee ({data.comm_rate}%):</span>
                                                 <span className="md:hidden">Processing Fee ({data.comm_rate}%):</span>
                                             </span>
+
+                                            <span className=" py-1 block mb-2">
+                                                <span className="hidden md:inline-block">Mpesa Transaction Costs:</span>
+                                                <span className="md:hidden">Mpesa Transaction Costs:</span>
+                                            </span>
                                         </div>
 
                                         <div className="basis-1/3 text-stone-600 text-right">
@@ -250,6 +255,10 @@ export const MoneyOut = ({ account }: { account: string }) => {
 
                                             <span className=" py-1 block mb-2 capitalize">
                                                 {formatAmount(parseFloat(data.comm_amount))}
+                                            </span>
+
+                                            <span className=" py-1 block mb-2 capitalize">
+                                                {formatAmount(parseFloat(data.mpesa_b2c_fee))}
                                             </span>
                                         </div>
                                     </div>
@@ -292,7 +301,7 @@ export const MoneyOut = ({ account }: { account: string }) => {
                     ) : (
                         <div className="px-0 w-full">
                             <div className="flex flex-col md:flex-row gap-y-4 md:gap-x-4 pt-2">
-                                <div className="w-full flex-grow flex flex-col md:pr-3 align-middle gap-y-2 md:pl-4 md:basis-1/2">
+                                <div className="w-full flex-grow flex flex-col md:pr-3 align-middle gap-y- md:pl-4 md:basis-1/2">
                                     <div className="w-full flex flex-row align-middle items-center gap-x-3 md:px-3 md:basis-1/2">
                                         <div className="basis-1/2">
                                             <span className=" py-0 px-1.5 text-stone-500 text-xs">
@@ -312,7 +321,7 @@ export const MoneyOut = ({ account }: { account: string }) => {
                                         </div>
                                     </div>
 
-                                    <div className="w-full md:flex hidden flex-row align-middle gap-x-3 items-center md:px-3 md:basis-1/2">
+                                    <div className="w-full md:flex hidden flex-col-reverse align-middle gap-x-3 items-cnter md:px-3 md:basis-1/2">
                                         <div className="basis-1/2">
                                             {
                                                 data.status === 'N' ? (
@@ -321,7 +330,7 @@ export const MoneyOut = ({ account }: { account: string }) => {
                                                             data.meta.app < data.meta.all ? (
                                                                 <span>Pending approval from members</span>
                                                             ) : (
-                                                                <span>Pending approval from administrator</span>
+                                                                <span>Pending admin's approval</span>
                                                             )
                                                         }
                                                     </span>
@@ -341,7 +350,7 @@ export const MoneyOut = ({ account }: { account: string }) => {
                                             <span className={
                                                 classNames(
                                                     data.meta.app < data.meta.all ? 'text-orange-500' : 'text-emerald-500',
-                                                    'text-sm ml-3'
+                                                    'text-sm'
                                                 )
                                             }>
                                                 {
@@ -365,7 +374,7 @@ export const MoneyOut = ({ account }: { account: string }) => {
                                                         data.meta.app < data.meta.all ? (
                                                             <span>Pending approval from members</span>
                                                         ) : (
-                                                            <span>Pending approval from administrator</span>
+                                                            <span>Pending admin's approval</span>
                                                         )
                                                     }
                                                 </span>
@@ -411,6 +420,11 @@ export const MoneyOut = ({ account }: { account: string }) => {
                                                 <span className="hidden md:inline-block">Processing Fee ({data.comm_rate}%):</span>
                                                 <span className="md:hidden">Processing Fee ({data.comm_rate}%):</span>
                                             </span>
+
+                                            <span className=" py-1 block mb-2">
+                                                <span className="hidden md:inline-block">Mpesa Transaction Cost:</span>
+                                                <span className="md:hidden">Mpesa Transaction Cost:</span>
+                                            </span>
                                         </div>
 
                                         <div className="basis-1/3 text-stone-600 text-right">
@@ -420,6 +434,10 @@ export const MoneyOut = ({ account }: { account: string }) => {
 
                                             <span className=" py-1 block mb-2 capitalize">
                                                 {formatAmount(parseFloat(data.comm_amount))}
+                                            </span>
+
+                                            <span className=" py-1 block mb-2 capitalize">
+                                                {formatAmount(parseFloat(data.mpesa_b2c_fee))}
                                             </span>
                                         </div>
                                     </div>
