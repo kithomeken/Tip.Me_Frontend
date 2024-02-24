@@ -26,8 +26,10 @@ export const WithdrawModal: FC<props> = ({ show, showOrHide, account, entity }) 
         summary: {
             fee: '0',
             receipt: '0',
+            b2C_charge: '0',
         },
         data: {
+            charges: null,
             pending: '',
             locked: '',
             bal: '',
@@ -63,7 +65,6 @@ export const WithdrawModal: FC<props> = ({ show, showOrHide, account, entity }) 
         try {
             const apiRoute = API_RouteReplace(ACCOUNT.VALIDATE_WITHDRAWAL, ':auid', account)
             const response: any = await HttpServices.httpPostWithoutData(apiRoute)
-            console.log(response);
 
             if (response.data.success) {
                 status = 'fulfilled'
@@ -71,6 +72,8 @@ export const WithdrawModal: FC<props> = ({ show, showOrHide, account, entity }) 
                 data.max = response.data.payload.max
                 data.min = response.data.payload.min
                 data.fee = response.data.payload.fee
+
+                data.charges = response.data.payload.charges
                 data.bal = formatAmount(parseFloat(data.bal))
             } else {
                 status = 'rejected'
@@ -85,19 +88,29 @@ export const WithdrawModal: FC<props> = ({ show, showOrHide, account, entity }) 
 
         setstate({
             ...state, status, data, posting: false, modal,
-            summary: { fee: '0', receipt: '0' },
+            summary: { fee: '0', receipt: '0', b2C_charge: '0' },
             input: { amount: '', description: '' },
             errors: { amount: '', description: '' },
         })
     }
 
-    const showOrHideSummaryDescription = () => {
-        let { show } = state
-        show = !state.show
+    function b2cBusinessCharge(amount: any) {
+        let businessCharge = 0;
+        let { data } = state
 
-        setstate({
-            ...state, show
-        })
+        // Iterate through the charges array
+        data.charges.forEach((charge: any) => {
+            const min = parseFloat(charge.min);
+            const max = parseFloat(charge.max);
+
+            // Check if the amount falls within the range
+            if (amount >= min && amount <= max) {
+                // Retrieve the business charge for the corresponding range
+                businessCharge = parseFloat(charge.business);
+            }
+        });
+
+        return businessCharge;
     }
 
     const onChangeHandler = (e: any) => {
@@ -113,11 +126,13 @@ export const WithdrawModal: FC<props> = ({ show, showOrHide, account, entity }) 
         let theAmount = output.value.replace(',', '')
         theAmount = theAmount.length < 1 ? '0' : theAmount
 
+        let mpesaB2C_Charges = b2cBusinessCharge(theAmount)
         let processingFees = parseFloat(theAmount) * parseFloat(data.fee) / 100
-        let receiptAmount = parseFloat(theAmount) - processingFees
+        let receiptAmount = parseFloat(theAmount) - processingFees - mpesaB2C_Charges
 
         summary.fee = processingFees.toString()
         summary.receipt = receiptAmount.toString()
+        summary.b2C_charge = mpesaB2C_Charges.toString()
 
         setstate({
             ...state, input, errors, summary
@@ -150,11 +165,13 @@ export const WithdrawModal: FC<props> = ({ show, showOrHide, account, entity }) 
                         output.value = walletBalanace
                         output.error = 'Maximum withdrawal amount is KSh. ' + formatAmount(parseFloat(walletBalanace))
                     } else {
+                        let mpesaB2C_Charges = b2cBusinessCharge(theAmount)
                         let processingFees = parseFloat(theAmount) * parseFloat(data.fee) / 100
-                        let receiptAmount = parseFloat(theAmount) - processingFees
+                        let receiptAmount = parseFloat(theAmount) - processingFees - mpesaB2C_Charges
 
                         summary.fee = processingFees.toString()
                         summary.receipt = receiptAmount.toString()
+                        summary.b2C_charge = mpesaB2C_Charges.toString()
                     }
                 }
 
@@ -175,8 +192,6 @@ export const WithdrawModal: FC<props> = ({ show, showOrHide, account, entity }) 
 
     function formValidation() {
         let valid = true
-
-        let { data } = state
         let { input } = state
         let { errors } = state
 
@@ -246,7 +261,7 @@ export const WithdrawModal: FC<props> = ({ show, showOrHide, account, entity }) 
             let { input } = state
             let formData = new FormData()
             formData.append("amount", input.amount.replace(',', ''))
-            
+
             const withdrawResponse: any = await HttpServices.httpPost(ACCOUNT.REQUEST_WITHDRAWAL, formData)
 
             if (withdrawResponse.data.success) {
@@ -353,6 +368,11 @@ export const WithdrawModal: FC<props> = ({ show, showOrHide, account, entity }) 
                                 <div className="flex flex-row w-full align-middle items-center">
                                     <div className="basis-2/3 text-stone-500 text-sm">
                                         <span className=" py-1 block mb-2">
+                                            <span className="hidden md:inline-block">Mpesa Transaction Costs:</span>
+                                            <span className="md:hidden">Mpesa Transaction Costs:</span>
+                                        </span>
+
+                                        <span className=" py-1 block mb-2">
                                             <span className="hidden md:inline-block">Processing Fee ({state.data.fee}%):</span>
                                             <span className="md:hidden">Processing Fee ({state.data.fee}%):</span>
                                         </span>
@@ -364,6 +384,10 @@ export const WithdrawModal: FC<props> = ({ show, showOrHide, account, entity }) 
                                     </div>
 
                                     <div className="basis-1/3 text-stone-600 text-right">
+                                        <span className=" py-1 block mb-2 capitalize">
+                                            {formatAmount(parseFloat(state.summary.b2C_charge))}
+                                        </span>
+
                                         <span className=" py-1 block mb-2 capitalize">
                                             {formatAmount(parseFloat(state.summary.fee))}
                                         </span>
@@ -392,8 +416,6 @@ export const WithdrawModal: FC<props> = ({ show, showOrHide, account, entity }) 
                     </>
                 }
             />
-
-
         </React.Fragment>
     )
 }
