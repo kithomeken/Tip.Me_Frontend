@@ -1,7 +1,7 @@
 import { Home } from "../views/home/Home";
 import { IndexToHome } from "../views/home/IndexToHome";
 import { Routes_Interface } from "../lib/modules/routesInterface";
-import { PendingRequests } from "../views/home/PendingRequests";
+import { PendingRequests } from "../views/home/admin/PendingRequests";
 import { WithdrawalRequest } from "../views/home/WithdrawalRequest";
 import { AccountManagement } from "../views/settings/AccountManagement";
 

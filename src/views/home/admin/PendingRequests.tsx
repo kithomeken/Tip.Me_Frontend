@@ -2,12 +2,12 @@ import React, { useState } from "react"
 import { Helmet } from "react-helmet"
 import { useParams } from "react-router-dom"
 
-import { ERR_404 } from "../errors/ERR_404";
-import HttpServices from "../../services/HttpServices";
-import { ADMINISTRATION } from "../../api/API_Registry";
-import { Loading } from "../../components/modules/Loading";
-import { API_RouteReplace, DateFormating, renderArtistDocuments } from "../../lib/modules/HelperFunctions";
-import { CONFIG_MAX_WIDTH } from "../../global/ConstantsRegistry";
+import { ERR_404 } from "../../errors/ERR_404";
+import HttpServices from "../../../services/HttpServices";
+import { ADMINISTRATION } from "../../../api/API_Registry";
+import { Loading } from "../../../components/modules/Loading";
+import { API_RouteReplace, DateFormating, renderArtistDocuments } from "../../../lib/modules/HelperFunctions";
+import { CONFIG_MAX_WIDTH } from "../../../global/ConstantsRegistry";
 import { RejectRequest } from "./RejectRequest";
 
 export const PendingRequests = () => {

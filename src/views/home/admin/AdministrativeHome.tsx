@@ -1,14 +1,14 @@
 import React, { useState } from "react"
 
-import { ADMINISTRATION } from "../../api/API_Registry"
-import HttpServices from "../../services/HttpServices"
-import { Loading } from "../../components/modules/Loading"
+import { Empty } from "../../errors/Empty"
 import { Link } from "react-router-dom"
-import { API_RouteReplace, DateFormating } from "../../lib/modules/HelperFunctions"
-import ReactTable from "../../lib/hooks/ReactTable"
-import { Empty } from "../errors/Empty"
-import { CONFIG_MAX_WIDTH } from "../../global/ConstantsRegistry"
-import { standardRoutes } from "../../routes/standardRoutes"
+import ReactTable from "../../../lib/hooks/ReactTable"
+import HttpServices from "../../../services/HttpServices"
+import { ADMINISTRATION } from "../../../api/API_Registry"
+import { Loading } from "../../../components/modules/Loading"
+import { standardRoutes } from "../../../routes/standardRoutes"
+import { CONFIG_MAX_WIDTH } from "../../../global/ConstantsRegistry"
+import { API_RouteReplace, humanReadableDate } from "../../../lib/modules/HelperFunctions"
 
 export const AdminstrativeHome = () => {
     const [state, setstate] = useState({
@@ -29,8 +29,6 @@ export const AdminstrativeHome = () => {
 
         try {
             const response: any = await HttpServices.httpGet(ADMINISTRATION.PENDING_REQUETS)
-            console.log(response);
-
 
             if (response.data.success) {
                 data.pending = response.data.payload.requests
@@ -82,7 +80,7 @@ export const AdminstrativeHome = () => {
                 id: 'jhfbcinsakdnwq',
                 accessor: (data: { created_at: any }) => (
                     <span className="block mb-0 text-sm">
-                        {DateFormating(data.created_at)}
+                        {humanReadableDate(data.created_at)}
                     </span>
                 )
             },

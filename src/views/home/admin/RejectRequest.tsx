@@ -1,10 +1,10 @@
 import React, { FC, useState } from "react"
 
-import HttpServices from "../../services/HttpServices"
-import { ADMINISTRATION } from "../../api/API_Registry"
-import { DynamicModal } from "../../lib/hooks/DynamicModal"
-import { API_RouteReplace, classNames } from "../../lib/modules/HelperFunctions"
-import { G_onInputChangeHandler, G_onInputBlurHandler } from "../../components/lib/InputHandlers"
+import HttpServices from "../../../services/HttpServices"
+import { ADMINISTRATION } from "../../../api/API_Registry"
+import { DynamicModal } from "../../../lib/hooks/DynamicModal"
+import { API_RouteReplace, classNames } from "../../../lib/modules/HelperFunctions"
+import { G_onInputChangeHandler, G_onInputBlurHandler } from "../../../components/lib/InputHandlers"
 
 interface Props {
     uuid: string,
