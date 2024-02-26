@@ -27,12 +27,15 @@ export const AdminstrativeHome = () => {
         pendingOnboardingRequests()
     }, [])
 
-    const showOrHideRequestDetailsPanel = () => {
-        let {show} = state
+    const showOrHideRequestDetailsPanel = (uuidX: string) => {
+        let { show } = state
+        let { uuid } = state
+
         show.requestPanel = !state.show.requestPanel
+        uuid = uuidX
 
         setstate({
-            ...state, show
+            ...state, show, uuid
         })
     }
 
@@ -41,7 +44,7 @@ export const AdminstrativeHome = () => {
         let { status } = state
 
         try {
-            const response: any = await HttpServices.httpGet(ADMINISTRATION.PENDING_REQUETS)
+            const response: any = await HttpServices.httpGet(ADMINISTRATION.ALL_REQUETS)
 
             if (response.data.success) {
                 data.pending = response.data.payload.requests
@@ -78,6 +81,32 @@ export const AdminstrativeHome = () => {
                 ),
             },
             {
+                Header: 'Status',
+                id: 'n9YpE3zK0q',
+                accessor: (data: { status: any }) => (
+                    <span>
+                        {
+                            data.status === 'A' ? (
+                                <span className="bg-green-200 text-emerald-700 text-xs py-1 px-2 rounded-md">
+                                    <span className="hidden md:inline-block">Approved</span>
+                                    <span className="md:hidden">Approved</span>
+                                </span>
+                            ) : data.status === 'P' ? (
+                                <span className="bg-sky-200 text-sky-700 text-xs py-1 px-2 rounded-md">
+                                    <span className="hidden md:inline-block">New Request</span>
+                                    <span className="md:hidden">New</span>
+                                </span>
+                            ) : (
+                                <span className="bg-red-200 text-red-500 text-xs py-1 px-1.5 rounded">
+                                    <span className="hidden md:inline-block">Rejected</span>
+                                    <span className="md:hidden">Rejected</span>
+                                </span>
+                            )
+                        }
+                    </span>
+                ),
+            },
+            {
                 Header: 'Type',
                 id: 'cle22tk3i',
                 accessor: (data: { type: any }) => (
@@ -100,17 +129,15 @@ export const AdminstrativeHome = () => {
             {
                 Header: '-',
                 id: 'ihbs87rvhb3298',
-                accessor: (data: { x_uuid: any }) => (
-                    <button onClick={showOrHideRequestDetailsPanel} type="button" className="text-amber-600 m-auto hover:underline text-right float-right cursor-pointer hover:text-amber-900 text-xs">
+                accessor: (data: { uuid: any }) => (
+                    <span onClick={() => showOrHideRequestDetailsPanel(data.uuid)} className="text-amber-600 m-auto hover:underline text-right block float-right cursor-pointer hover:text-amber-900 text-xs">
                         View
-                    </button>
+                    </span>
                 )
             },
         ],
         []
     )
-
-
 
     return (
         <React.Fragment>
@@ -156,6 +183,7 @@ export const AdminstrativeHome = () => {
             </div>
 
             <RequestDetails
+                uuid={state.uuid}
                 show={state.show.requestPanel}
                 showOrHide={showOrHideRequestDetailsPanel}
             />
