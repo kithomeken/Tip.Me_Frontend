@@ -73,9 +73,9 @@ export const ACCOUNT: any = {
 *********************/
 
 export const ADMINISTRATION = {
-    PENDING_REQUETS: '/v1/admin/onboarding/list/pending',
-    APPROVE_REQUETS: '/v1/admin/onboarding/list/pending/:uuid/approve',
-    DECLINE_REQUETS: '/v1/admin/onboarding/list/pending/:uuid/decline',
+    ALL_REQUETS:        '/v1/admin/onboarding/requests/all',
+    REQUETS_DETAILS:    '/v1/admin/onboarding/requests/:uuid',
+    ACTION_REQUETS:     '/v1/admin/onboarding/requests/:uuid/action',
 }
 
 
