@@ -68,6 +68,7 @@ export function G_onInputBlurHandler(event: any, posting: boolean, title: any, m
                 }
                 break
 
+            case 'comment':
             case 'description':
                 if (tValue.length < 5) {
                     input.error = head + ' cannot be less than 5 characters'
