@@ -76,6 +76,12 @@ export const ADMINISTRATION = {
     ALL_REQUETS:        '/v1/admin/onboarding/requests/all',
     REQUETS_DETAILS:    '/v1/admin/onboarding/requests/:uuid',
     ACTION_REQUETS:     '/v1/admin/onboarding/requests/:uuid/action',
+
+    MPESA_EXCEPTIONS:   '/v1/admin/payments/mpesa/exceptions',
+
+    ALL_PAYMENTS:       '/v1/admin/payments/requests/all',
+    PAYMENT_DETAILS:    '/v1/admin/payments/requests/:uuid',
+    PAYMENT_ACTION:     '/v1/admin/payments/requests/:uuid/action',
 }
 
 
