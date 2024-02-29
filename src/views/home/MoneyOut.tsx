@@ -144,11 +144,11 @@ export const MoneyOut = ({ account }: { account: string }) => {
                                         <div className="basis-1/2">
                                             <div className="basis-1/2">
                                                 {
-                                                    data.status === 'N' ? (
+                                                    data.status === 'P' ? (
                                                         <span className="inline-flex items-center mr-2 rounded-md px-2 text-sm text-orange-600">
                                                             Pending your approval
                                                         </span>
-                                                    ) : data.status === 'Y' ? (
+                                                    ) : data.status === 'A' ? (
                                                         <span className="inline-flex items-center mr-2 rounded-md px-2 text-sm text-emerald-600">
                                                             You approved the withdrawal request
                                                         </span>
@@ -164,7 +164,7 @@ export const MoneyOut = ({ account }: { account: string }) => {
 
                                     <div className="w-full flex-row align-middle hidden md:block px-3 items-center">
                                         {
-                                            data.status === 'N' ? (
+                                            data.status === 'P' ? (
                                                 <div className="w-full flex flex-row gap-x-4 pt-1 align-middle items-center">
                                                     <div className="basis-1/2">
                                                         <span onClick={() => approveOrRejectRequestCheck('A')} className="text-green-600 w-full py-2 px-4 text-sm flex flex-row border border-green-600 items-center justify-center text-center rounded-md cursor-pointer bg-white hover:bg-green-200 focus:outline-none">
@@ -211,11 +211,11 @@ export const MoneyOut = ({ account }: { account: string }) => {
                                     <div className="basis-1/2">
                                         <div className="basis-1/2">
                                             {
-                                                data.status === 'N' ? (
+                                                data.status === 'P' ? (
                                                     <span className="inline-flex items-center mr-2 rounded-md px-2 text-sm text-orange-600">
                                                         Pending your approval
                                                     </span>
-                                                ) : data.status === 'Y' ? (
+                                                ) : data.status === 'A' ? (
                                                     <span className="inline-flex items-center mr-2 rounded-md px-2 text-sm text-emerald-600">
                                                         You approved the withdrawal request
                                                     </span>
@@ -267,7 +267,7 @@ export const MoneyOut = ({ account }: { account: string }) => {
 
                             <div className="flex flex-col md:flex-row gap-y-4 pt-4">
                                 {
-                                    data.status === 'N' ? (
+                                    data.status === 'P' ? (
                                         <div className="w-full flex flex-row md:pr-3 gap-x-4 mb-4 align-middle items-center md:basis-1/2">
                                             <div className="basis-1/2">
                                                 <span onClick={() => approvePendingRequest('A')} className="text-green-600 w-full py-2 px-4 sm:hidden text-sm flex flex-row border border-green-600 items-center justify-center text-center rounded-md bg-white hover:bg-green-200 focus:outline-none">
@@ -324,7 +324,7 @@ export const MoneyOut = ({ account }: { account: string }) => {
                                     <div className="w-full md:flex hidden flex-col-reverse align-middle gap-x-3 items-cnter md:px-3 md:basis-1/2">
                                         <div className="basis-1/2">
                                             {
-                                                data.status === 'N' ? (
+                                                data.status === 'P' ? (
                                                     <span className="inline-flex items-center mr-2 rounded bg-orange-100 px-3 text-sm text-orange-600 ring-1 ring-inset ring-orange-500/20">
                                                         {
                                                             data.meta.app < data.meta.all ? (
@@ -334,7 +334,7 @@ export const MoneyOut = ({ account }: { account: string }) => {
                                                             )
                                                         }
                                                     </span>
-                                                ) : data.status === 'Y' ? (
+                                                ) : data.status === 'A' ? (
                                                     <span className="inline-flex items-center mr-2 rounded bg-emerald-100 px-3 text-sm text-emerald-600 ring-1 ring-inset ring-emerald-500/20">
                                                         Approved
                                                     </span>
@@ -368,7 +368,7 @@ export const MoneyOut = ({ account }: { account: string }) => {
                                 <div className="w-full md:hidden flex flex-col align-middle items-ceter gap-y-2 md:pl-3 md:basis-1/2">
                                     <div className="basis-1/2">
                                         {
-                                            data.status === 'N' ? (
+                                            data.status === 'P' ? (
                                                 <span className="inline-flex items-center mr-2 rounded bg-orange-100 px-3 text-sm text-orange-600 ring-1 ring-inset ring-orange-500/20">
                                                     {
                                                         data.meta.app < data.meta.all ? (
@@ -378,7 +378,7 @@ export const MoneyOut = ({ account }: { account: string }) => {
                                                         )
                                                     }
                                                 </span>
-                                            ) : data.status === 'Y' ? (
+                                            ) : data.status === 'A' ? (
                                                 <span className="inline-flex items-center mr-2 rounded bg-emerald-100 px-3 text-sm text-emerald-600 ring-1 ring-inset ring-emerald-500/20">
                                                     Approved
                                                 </span>
