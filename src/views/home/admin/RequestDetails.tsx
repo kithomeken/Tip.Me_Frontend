@@ -44,6 +44,10 @@ export const RequestDetails: FC<RequestProps> = ({ uuid, show, showOrHide }) => 
     const emptyOnChangeHandler = () => { }
 
     const fetchRequestDetails = async () => {
+        setstate({
+            ...state, status: 'pending'
+        })
+
         let { data } = state
         let { status } = state
         let { posting } = state
