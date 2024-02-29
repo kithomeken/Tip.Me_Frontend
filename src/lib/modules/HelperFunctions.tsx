@@ -13,7 +13,7 @@ export function API_RouteReplace(apiRoute: string, findT: string, replaceT: any)
 }
 
 export function DateFormating(dateString: any) {
-    return Moment(dateString).format('Do ddd MMM YYYY')
+    return Moment(dateString).format('MMM D, YYYY h:mm A')
 }
 
 export function minimalistDateFormat(dateString: any) {
