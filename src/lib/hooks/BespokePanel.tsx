@@ -3,7 +3,7 @@ import { Transition, Dialog } from "@headlessui/react"
 import { classNames } from "../modules/HelperFunctions"
 
 interface Props {
-    size?: any,
+    size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl' | '6xl',
     title: any,
     show: boolean,
     showOrHidePanel: any,
@@ -40,11 +40,19 @@ export const BespokePanel: FC<Props> = ({ show, title, showOrHidePanel, componen
                                     leaveTo="translate-x-full"
                                 >
                                     <Dialog.Panel className={classNames(
-                                        size === 'md' ? 'max-w-md' : 'max-w-sm',
+                                        size === 'sm' ? 'sm:max-w-sm' : null,
+                                        size === 'md' ? 'sm:max-w-md' : null,
+                                        size === 'lg' ? 'sm:max-w-lg' : null,
+                                        size === 'xl' ? 'sm:max-w-xl' : null,
+                                        size === '2xl' ? 'sm:max-w-2xl' : null,
+                                        size === '3xl' ? 'sm:max-w-3xl' : null,
+                                        size === '4xl' ? 'sm:max-w-4xl' : null,
+                                        size === '5xl' ? 'sm:max-w-5xl' : null,
+                                        size === '6xl' ? 'sm:max-w-6xl' : null,
                                         'pointer-events-auto relative w-screen'
                                     )}>
                                         <div className="flex h-screen flex-col bg-white shadow-xl overflow-y-auto">
-                                            <div className="w-full px-3 py-4 md:px-5 border-b-2 border-dashed">
+                                            <div className="w-full px-3 py-4 md:px-5">
                                                 <div className="top-0 left-0 flex my-0.5 flex-row-reverse align-middle">
                                                     <button
                                                         type="button"
