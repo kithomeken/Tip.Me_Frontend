@@ -161,9 +161,9 @@ export const Identity_01 = () => {
                     // Use the compressed file to upload the images to your server.        
                     // setCompressedFile(res)
                     // console.log('COM34-31x', compressedResult);
-                    input.docPhoto = compressedResult
+                    input.docPhoto = compressedResult                    
                 },
-            });
+            });            
 
             input.docFile = e.target.files[0].name
             errors[e.target.name] = ''
@@ -462,7 +462,7 @@ export const Identity_01 = () => {
                                 </div>
 
                                 {
-                                    state.input.docPhoto !== null && state.input.docPhoto !== undefined ? (
+                                    state.input.docFile && (
                                         <div className="w-full">
                                             <span className="text-gray-500 block mb-1 text-xs w-full">
                                                 File Name:
@@ -473,7 +473,7 @@ export const Identity_01 = () => {
                                                 {state.input.docFile}
                                             </span>
                                         </div>
-                                    ) : null
+                                    )
                                 }
 
                                 <div className="mb-3 pt-3 px-3 md:px-0">
