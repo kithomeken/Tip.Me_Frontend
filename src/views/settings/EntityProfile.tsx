@@ -201,7 +201,7 @@ export const EntityProfile = () => {
 
             <div className="md:w-12/12 w-full pr-4">
                 <p className="text-2xl text-amber-600 mb-3">
-                    Account Profile
+                    Nominated Member
                 </p>
 
                 {
@@ -211,10 +211,6 @@ export const EntityProfile = () => {
                         </>
                     ) : state.status === 'fulfilled' ? (
                         <div className="w-full">
-                            <p className="text-lg text-stone-600 py-2">
-                                Nominated Member
-                            </p>
-
                             <p className="text-sm text-stone-500 mb-3">
                                 This refers to a member's phone number that has been nominated to receive withdrawal notifications, funds and confirmation of transactions.
                                 {/* It serves as a unique identifier and is crucial for facilitating secure and efficient fund transfers from your account. */}
