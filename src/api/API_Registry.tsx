@@ -49,7 +49,6 @@ export const ACCOUNT: any = {
      TODO: 
      * To be reviewed later on 
     */
-    EMAIL_HISTORY: '/v1/account/auth/email/history',
     EMAIL_CHANGE: '/v1/account/auth/email/change',
     EMAIL_UNDO_CHANGE: '/v1/account/auth/email/change',
     EMAIL_VERIFICATION: '/v1/account/auth/email/resend-verification',
@@ -63,7 +62,9 @@ export const ACCOUNT: any = {
     GET_NOMINATED:          '/v1/account/settings/entity/nominated/member',
     SET_NOMINATED:          '/v1/account/settings/entity/nominated/member/set-own',
     NMNTD_MMBR_ACTION:      '/v1/account/settings/entity/nominated/member/action',
-    MEMBER_NOMINTATION:     '/v1/account/settings/entity/nominated/member/set-other'
+    MEMBER_NOMINTATION:     '/v1/account/settings/entity/nominated/member/set-other',
+
+    EMAIL_HISTORY:          '/v1/account/settings/artist/email/history',
 }
 
 
