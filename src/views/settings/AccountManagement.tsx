@@ -4,6 +4,7 @@ import { Helmet } from "react-helmet"
 import { EntityProfile } from "./EntityProfile"
 import { classNames } from "../../lib/modules/HelperFunctions"
 import { CONFIG_MAX_WIDTH } from "../../global/ConstantsRegistry"
+import { ChangeEmail } from "./ChangeEmail"
 
 export const AccountManagement = () => {
     const [state, setstate] = useState({
@@ -25,6 +26,9 @@ export const AccountManagement = () => {
         switch (tabName) {
             case 'profile':
                 return <EntityProfile />
+
+            case 'email':
+                return <ChangeEmail />
 
             default:
                 return null
@@ -63,13 +67,13 @@ export const AccountManagement = () => {
                                     </span>
                                 </button>
 
-                                <button type="button" onClick={() => setActivateTab('security')} className={classNames(
-                                    state.activeTab === 'security' ? 'text-amber-700 bg-amber-100' : 'text-slate-700 hover:bg-slate-100',
+                                <button type="button" onClick={() => setActivateTab('email')} className={classNames(
+                                    state.activeTab === 'email' ? 'text-amber-700 bg-amber-100' : 'text-slate-700 hover:bg-slate-100',
                                     "text-sm items-center w-full text-left py-2 px-4 rounded mt-2"
                                 )}>
                                     <span className="flex flex-row align-middle items-center">
                                         <span className="ml-2 flex-auto">
-                                            Security
+                                            Change Email
                                         </span>
                                     </span>
                                 </button>
