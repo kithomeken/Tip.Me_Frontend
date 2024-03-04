@@ -1,13 +1,13 @@
 import React, { FC, useState } from "react"
 import PhoneInput from 'react-phone-number-input'
 
-import { ERR_404 } from "../../errors/ERR_404"
-import HttpServices from "../../../services/HttpServices"
-import { ADMINISTRATION } from "../../../api/API_Registry"
-import { Loading } from "../../../components/modules/Loading"
-import { BespokePanel } from "../../../lib/hooks/BespokePanel"
-import { G_onInputBlurHandler, G_onInputChangeHandler } from "../../../components/lib/InputHandlers"
-import { API_RouteReplace, DateFormating, classNames, formatAmount } from "../../../lib/modules/HelperFunctions"
+import { ERR_404 } from "../errors/ERR_404"
+import HttpServices from "../../services/HttpServices"
+import { ADMINISTRATION } from "../../api/API_Registry"
+import { Loading } from "../../components/modules/Loading"
+import { BespokePanel } from "../../lib/hooks/BespokePanel"
+import { G_onInputBlurHandler, G_onInputChangeHandler } from "../../components/lib/InputHandlers"
+import { API_RouteReplace, DateFormating, classNames, formatAmount } from "../../lib/modules/HelperFunctions"
 
 interface PaymentProps {
     uuid: any,
