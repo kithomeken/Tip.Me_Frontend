@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import { Helmet } from "react-helmet"
 
 import Crypto from '../../security/Crypto'
-import { AdminstrativeHome } from "./admin/AdministrativeHome"
+import { AdminstrativeHome } from "../admin/AdministrativeHome"
 import StorageServices from "../../services/StorageServices"
 import { STORAGE_KEYS } from "../../global/ConstantsRegistry"
 import { ArtistHome } from "./ArtistHome"
