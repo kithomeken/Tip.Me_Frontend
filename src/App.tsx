@@ -9,23 +9,22 @@ import './assets/icons/fontawesome_pro/css/all.css'
 import './assets/icons/fontawesome_6_pro/css/all.css'
 import "react-toastify/dist/ReactToastify.css"
 
+import './firebase/firebaseConfigs'
 import { ERR_404 } from './views/errors/ERR_404'
-import { coreSettingsRoutes } from "./routes/configRoutes"
+import { genericRoutes } from "./routes/genericRoutes"
 import EncryptionKeys from "./security/EncryptionKeys"
 import { standardRoutes } from './routes/standardRoutes'
 import { authenticationRoutes } from './routes/authRoutes'
-import { FULLY_QUALIFIED_DOMAIN_NAME } from "./api/API_Controller"
-import { sanctumAxiosInstance } from "./lib/modules/HelperFunctions"
-import { AUTH, AUTH_SIGN_IN, AUTH_SIGN_OUT, CSRF_COOKIE_ROUTE } from "./api/API_Registry"
 import { standardErrorRoutes } from "./routes/errorRoutes"
-import CoreSettingsRouteGuard from "./lib/guards/CoreSettingsRoutesGuard"
+import { coreSettingsRoutes } from "./routes/configRoutes"
 import AuthRoutesGuard from "./lib/guards/AuthRoutesGuard"
 import ErrorRoutesGuard from "./lib/guards/ErrorRoutesGuard"
+import GenericRoutesGuard from "./lib/guards/GenericRoutesGuard"
 import StandardRoutesGuard from "./lib/guards/StandardRoutesGuard"
-
-import './firebase/firebaseConfigs'
-import { useDispatch } from "react-redux"
-import { revokeAuthSession } from "./store/auth/firebaseAuthActions"
+import { FULLY_QUALIFIED_DOMAIN_NAME } from "./api/API_Controller"
+import { sanctumAxiosInstance } from "./lib/modules/HelperFunctions"
+import CoreSettingsRouteGuard from "./lib/guards/CoreSettingsRoutesGuard"
+import { AUTH, AUTH_SIGN_OUT, CSRF_COOKIE_ROUTE } from "./api/API_Registry"
 
 interface RouteContextType {
     currentpage: string,
@@ -116,6 +115,20 @@ function App() {
                         <Route element={<ErrorRoutesGuard />} >
                             {
                                 standardErrorRoutes.map((route, index) => {
+                                    return (
+                                        <Route
+                                            path={route.path}
+                                            element={route.element}
+                                            key={index}
+                                        />
+                                    )
+                                })
+                            }
+                        </Route>
+
+                        <Route element={<GenericRoutesGuard />} >
+                            {
+                                genericRoutes.map((route, index) => {
                                     return (
                                         <Route
                                             path={route.path}
