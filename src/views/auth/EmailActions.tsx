@@ -61,6 +61,11 @@ export const EmailActions = () => {
 
         applyActionCode(firebaseAuth, actionCode).then((resp) => {
             console.log('DNEOS20-32', resp);
+            status = 'fulfilled'
+
+            setstate({
+                ...state, status, httpStatus
+            })
 
             // TODO: Display a confirmation message to the user.
             // You could also provide the user with a link back to the app.
