@@ -295,7 +295,7 @@ export const WithdrawModal: FC<props> = ({ show, showOrHide, account, entity }) 
     return (
         <React.Fragment>
             <DynamicModal
-                size={"sm"}
+                size={"md"}
                 title={'Cash Withdrawal'}
                 status={state.status}
                 show={show}
