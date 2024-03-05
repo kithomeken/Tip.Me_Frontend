@@ -74,7 +74,7 @@ export const EmailActions = () => {
             // click redirects the user back to the app via continueUrl with
             // additional state determined from that URL's parameters.
         }).catch((error) => {
-            status = 'fulfilled'
+            status = 'rejected'
             const errorCode = error.code;
             let errorMessage = error.message;
 
