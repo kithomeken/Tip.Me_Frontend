@@ -267,8 +267,8 @@ export const WithdrawModal: FC<props> = ({ show, showOrHide, account, entity }) 
             if (withdrawResponse.data.success) {
                 toast.success(withdrawResponse.data.payload.message, {
                     position: "top-right",
-                    autoClose: 7000,
-                    hideProgressBar: true,
+                    autoClose: 5000,
+                    hideProgressBar: false,
                     closeOnClick: true,
                     pauseOnHover: true,
                     draggable: true,
