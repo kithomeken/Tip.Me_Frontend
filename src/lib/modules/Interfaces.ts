@@ -12,4 +12,9 @@ export interface Generic_Error_Interface {
 	description: any
 }
 
+export interface Basic_Modal_Props {
+    reload?: any,
+    show: boolean,
+    showOrHide: any,
+}
 
