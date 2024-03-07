@@ -12,6 +12,7 @@ import { Loading } from "../../components/modules/Loading"
 import { authenticationRoutes } from '../../routes/authRoutes'
 import { APPLICATION, CONFIG_MAX_WIDTH } from "../../global/ConstantsRegistry"
 import { API_RouteReplace, classNames, formatAmount } from '../../lib/modules/HelperFunctions';
+import { ERR_404 } from '../errors/ERR_404';
 
 export const ArtistHome = () => {
     const [qrCode, setQRCode] = useState({
@@ -21,9 +22,10 @@ export const ArtistHome = () => {
 
     const [state, setstate] = useState({
         show: false,
-        status: 'pending',
-        pageTitle: 'Home',
         activeTab: 'in',
+        httpStatus: 200,
+        pageTitle: 'Home',
+        status: 'pending',
         data: {
             craft: null,
             entity: null,
@@ -37,12 +39,14 @@ export const ArtistHome = () => {
     }, [])
 
     const artistDetailsApiCall = async () => {
+        let { httpStatus } = state
         let { status } = state
         let { data } = state
 
         try {
             const apiRoute = API_RouteReplace(ACCOUNT.ARTIST_DETAILS, ':auid', 'owudow')
             const response: any = await HttpServices.httpGet(apiRoute)
+            httpStatus = response.status
 
             if (response.data.success) {
                 status = 'fulfilled'
@@ -59,21 +63,17 @@ export const ArtistHome = () => {
                 const qrCodeText = APPLICATION.URL + entity0Route
                 GenerateQRCode(qrCodeText)
 
-                console.log(qrCodeText);
-
-
                 data.entity.bal = formatAmount(parseFloat(data.entity.bal))
                 data.qrCodeImageName = 'qrcode_' + data.entity.uuid + '.png'
             } else {
                 status = 'rejected'
             }
         } catch (error) {
-            console.log(error);
             status = 'rejected'
         }
 
         setstate({
-            ...state, status, data
+            ...state, status, data, httpStatus
         })
     }
 
@@ -153,7 +153,13 @@ export const ArtistHome = () => {
 
             {
                 state.status === 'rejected' ? (
-                    <ERR_500 />
+                    state.httpStatus === 404 ? (
+                        <ERR_404
+                            compact={true}
+                        />
+                    ) : (
+                        <ERR_500 />
+                    )
                 ) : state.status === 'fulfilled' ? (
                     <div className="w-full">
                         <div className={`w-full mb-3`}>
@@ -271,10 +277,8 @@ export const ArtistHome = () => {
                         </div>
                     </div>
                 ) : (
-                    <div className="w-full h-full flex flex-col justify-center">
-                        <div className="flex-grow">
-                            <Loading />
-                        </div>
+                    <div className="w-full h-screen -mt-20 flex flex-col justify-center align-middle items-center mx-4">
+                        <Loading />
                     </div>
                 )
             }
