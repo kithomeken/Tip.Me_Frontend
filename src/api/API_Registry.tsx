@@ -58,6 +58,9 @@ export const ACCOUNT: any = {
     TEAM_RIGHTS: '/v1/account/auth/team/rights',
 
 
+    MSISDN_CHANGE:          '/v1/account/settings/artist/msisdn/change',
+
+
     ENTITY_CONTR_DATA:      '/v1/entity/contr/:uuid',
     GET_NOMINATED:          '/v1/account/settings/entity/nominated/member',
     SET_NOMINATED:          '/v1/account/settings/entity/nominated/member/set-own',
