@@ -39,28 +39,42 @@ export const ChangeEmail = () => {
     }, [])
 
     const fetchAccountEmailHistory = async () => {
-        let { httpStatus } = state
+        const providerId = firebaseAuth.currentUser.providerData[0].providerId
         let { status } = state
-        let { data } = state
 
-        try {
-            const response: any = await HttpServices.httpGet(ACCOUNT.EMAIL_HISTORY)
-            httpStatus = response.status
+        if (providerId === 'password') {
+            let { httpStatus } = state
+            let { data } = state
 
-            if (response.data.success) {
-                status = 'fulfilled'
-                data = response.data.payload
-            } else {
+            try {
+                const response: any = await HttpServices.httpGet(ACCOUNT.EMAIL_HISTORY)
+                httpStatus = response.status
+
+                if (response.data.success) {
+                    status = 'fulfilled'
+                    data = response.data.payload
+                } else {
+                    status = 'rejected'
+                }
+            } catch (error) {
+                console.log(error);
                 status = 'rejected'
             }
-        } catch (error) {
-            console.log(error);
-            status = 'rejected'
-        }
+    
+            setstate({
+                ...state, status, data, httpStatus
+            })
+
+            return
+        } 
+
+        status = 'fulfilled'
 
         setstate({
-            ...state, status, data, httpStatus
+            ...state, status
         })
+        
+        return
     }
 
     const emailChangesLeft = () => {
@@ -258,29 +272,29 @@ export const ChangeEmail = () => {
                 </p>
 
                 {
-                    state.status === 'rejected' ? (
-                        state.httpStatus === 404 ? (
-                            <ERR_404
-                                compact={true}
-                            />
-                        ) : (
-                            <ERR_500 />
-                        )
-                    ) : state.status === 'fulfilled' ? (
+                    firebaseAuth.currentUser.providerData[0].providerId === 'password' ? (
                         <>
-                            <p className="text-sm text-slate-500 mb-1">
-                                <span className="text-slate-700 mr-2">
-                                    Current e-mail address:
-                                </span>
-
-                                <span className="text-amber-600 mr-2">
-                                    {auth0.identity.email}
-                                </span>
-                            </p>
-
                             {
-                                state.data.provider === 'password' ? (
+                                state.status === 'rejected' ? (
+                                    state.httpStatus === 404 ? (
+                                        <ERR_404
+                                            compact={true}
+                                        />
+                                    ) : (
+                                        <ERR_500 />
+                                    )
+                                ) : state.status === 'fulfilled' ? (
                                     <>
+                                        <p className="text-sm text-slate-500 mb-1">
+                                            <span className="text-slate-700 mr-2">
+                                                Current e-mail address:
+                                            </span>
+
+                                            <span className="text-amber-600 mr-2">
+                                                {auth0.identity.email}
+                                            </span>
+                                        </p>
+
                                         {
                                             emailChangesLeft() === 0 ? (
                                                 <div className="w-12/12 py-3">
@@ -301,7 +315,7 @@ export const ChangeEmail = () => {
                                                     </div>
                                                 </div>
                                             ) : (
-                                                state.data.verified === null ? (
+                                                !firebaseAuth.currentUser.emailVerified ? (
                                                     <div className="w-/12 pt-3 pb-2">
                                                         <div className="mb-2 bg-sky-00 py-4 px-4 border-2 border-sky-300 border-dashed rounded-md">
                                                             <div className="flex flex-row align-middle items-center text-sky-700 px-2">
@@ -441,36 +455,34 @@ export const ChangeEmail = () => {
                                         </div>
                                     </>
                                 ) : (
-                                    <div className="bg-white px-4 pt-6 pb-4">
-                                        <div className="flex flex-col pt-4 items-center">
-                                            <div className="mx-auto flex-shrink-0 flex items-center justify-center mb-3 sm:mx-0 w-52">
-                                                <img src={noActionRequired} alt="broken_robot" width="auto" className="block text-center m-auto" />
-                                            </div>
-
-                                            <div className="mt-3 text-center m-auto text-slate-600">
-                                                <span className="text-amber-600 mb-2 block">
-                                                    Feature Not Supported
-                                                </span>
-
-                                                <div className="text-sm">
-                                                    This feature is not supported for users who signed in with a Google account at the moment.
-                                                </div>
-                                            </div>
+                                    <div className="w-full h-full flex flex-col justify-center">
+                                        <div className="flex-grow">
+                                            <Loading />
                                         </div>
                                     </div>
                                 )
                             }
                         </>
                     ) : (
-                        <div className="w-full h-full flex flex-col justify-center">
-                            <div className="flex-grow">
-                                <Loading />
+                        <div className="bg-white px-4 pt-6 pb-4">
+                            <div className="flex flex-col pt-4 items-center">
+                                <div className="mx-auto flex-shrink-0 flex items-center justify-center mb-3 sm:mx-0 w-52">
+                                    <img src={noActionRequired} alt="broken_robot" width="auto" className="block text-center m-auto" />
+                                </div>
+
+                                <div className="mt-3 text-center m-auto text-slate-600">
+                                    <span className="text-amber-600 mb-2 block">
+                                        Feature Not Supported
+                                    </span>
+
+                                    <div className="text-sm">
+                                        This feature is not supported for users who signed in with a Google account at the moment.
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     )
                 }
-
-
             </div>
         </React.Fragment>
     )
