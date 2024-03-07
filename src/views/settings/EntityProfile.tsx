@@ -3,6 +3,9 @@ import { toast } from "react-toastify"
 import React, { useState } from "react"
 import PhoneInput from 'react-phone-number-input'
 
+import { ERR_404 } from "../errors/ERR_404"
+import { ERR_500 } from "../errors/ERR_500"
+import { ChangeMsisdn } from "./ChangeMsisdn"
 import { ACCOUNT } from "../../api/API_Registry"
 import HttpServices from "../../services/HttpServices"
 import { Loading } from "../../components/modules/Loading"
@@ -11,16 +14,10 @@ import { MemberNominations } from "./MemberNominations"
 
 export const EntityProfile = () => {
     const [state, setstate] = useState({
-        show: false,
         posting: false,
+        httpStatus: 200,
         status: 'pending',
-        data: {
-            Fb0C: null,
-            meta: null,
-            enTT: null,
-            Nm0T: null,
-            designated: null,
-        },
+        data: null,
         input: {
             email: ''
         },
@@ -30,6 +27,10 @@ export const EntityProfile = () => {
         process: {
             type: '',
             state: false,
+        },
+        show: {
+            msisdnChange: false,
+            nominations: false,
         }
     })
 
@@ -40,21 +41,18 @@ export const EntityProfile = () => {
     const emptyOnChangeHandler = () => { }
 
     const fetchDesignatedMember = async () => {
+        let { httpStatus } = state
         let { posting } = state
         let { status } = state
         let { data } = state
 
         try {
             const response: any = await HttpServices.httpGet(ACCOUNT.GET_NOMINATED)
+            httpStatus = response.status
 
             if (response.data.success) {
                 status = 'fulfilled'
-
-                data.Fb0C = response.data.payload.Fb0C
-                data.Nm0T = response.data.payload.Nm0T
-                data.meta = response.data.payload.meta
-                data.enTT = response.data.payload.enTT
-                data.designated = response.data.payload.designated
+                data = response.data.payload
             } else {
                 status = 'rejected'
             }
@@ -66,7 +64,7 @@ export const EntityProfile = () => {
         posting = false
 
         setstate({
-            ...state, status, data, posting
+            ...state, status, data, posting, httpStatus
         })
     }
 
@@ -183,14 +181,23 @@ export const EntityProfile = () => {
     const showOrHideNominationModal = () => {
         let { data } = state
 
-        if (state.data.Nm0T === 'N' && state.data.enTT.max > 1 && state.data.Fb0C === 'Y') {
+        if (data.Nm0T === 'N' && data.enTT.max > 1 && data.Fb0C === 'Y') {
             let { show } = state
-            show = !state.show
+            show.nominations = !state.show.nominations
 
             setstate({
                 ...state, show
             })
         }
+    }
+
+    const showOrHideMsisdnChangeModal = () => {
+        let { show } = state
+        show.msisdnChange = !state.show.msisdnChange
+
+        setstate({
+            ...state, show
+        })
     }
 
     return (
@@ -200,27 +207,71 @@ export const EntityProfile = () => {
             </Helmet>
 
             <div className="md:w-12/12 w-full pr-4">
-                <p className="text-2xl text-amber-600 mb-3">
-                    Nominated Member
-                </p>
-
                 {
                     state.status === 'rejected' ? (
-                        <>
-
-                        </>
+                        state.httpStatus === 404 ? (
+                            <ERR_404
+                                compact={true}
+                            />
+                        ) : (
+                            <ERR_500 />
+                        )
                     ) : state.status === 'fulfilled' ? (
                         <div className="w-full">
+                            <p className="text-2xl text-amber-600 mb-3">
+                                {
+                                    state.data.enTT.max === 1 ? (
+                                        <>
+                                            Appointed Number
+                                        </>
+                                    ) : (
+                                        <>
+                                            Nominated Member
+                                        </>
+                                    )
+                                }
+                            </p>
+
                             <p className="text-sm text-stone-500 mb-3">
-                                This refers to a member's phone number that has been nominated to receive withdrawal notifications, funds and confirmation of transactions.
-                                {/* It serves as a unique identifier and is crucial for facilitating secure and efficient fund transfers from your account. */}
+                                {
+                                    state.data.enTT.max === 1 ? (
+                                        <>
+                                            Your appointed phone number that will receive withdrawal notifications, funds and confirmation of transactions.
+                                        </>
+                                    ) : (
+                                        <>
+                                            This refers to a member's phone number that has been nominated to receive withdrawal notifications, funds and confirmation of transactions.
+                                        </>
+                                    )
+                                }
                             </p>
 
                             {
                                 state.data.enTT.max === 1 ? (
-                                    <>
+                                    <div className="mb-2 py-2 border-y-2 border-stone-300 border-dashed rounded">
+                                        <span className="text-sm px-3 py-1 block bg-inherit text-stone-700 sm:w-auto sm:text-sm">
+                                            Current appointed number:
+                                        </span>
 
-                                    </>
+                                        <div className="flex md:flex-row flex-col gap-y-1 md:pt-0 pt-3 w-full md:gap-x-3 align-middle md:items-center px-3">
+                                            <div className="md:py-2 basis-1/2 text-stone-500 whitespace-nowrap">
+                                                <PhoneInput
+                                                    international
+                                                    readOnly={true}
+                                                    disabled={true}
+                                                    defaultCountry="KE"
+                                                    onChange={emptyOnChangeHandler}
+                                                    value={state.data.nominated.msisdn}
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <div className="flex flex-row-reverse align-middle items-center py-1">
+                                            <span onClick={showOrHideMsisdnChangeModal} className="text-sm flex-none shadow-none px-3 py-1 bg-inherit text-amber-600 hover:underline hover:cursor-pointer mr-2 sm:w-auto sm:text-sm">
+                                                Change Phone Number
+                                            </span>
+                                        </div>
+                                    </div>
                                 ) : (
                                     <div className="md:w-10/12 w-full py-3">
                                         {
@@ -361,13 +412,23 @@ export const EntityProfile = () => {
 
                 {
                     state.status === 'fulfilled' ? (
-                        state.data.Nm0T === 'N' && state.data.enTT.max > 1 && state.data.Fb0C === 'Y' ? (
-                            <MemberNominations
-                                show={state.show}
+                        <>
+                            {
+                                state.data.Nm0T === 'N' && state.data.enTT.max > 1 && state.data.Fb0C === 'Y' ? (
+                                    <MemberNominations
+                                        show={state.show.nominations}
+                                        reload={fetchDesignatedMember}
+                                        showOrHide={showOrHideNominationModal}
+                                    />
+                                ) : null
+                            }
+
+                            <ChangeMsisdn
+                                show={state.show.msisdnChange}
                                 reload={fetchDesignatedMember}
-                                showOrHide={showOrHideNominationModal}
+                                showOrHide={showOrHideMsisdnChangeModal}
                             />
-                        ) : null
+                        </>
                     ) : null
                 }
             </div >
