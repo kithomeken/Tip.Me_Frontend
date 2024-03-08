@@ -59,6 +59,7 @@ export const ACCOUNT: any = {
 
 
     MSISDN_CHANGE:          '/v1/account/settings/artist/msisdn/change',
+    DSPLY_NAME_CHANGE:      '/v1/account/settings/artist/display_name/update',
 
 
     ENTITY_CONTR_DATA:      '/v1/entity/contr/:uuid',
