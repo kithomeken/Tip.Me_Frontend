@@ -10,6 +10,7 @@ import { standardRoutes } from "../../routes/standardRoutes"
 import { STORAGE_KEYS } from "../../global/ConstantsRegistry"
 import cartoonChar from '../../assets/images/cartoon_character.jpg'
 import { revokeAuthSession } from "../../store/auth/firebaseAuthActions"
+import { getColorForLetter } from "../../lib/modules/HelperFunctions"
 
 interface headerProps {
     errorMode?: boolean,
@@ -23,7 +24,7 @@ export const AccountSubHeader: FC<headerProps> = ({ errorMode = false }) => {
     const storageObject = JSON.parse(encryptedKeyString)
 
     let Identity: any = Crypto.decryptDataUsingAES256(storageObject)
-    Identity = JSON.parse(Identity)    
+    Identity = JSON.parse(Identity)
 
     const IdentityRoute: any = (
         standardRoutes.find(
@@ -49,14 +50,19 @@ export const AccountSubHeader: FC<headerProps> = ({ errorMode = false }) => {
                                 className={
                                     classNames(
                                         open ? 'text-slate-700' : null,
-                                        "flex flex-row items-center w-auto px-3 rounded py-1 bg-white text-sm text-slate-500 hover:bg-slate-100 hover:text-slate-700 focus:outline-none focus:ring-0 focus:ring-offset focus:ring-offset-slate-100 focus:ring-green-500 align-middle"
+                                        "flex flex-row items-center w-auto px-3 gap-x-3 rounded py-1 bg-white text-sm text-slate-500 hover:bg-slate-100 hover:text-slate-700 focus:outline-none focus:ring-0 focus:ring-offset focus:ring-offset-slate-100 focus:ring-green-500 align-middle"
                                     )
                                 }>
                                 <span className="text-sm">{auth0.identity.display_name}</span>
 
                                 {
                                     Identity.photo_url === null ? (
-                                        <img className="ml-4 rounded-full h-10 w-10" src={cartoonChar} alt="avatar" />
+                                        // <img className="ml-4 rounded-full h-10 w-10" src={cartoonChar} alt="avatar" />
+                                        <div className={`w-10 h-10 flex items-center justify-center rounded-full ${getColorForLetter(auth0.identity.display_name.charAt(0))}`}>
+                                            <span className="text-white text-xl font-bold">
+                                                {auth0.identity.display_name.charAt(0)}
+                                            </span>
+                                        </div>
                                     ) : (
                                         <img className="ml-4 rounded-full h-10 w-10" src={Identity.photo_url} alt={Identity.photo_url} />
                                     )
