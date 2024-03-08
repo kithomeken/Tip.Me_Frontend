@@ -9,8 +9,11 @@ import { ChangeMsisdn } from "./ChangeMsisdn"
 import { ACCOUNT } from "../../api/API_Registry"
 import HttpServices from "../../services/HttpServices"
 import { Loading } from "../../components/modules/Loading"
-import { classNames } from "../../lib/modules/HelperFunctions"
+import { classNames, getColorForLetter, readDecryptAndParseLS } from "../../lib/modules/HelperFunctions"
 import { MemberNominations } from "./MemberNominations"
+import { useAppSelector } from "../../store/hooks"
+import { STORAGE_KEYS } from "../../global/ConstantsRegistry"
+import { UpdateDisplayName } from "./UpdateDisplayName"
 
 export const EntityProfile = () => {
     const [state, setstate] = useState({
@@ -31,14 +34,18 @@ export const EntityProfile = () => {
         show: {
             msisdnChange: false,
             nominations: false,
+            displayName: false,
         }
     })
+
+    const auth0: any = useAppSelector(state => state.auth0)
+    let idenityData = readDecryptAndParseLS(STORAGE_KEYS.ACCOUNT_DATA)
+
+    const emptyOnChangeHandler = () => { }
 
     React.useEffect(() => {
         fetchDesignatedMember()
     }, [])
-
-    const emptyOnChangeHandler = () => { }
 
     const fetchDesignatedMember = async () => {
         let { httpStatus } = state
@@ -200,6 +207,17 @@ export const EntityProfile = () => {
         })
     }
 
+    const showOrHideDisplayNameModal = () => {
+        if (idenityData.provider_id === 'password') {
+            let { show } = state
+            show.displayName = !state.show.displayName
+    
+            setstate({
+                ...state, show
+            })
+        }
+    }
+
     return (
         <React.Fragment>
             <Helmet>
@@ -218,7 +236,68 @@ export const EntityProfile = () => {
                         )
                     ) : state.status === 'fulfilled' ? (
                         <div className="w-full">
-                            <p className="text-2xl text-amber-600 mb-3">
+                            <div className="w-full gap-y-4 mb-4 md:gap-x-4 flex flex-col align-middle tems-center md:flex-row">
+                                <div className="w-24 h-24 flex flex-col justify-center align-middle items-center mx-auto">
+                                    {
+                                        idenityData.photo_url ? (
+                                            <>
+                                                <img className="rounded-full h-24 w-24" src={idenityData.photo_url} alt={'photo_url'} />
+                                            </>
+                                        ) : (
+                                            <>
+                                                <div className={`w-20 h-20 flex items-center justify-center rounded-full ${getColorForLetter(auth0.identity.display_name.charAt(0))}`}>
+                                                    <span className="text-white text-3xl font-bold">
+                                                        {auth0.identity.display_name.charAt(0)}
+                                                    </span>
+                                                </div>
+                                            </>
+                                        )
+                                    }
+                                </div>
+
+                                <div className="flex-grow py-3">
+                                    {
+                                        idenityData.provider_id === 'password' ? (
+                                            <>
+                                                <span className="text-3xl bg-inherit text-stone-500">
+                                                    {idenityData.display_name}
+                                                </span>
+
+                                                <div className="flex flex-row align-middle pt-3 gap-x-3">
+                                                    <span className="text-sm flex-none shadow-none py-1 bg-inherit text-amber-600 hover:underline hover:cursor-pointer mr-2 sm:w-auto sm:text-sm">
+                                                        Change Avatar
+                                                    </span>
+
+                                                    <span onClick={showOrHideDisplayNameModal} className="text-sm flex-none shadow-none border-l-2 pl-3 py-1 bg-inherit text-amber-600 hover:underline hover:cursor-pointer mr-2 sm:w-auto sm:text-sm">
+                                                        Update Profile Name
+                                                    </span>
+                                                </div>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <span className="text-3xl bg-inherit text-stone-500">
+                                                    {idenityData.display_name}
+                                                </span>
+
+                                                <span className="flex w-full flex-row items-center text-sm gap-x-3 align-middle text-stone-600 pt-3">
+                                                    <img className="w-6 h-6" src="https://www.svgrepo.com/show/475656/google-color.svg" loading="lazy" alt="google logo" />
+                                                    Google Account
+                                                </span>
+                                            </>
+                                        )
+                                    }
+                                </div>
+                            </div>
+
+
+
+
+
+
+
+
+
+                            <p className="text-xl text-amber-600 mb-3">
                                 {
                                     state.data.enTT.max === 1 ? (
                                         <>
@@ -422,6 +501,12 @@ export const EntityProfile = () => {
                                     />
                                 ) : null
                             }
+
+                            <UpdateDisplayName
+                                show={state.show.displayName}
+                                reload={fetchDesignatedMember}
+                                showOrHide={showOrHideDisplayNameModal}
+                            />
 
                             <ChangeMsisdn
                                 show={state.show.msisdnChange}
