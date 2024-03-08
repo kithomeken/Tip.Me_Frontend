@@ -78,17 +78,6 @@ export const AccountManagement = () => {
                                     </span>
                                 </button>
 
-                                <button type="button" onClick={() => setActivateTab('preferences')} className={classNames(
-                                    state.activeTab === 'preferences' ? 'text-amber-700 bg-amber-100' : 'text-slate-700 hover:bg-slate-100',
-                                    "text-sm items-center w-full text-left py-2 px-4 rounded mb-4 mt-2"
-                                )}>
-                                    <span className="flex flex-row align-middle items-center">
-                                        <span className="ml-2 flex-auto">
-                                            Preferences
-                                        </span>
-                                    </span>
-                                </button>
-
                             </div>
 
                         </div>
