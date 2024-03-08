@@ -21,8 +21,6 @@ class HttpServices {
             const GET_API_URL = API_DOMAIN + url
             return await axios.get(GET_API_URL, this.axiosInstanceHeaders())
         } catch (error: any) {
-            console.error('Error in httpGet:', error);
-
             let ERR = {
                 status: error.response?.status,
                 message: error.message,
@@ -52,8 +50,6 @@ class HttpServices {
 
             return await axios.post(POST_API_URL, data, finalOptions);
         } catch (error: any) {
-            console.error('Error in httpPost:', error);
-
             const ERR = {
                 status: error.response?.status,
                 message: error.message,
@@ -83,8 +79,6 @@ class HttpServices {
 
             return await axios.post(POST_API_URL, data, finalOptions);
         } catch (error: any) {
-            console.error('Error in httpPost:', error);
-
             const ERR = {
                 status: error.response?.status,
                 message: error.message,
@@ -172,41 +166,6 @@ class HttpServices {
 
             return await axios.post(POST_API_URL, data, finalOptions);
         } catch (error: any) {
-            const ERR = {
-                status: error.response?.status,
-                message: error.message,
-                code: error.code
-            }
-
-            if (axios.isAxiosError(error)) {
-                // Handle Axios-specific errors
-                let statusCode = error.response?.status;
-
-                if (statusCode === 401) {
-                    return this.revokeAuthenticatedSession();
-                } else {
-                    return ERR;
-                }
-            } else {
-                // Handle other types of errors
-                return ERR;
-            }
-        }
-    }
-
-    async httpCustom(url: string, data: any, method: string, options: any = null) {
-        try {
-            switch (method) {
-                case 'POST':
-                    const finalOptions = Object.assign(this.axiosInstanceHeaders(), options)
-                    const POST_API_URL = FULLY_QUALIFIED_DOMAIN_NAME + url
-        
-                    return await axios.post(POST_API_URL, data, finalOptions);
-
-                default:
-                    break;
-            }
-        } catch (error) {
             const ERR = {
                 status: error.response?.status,
                 message: error.message,
