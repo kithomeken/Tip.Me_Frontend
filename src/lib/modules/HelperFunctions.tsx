@@ -155,4 +155,16 @@ export function emailValidator(tValue) {
     return true
 }
 
+export function getColorForLetter(letter: string) {
+    const colorGroups = [
+        ['A', 'B', 'C', 'D', 'E'],
+        ['F', 'G', 'H', 'I', 'J'],
+        ['K', 'L', 'M', 'N', 'O'],
+        ['P', 'Q', 'R', 'S', 'T'],
+        ['U', 'V', 'W', 'X', 'Y', 'Z']
+    ];
 
+    const colors = ['bg-green-600', 'bg-cyan-600', 'bg-rose-700', 'bg-orange-500', 'bg-fuchsia-700'];
+    const groupIndex = colorGroups.findIndex(group => group.includes(letter.toUpperCase()));
+    return groupIndex !== -1 ? colors[groupIndex] : 'bg-gray-500'; // Default to gray if not found
+}
