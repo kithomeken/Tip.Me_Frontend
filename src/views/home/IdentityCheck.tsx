@@ -8,6 +8,11 @@ import { administrativeRoutes } from '../../routes/adminRoutes'
 import { standardRoutes } from '../../routes/standardRoutes'
 
 export const IdentityCheck = () => {
+    /* 
+     * Performs an identity check to determine 
+     * which component should be rendered
+    */
+
     const encryptedKeyString = StorageServices.getLocalStorage(STORAGE_KEYS.ACCOUNT_DATA)
     const storageObject = JSON.parse(encryptedKeyString)
 
