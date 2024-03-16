@@ -42,6 +42,7 @@ export const UserManagement = () => {
     const fetchOnboardedUsers = async () => {
         let { data } = state
         let { status } = state
+        let { search } = state
         let { httpStatus } = state
 
         try {
@@ -50,16 +51,19 @@ export const UserManagement = () => {
 
             if (response.data.success) {
                 data.onbU = response.data.payload.onbU
+                search.posting = false
                 status = 'fulfilled'
             } else {
+                search.posting = false
                 status = 'rejected'
             }
         } catch (error) {
+            search.posting = false
             status = 'rejected'
         }
 
         setstate({
-            ...state, status, data, httpStatus
+            ...state, status, data, httpStatus, search
         })
     }
 
@@ -232,24 +236,21 @@ export const UserManagement = () => {
         let { input } = state
 
         if (!search.posting) {
-            if (!input.search.trim()) {
-                setstate({
-                    ...state, status: 'pending'
-                })
+            search.posting = true
+            search.gotResults = 'search/no-operation'
 
+            setstate({
+                ...state, search
+            })
+
+            if (!input.search.trim()) {
                 fetchOnboardedUsers()
-                return;
+                return
             }
 
-            if (input.search.length > 3) {
-                search.posting = true
-                search.gotResults = 'search/no-operation'
-
-                setstate({
-                    ...state, search
-                })
-
+            if (input.search.length >= 3) {
                 retrieveSearchResults()
+                return
             }
         }
     }
