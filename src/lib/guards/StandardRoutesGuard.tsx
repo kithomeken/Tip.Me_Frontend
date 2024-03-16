@@ -49,9 +49,9 @@ export default function StandardRoutesGuard() {
                 
                 <Header />
 
-                <div className="flex flex-col w-full mb-5">
-                    <div className="w-full overflow-y-auto">
-                        <div className="kiOAkj" style={CONFIG_MARGIN_TOP}>
+                <div className="flex flex-col w-full h-screen">
+                    <div className="w-full overflow-y-auto" style={CONFIG_MARGIN_TOP}>
+                        <div className="kiOAkj py-4 px-2">
 
                             <Outlet />
                             
