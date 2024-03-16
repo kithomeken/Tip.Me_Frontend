@@ -45,44 +45,68 @@ export const Home = () => {
         let { data } = state
         let { status } = state
         let { httpStatus } = state
+        const PRc0State = StorageServices.getLocalStorage(STORAGE_KEYS.PRc0_STATE)
 
-        try {
-            const metaCheckResp: any = await HttpServices.httpGet(AUTH.META_CHECK)
-            httpStatus = metaCheckResp.status
+        if (PRc0State === null) {
+            /* 
+             * Fetch PRc0 state
+            */
+            try {
+                const metaCheckResp: any = await HttpServices.httpGet(AUTH.META_CHECK)
+                httpStatus = metaCheckResp.status
 
-            if (metaCheckResp.data.success) {
-                data.PRc0 = metaCheckResp.data.payload.PRc0
+                if (metaCheckResp.data.success) {
+                    data.PRc0 = metaCheckResp.data.payload.PRc0
 
-                const metaCheckProps = {
-                    dataDump: {
-                        PRc0: data.PRc0,
+                    const metaCheckProps = {
+                        dataDump: {
+                            PRc0: data.PRc0,
+                        }
                     }
-                }
 
-                dispatch(setPRc0MetaStage(metaCheckProps))
+                    dispatch(setPRc0MetaStage(metaCheckProps))
 
-                if (data.PRc0 === 'META_00') {
+                    if (data.PRc0 === 'META_00') {
+                        /* 
+                         * Onboarding was completed.
+                         * Fetch identity verification status
+                        */
+                        identityVerificationStatus()
+                        return
+                    }
+
                     /* 
-                     * Onboarding was completed.
-                     * Fetch identity verification status
+                     * Onboarding was not completed. 
+                     * Skip identity verification check. 
+                     * Complete onboarding first
                     */
-                    identityVerificationStatus()
-                    return
+                    status = 'fulfilled'
+                } else {
+                    status = 'rejected'
                 }
-
-                /* 
-                 * Onboarding was not completed. 
-                 * Skip identity verification check. 
-                 * Complete onboarding first
-                */
-                status = 'fulfilled'
-            } else {
+            } catch (error) {
+                console.error(error);
                 status = 'rejected'
+                httpStatus = 500
             }
-        } catch (error) {
-            console.error(error);
-            status = 'rejected'
-            httpStatus = 500
+        } else {
+            data.PRc0 = PRc0State
+
+            if (data.PRc0 === 'META_00') {
+                /* 
+                 * Onboarding was completed.
+                 * Fetch identity verification status
+                */
+                identityVerificationStatus()
+                return
+            }
+
+            /* 
+             * Onboarding was not completed. 
+             * Skip identity verification check. 
+             * Complete onboarding first
+            */
+            status = 'fulfilled'
         }
 
         setstate({
@@ -128,7 +152,6 @@ export const Home = () => {
 
         setVerified(accountVerified)
         status = 'fulfilled'
-        console.log('deon1o13', accountVerified);
 
         setstate({
             ...state, status
