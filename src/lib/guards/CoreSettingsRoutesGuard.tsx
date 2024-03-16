@@ -3,11 +3,14 @@ import { useDispatch } from "react-redux";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 
 import Auth from "./Auth";
+import Crypto from '../../security/Crypto'
 import { useAppSelector } from "../../store/hooks";
 import { Header } from "../../components/layouts/Header";
+import StorageServices from "../../services/StorageServices";
+import { STORAGE_KEYS } from "../../global/ConstantsRegistry";
 import { standardErrorRoutes } from "../../routes/errorRoutes";
-import { revokeAuthSession } from "../../store/auth/firebaseAuthActions";
 import { CoreSideBar } from "../../components/layouts/CoreSideBar";
+import { revokeAuthSession } from "../../store/auth/firebaseAuthActions";
 
 export default function CoreSettingsRouteGuard() {
     const dispatch: any = useDispatch()
@@ -37,6 +40,16 @@ export default function CoreSettingsRouteGuard() {
             return <Navigate to="/auth/sign-in" replace state={state} />;
         }
     } else {
+        const encryptedKeyString = StorageServices.getLocalStorage(STORAGE_KEYS.ACCOUNT_DATA)
+        const storageObject = JSON.parse(encryptedKeyString)
+
+        let identityData: any = Crypto.decryptDataUsingAES256(storageObject)
+        identityData = JSON.parse(identityData)
+
+        if (identityData.type !== 'A') {
+            return <Navigate to={'/home'} replace />;
+        }
+
         if (sessionState.status.disabled) {
             // Suspended accounts
             const suspendAccountRoute: any = (standardErrorRoutes.find((routeName) => routeName.name === 'SUSP_ACC'))?.path
