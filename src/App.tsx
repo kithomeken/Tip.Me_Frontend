@@ -14,10 +14,10 @@ import { ERR_404 } from './views/errors/ERR_404'
 import { genericRoutes } from "./routes/genericRoutes"
 import EncryptionKeys from "./security/EncryptionKeys"
 import { standardRoutes } from './routes/standardRoutes'
+import AuthRoutesGuard from './lib/guards/AuthRoutesGuard'
 import { authenticationRoutes } from './routes/authRoutes'
 import { standardErrorRoutes } from "./routes/errorRoutes"
-import { coreSettingsRoutes } from "./routes/configRoutes"
-import AuthRoutesGuard from "./lib/guards/AuthRoutesGuard"
+import { administrativeRoutes } from "./routes/adminRoutes"
 import ErrorRoutesGuard from "./lib/guards/ErrorRoutesGuard"
 import GenericRoutesGuard from "./lib/guards/GenericRoutesGuard"
 import StandardRoutesGuard from "./lib/guards/StandardRoutesGuard"
@@ -100,7 +100,7 @@ function App() {
 
                         <Route element={<CoreSettingsRouteGuard />} >
                             {
-                                coreSettingsRoutes.map((route, index) => {
+                                administrativeRoutes.map((route, index) => {
                                     return (
                                         <Route
                                             path={route.path}
