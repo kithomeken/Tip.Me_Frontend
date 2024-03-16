@@ -18,3 +18,19 @@ export interface Basic_Modal_Props {
     showOrHide: any,
 }
 
+export interface Line_Chart_Props {
+    labels: any,
+    dataset: any,
+    title: string,
+}
+
+export interface Core_Side_B_Props {
+    location: any,
+}
+
+export interface Search_Box_Props {
+    state: any,
+    onInputBlur: any,
+    onChangeHandler: any,
+    onSearchableTermHandler: any,
+}
