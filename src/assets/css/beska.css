@@ -21,18 +21,6 @@ body {
     display: none !important;
 }
 
-.font-small {
-    font-size: small;
-}
-
-.font-medium {
-    font-size: medium;
-}
-
-.font-large {
-    font-size: large;
-}
-
 .font-bold {
     font-weight: bold;
 }
@@ -589,4 +577,17 @@ select:focus~label {
     left: 0px;
     z-index: 5;
     top: 0.725rem;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+    width: 5px;
+    /* Set the width of the scrollbar */
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: darkgray;
+    /* Set the color of the scrollbar thumb */
+    border-radius: 5px;
+    margin: 15px 0px;
+    /* Set the border radius of the scrollbar thumb */
 }
