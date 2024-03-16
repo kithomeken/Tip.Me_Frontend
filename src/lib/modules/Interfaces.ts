@@ -30,7 +30,7 @@ export interface Core_Side_B_Props {
 
 export interface Search_Box_Props {
     state: any,
+    formHandler: any,
     onInputBlur: any,
     onChangeHandler: any,
-    onSearchableTermHandler: any,
 }

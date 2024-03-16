@@ -5,13 +5,13 @@ import { Search_Box_Props } from "../../lib/modules/Interfaces"
 
 export const SearchBar: FC<Search_Box_Props> = ({
     state,
+    formHandler,
     onInputBlur,
     onChangeHandler,
-    onSearchableTermHandler,
 }) => {
     return (
         <React.Fragment>
-            <form onSubmit={onSearchableTermHandler}>
+            <form onSubmit={formHandler}>
                 <div className="relative mb-3 w-full flex flex-row-reverse md:gap-x-3">
                     <button type="submit" className="w-auto disabled:cursor-not-allowed text-sm rounded-md shadow-sm px-3 py-2 bg-amber-500 text-white disabled:bg-amber-600 hover:bg-amber-600 focus:outline-none flex items-center justify-center" disabled={state.searching}>
                         {
