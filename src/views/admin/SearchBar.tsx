@@ -12,7 +12,7 @@ export const SearchBar: FC<Search_Box_Props> = ({
     return (
         <React.Fragment>
             <form onSubmit={formHandler}>
-                <div className="relative mb-3 w-full flex flex-row-reverse md:gap-x-3 py-2">
+                <div className="relative w-full flex flex-row-reverse md:gap-x-3 pt-3 bg-gray-50">
                     <button type="submit" className="w-auto disabled:cursor-not-allowed text-sm rounded-md shadow-sm px-3 py-2 bg-amber-500 text-white disabled:bg-amber-600 hover:bg-amber-600 focus:outline-none flex items-center justify-center" disabled={state.searching}>
                         {
                             state.searching ? (

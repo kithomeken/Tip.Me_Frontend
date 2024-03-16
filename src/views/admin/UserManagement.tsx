@@ -308,13 +308,13 @@ export const UserManagement = () => {
                 ) : state.status === 'fulfilled' ? (
                     <div className="w-full flex-grow">
                         <div className={`w-full pb-3 mx-auto bg-white border rounded h-full`}>
-                            <div className="py-3 px-4">
+                            <div className="py-4 px-6">
                                 <div className="flex items-center">
-                                    <p className="text-xl flex-auto text-amber-600 mb-2 font-bold dark:text-white">
+                                    <p className="text-2xl flex-auto text-amber-600 mb-2 font-medium dark:text-white">
                                         User Management
 
-                                        <span className="py-2 block text-sm font-normal text-gray-500 dark:text-gray-400">
-                                            Effortlessly manage user accounts and activity
+                                        <span className="py-4 block text-sm font-normal text-gray-500 dark:text-gray-400">
+                                            Essential tools to efficiently oversee user accounts. From account verification to engagement monitoring, our dashboard simplifies user management tasks, ensuring a smooth and secure user experience
                                         </span>
                                     </p>
                                 </div>
@@ -349,7 +349,7 @@ export const UserManagement = () => {
                                                     formHandler={onSearchableTermHandler}
                                                 />
 
-                                                <div className="py-3">
+                                                <div className="pb-3">
                                                     {
                                                         state.search.posting ? (
                                                             <div className="w-full h-full flex flex-col py-3 justify-center">
