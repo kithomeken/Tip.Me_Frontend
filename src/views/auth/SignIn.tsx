@@ -15,6 +15,7 @@ import { firebaseSSO_SignIn, generateSanctumToken, resetAuth0 } from "../../stor
 
 export const SignIn = () => {
     const [state, setstate] = useState({
+        pwdVisibility: false,
         input: {
             email: '',
             password: ''
@@ -82,6 +83,14 @@ export const SignIn = () => {
             })
         }
     }
+
+    const togglePasswordVisibility = () => {
+        if (!auth0.processing) {
+            setstate({
+                ...state, pwdVisibility: !state.pwdVisibility
+            })
+        }
+    };
 
     const onInputBlur = (e: any) => {
         if (!auth0.processing) {
@@ -307,11 +316,21 @@ export const SignIn = () => {
                                     <label htmlFor="password" className="block text-sm leading-6 text-stone-700 mb-1">Password:</label>
 
                                     <div className="relative mt-2 rounded shadow-sm">
-                                        <input type="password" name="password" id="password" placeholder="********" autoComplete="off"
+                                        <input type={state.pwdVisibility ? 'text' : 'password'} name="password" id="password" placeholder="********" autoComplete="off"
                                             className={classNames(
                                                 'text-stone-900 ring-slate-300 placeholder:text-stone-500 focus:border-0 focus:outline-none focus:ring-amber-600 focus:outline-amber-500 hover:border-stone-400 border border-stone-300',
                                                 'block w-full rounded-md py-2 pl-3 pr-8 text-sm'
                                             )} onChange={onChangeHandler} onBlur={onInputBlur} value={state.input.password} required style={{ height: '3rem' }} />
+
+                                        <div className="absolute inset-y-0 right-0 flex items-center w-8">
+                                            {
+                                                state.pwdVisibility ? (
+                                                    <span className="fa-duotone fa-eye text-amber-600 fa-lg cursor-pointer" onClick={togglePasswordVisibility}></span>
+                                                ) : (
+                                                    <span className="fa-duotone fa-eye-slash text-amber-600 fa-lg cursor-pointer" onClick={togglePasswordVisibility}></span>
+                                                )
+                                            }
+                                        </div>
                                     </div>
 
                                     {
