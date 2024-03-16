@@ -4,9 +4,11 @@ import { Navigate, Outlet, useLocation } from "react-router"
 import Auth from "./Auth"
 import { useAppSelector } from "../../store/hooks"
 import { Header } from "../../components/layouts/Header"
+import { standardRoutes } from "../../routes/standardRoutes"
+import StorageServices from "../../services/StorageServices"
 import { standardErrorRoutes } from "../../routes/errorRoutes"
-import { CONFIG_MARGIN_TOP } from "../../global/ConstantsRegistry"
 import { revokeAuthSession } from "../../store/auth/firebaseAuthActions"
+import { CONFIG_MARGIN_TOP, STORAGE_KEYS } from "../../global/ConstantsRegistry"
 
 export default function StandardRoutesGuard() {
     const dispatch: any = useDispatch()
@@ -15,7 +17,7 @@ export default function StandardRoutesGuard() {
 
     const auth0: any = useAppSelector(state => state.auth0)
     const sessionState = Auth.checkAuthentication(auth0)
-    
+
     const state = {
         from: currentLocation
     }
@@ -23,12 +25,9 @@ export default function StandardRoutesGuard() {
     if (!sessionState.authenticated) {
         if (sessionState.status.resetSession) {
             /* 
-             * Redux session state is authenticated
-             * but cookies are not set.
-             * 
+             * Authenticated but data dependencies are missing/corrupt
              * Reset session and start all-over again
             */
-
             dispatch(revokeAuthSession())
             return
         } else {
@@ -37,16 +36,31 @@ export default function StandardRoutesGuard() {
         }
     } else {
         if (sessionState.status.disabled) {
-            // Suspended accounts
             const suspendAccountRoute: any = (standardErrorRoutes.find((routeName) => routeName.name === 'SUSP_ACC'))?.path
             return <Navigate to={suspendAccountRoute} replace />;
+        }
+
+        const accountVerified: any = StorageServices.getLocalStorage(STORAGE_KEYS.ACC_VERIFIED)
+
+        if (accountVerified === null) {
+            const homePeripheralRoute: any = (
+                standardRoutes.find(
+                    (routeName) => routeName.name === 'PERIPH_HOME_')
+            )?.path
+
+            return <Navigate to={homePeripheralRoute} replace />;
+        } else if (accountVerified === '1') {
+            const identityVerificationRoute: any = (
+                standardRoutes.find(
+                    (routeName) => routeName.name === 'IDENTITY_VERF_')
+            )?.path
         }
     }
 
     return (
         <div>
             <div className="flex h-screen">
-                
+
                 <Header />
 
                 <div className="flex flex-col w-full h-screen">
@@ -54,7 +68,7 @@ export default function StandardRoutesGuard() {
                         <div className="kiOAkj py-4 px-2">
 
                             <Outlet />
-                            
+
                         </div>
                     </div>
                 </div>
