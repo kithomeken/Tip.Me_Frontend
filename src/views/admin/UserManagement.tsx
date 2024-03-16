@@ -233,6 +233,11 @@ export const UserManagement = () => {
 
         if (!search.posting) {
             if (!input.search.trim()) {
+                setstate({
+                    ...state, status: 'pending'
+                })
+
+                fetchOnboardedUsers()
                 return;
             }
 
