@@ -27,6 +27,7 @@ export const STORAGE_KEYS = {
     FIREBASE_RFSH: '__RfhS',
     ENTITY_TYPE: '__eNTY',
     ENTITY_HASH: '__enTHSh',
+    ACC_VERIFIED:   '__veRF',
 }
 
 
