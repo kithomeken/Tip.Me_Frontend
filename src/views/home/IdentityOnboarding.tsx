@@ -15,7 +15,7 @@ import { Loading } from "../../components/modules/Loading"
 import { CONFIG_MAX_WIDTH } from "../../global/ConstantsRegistry"
 import { resetIdentity, setPRc0MetaStage } from "../../store/identityCheckActions"
 
-export const ProfileCheck = () => {
+export const IdentityOnboarding = () => {
     const [state, setstate] = useState({
         httpStatus: 200,
         status: 'pending',
