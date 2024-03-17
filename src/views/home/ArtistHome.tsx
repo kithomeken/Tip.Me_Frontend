@@ -181,7 +181,7 @@ export const ArtistHome = () => {
                                             </a>
                                         </div>
 
-                                        <div className="flex-grow border-0 md:border-l md:ml-3 px-4 pb-4 md:py-0">
+                                        <div className="flex-grow border-0 md:border-l md:ml-3 md:px-4 pb-4 md:py-0">
                                             <div className="w-full">
                                                 <div className="w-full flex flex-row items-center -middle">
                                                     <span className="py-1 flex-grow px-1.5 block text-2xl text-amber-600 mb-2 capitalize">
@@ -239,7 +239,7 @@ export const ArtistHome = () => {
                                         </div>
                                     </div>
 
-                                    <div className="w-full mb-3 px-3">
+                                    <div className="w-full mb-3 md:px-3">
                                         <div className="w-full flex flex-row">
                                             <div className="md:flex-none cursor-pointer basis-1/2 border-b" onClick={() => activateTab('in')}>
                                                 <button className={classNames(
