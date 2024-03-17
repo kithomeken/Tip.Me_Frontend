@@ -40,20 +40,15 @@ export default function StandardRoutesGuard() {
             return <Navigate to={suspendAccountRoute} replace />;
         }
 
-        const accountVerified: any = StorageServices.getLocalStorage(STORAGE_KEYS.ACC_VERIFIED)
+        const accountVerified: any = StorageServices.getLocalStorage(STORAGE_KEYS.ACC_VERIFIED)        
 
-        if (accountVerified === null) {
-            const homePeripheralRoute: any = (
-                standardRoutes.find(
-                    (routeName) => routeName.name === 'PERIPH_HOME_')
-            )?.path
-
-            return <Navigate to={homePeripheralRoute} replace />;
-        } else if (accountVerified === '1') {
+        if (accountVerified === '1') {
             const identityVerificationRoute: any = (
-                standardRoutes.find(
+                standardErrorRoutes.find(
                     (routeName) => routeName.name === 'IDENTITY_VERF_')
             )?.path
+
+            return <Navigate to={identityVerificationRoute} replace />;
         }
     }
 
