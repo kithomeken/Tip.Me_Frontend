@@ -1,11 +1,14 @@
 import { toast } from "react-toastify";
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 import { AUTH } from "../../api/API_Registry";
 import HttpServices from "../../services/HttpServices";
+import { commonRoutes } from "../../routes/genericRoutes";
 import StorageServices from "../../services/StorageServices";
 import { STORAGE_KEYS } from "../../global/ConstantsRegistry";
 import completed from "../../assets/images/Completed-amico.svg"
+import { classNames } from "../../lib/modules/HelperFunctions";
 import { G_onInputBlurHandler } from "../../components/lib/InputHandlers";
 
 export const Identity_00 = () => {
@@ -13,6 +16,7 @@ export const Identity_00 = () => {
         data: null,
         show: false,
         posting: false,
+        httpStatus: 200,
         status: 'pending',
         entity: [{
             email: '',
@@ -26,9 +30,10 @@ export const Identity_00 = () => {
     let entityHash: any = StorageServices.getLocalStorage(STORAGE_KEYS.ENTITY_HASH)
     specificObject = JSON.parse(specificObject)
 
-    const reloadWindow = () => {
-        window.location.reload();
-    }
+    const homeRoute: any = (
+        commonRoutes.find(
+            (routeName) => routeName.name === 'HOME_')
+    )?.path
 
     const onChangeHandler = (e: any, index: any) => {
         const { posting } = state
@@ -120,6 +125,7 @@ export const Identity_00 = () => {
     const addMemeberToEntity = async () => {
         let { entity } = state
         let { posting } = state
+        let { httpStatus } = state
         let formData = new FormData()
 
         try {
@@ -128,9 +134,11 @@ export const Identity_00 = () => {
             })
 
             const entityResponse: any = await HttpServices.httpPost(AUTH.ENTITY_EXPANSION, formData)
-            console.log('ENFR_3e8', entityResponse);
+            httpStatus = entityResponse.status
 
             if (entityResponse.data.success) {
+                showOrHideEntityInv()
+                posting = false
                 let toastText = 'Invites sent out'
 
                 toast.success(toastText, {
@@ -142,14 +150,18 @@ export const Identity_00 = () => {
                     draggable: true,
                     progress: undefined,
                 });
-
-                reloadWindow()
             } else {
-
+                posting = false
+                httpStatus = 500
             }
         } catch (error) {
-
+            posting = false
+            httpStatus = 500
         }
+
+        setstate({
+            ...state, posting, httpStatus
+        })
     }
 
     return (
@@ -185,68 +197,87 @@ export const Identity_00 = () => {
                                         <div className="flex-grow text-center w-full p-3">
                                             {
                                                 state.show ? (
-                                                    <form className="w-full mb-6 md:w-2/3 m-auto" onSubmit={onFormSubmitHandler}>
+                                                    <>
                                                         {
-                                                            state.entity.map((contact: any, index: any) => {
-                                                                return (
-                                                                    <div key={`KDE_${index}`} className="w-full mb-3 flex flex-row align-middle">
-                                                                        <div className="mr-5 mb-3 flex-grow">
-                                                                            <input type="text" name="email" id="entity-1-email" autoComplete="off" onChange={(e) => onChangeHandler(e, index)} className="focus:ring-1 w-full focus:ring-green-500 p-1-5 lowercase flex-1 block text-sm rounded-md sm:text-sm border border-gray-300 disabled:opacity-50" onBlur={(e) => onInputBlur(e, index)} placeholder="jane.doe@email.com" value={contact.email} />
+                                                            state.httpStatus !== 200 ? (
+                                                                <>
+                                                                    <div className="mb-2 bg-sky-00 py-1 md:px-4 border-2 border-red-300 border-dashed rounded-md">
+                                                                        <div className="flex md:flex-row flex-col align-middle items-center text-red-700 px-2">
+                                                                            <i className="fa-duotone fa-octagon-exclamation fa-2x mt-1 text-red-700 flex-none"></i>
 
-                                                                            {
-                                                                                state.entityErrors[index].email.length > 0 &&
-                                                                                <span className='invalid-feedback text-xs text-red-600 pl-0'>
-                                                                                    {state.entityErrors[index].email}
+                                                                            <div className="flex-auto ml-1 mt-1">
+                                                                                <span className="text-sm pl-3 block text-left py-2 text-red-700">
+                                                                                    Error occurred when sending out invities to your members. Try again later
                                                                                 </span>
-                                                                            }
+                                                                            </div>
                                                                         </div>
+                                                                    </div>
+                                                                </>
+                                                            ) : null
+                                                        }
 
-                                                                        <div className="mb-3 flex-none w-20">
+                                                        <form className="w-full mb-6 md:w-2/3 m-auto" onSubmit={onFormSubmitHandler}>
+                                                            {
+                                                                state.entity.map((contact: any, index: any) => {
+                                                                    return (
+                                                                        <div key={`KDE_${index}`} className="w-full py-3 flex flex-row align-middle items-center gap-x-2">
+                                                                            <div className="flex-grow">
+                                                                                <input type="text" name="email" id="entity-1-email" autoComplete="off" onChange={(e) => onChangeHandler(e, index)} className="focus:ring-1 w-full focus:ring-green-500 py-1.5 px-2.5 lowercase flex-1 block text-sm rounded-md sm:text-sm border border-gray-300 disabled:opacity-50" onBlur={(e) => onInputBlur(e, index)} placeholder={`member${index + 1}@email.com`} value={contact.email} />
+
+                                                                                {
+                                                                                    state.entityErrors[index].email.length > 0 &&
+                                                                                    <span className='invalid-feedback text-xs text-red-600 pl-0'>
+                                                                                        {state.entityErrors[index].email}
+                                                                                    </span>
+                                                                                }
+                                                                            </div>
+
                                                                             {
                                                                                 index !== 0 ? (
-                                                                                    <p className="text-red-500 p-1-5 flex-1 text-sm cursor-pointer mb-0" onClick={() => removePointOfContactHandler(index)}>
+                                                                                    <p className="text-red-500 w-16 text-sm cursor-pointer" onClick={() => removePointOfContactHandler(index)}>
                                                                                         Remove
                                                                                     </p>
                                                                                 ) : (
                                                                                     null
                                                                                 )
                                                                             }
-                                                                        </div>
-                                                                    </div>
-                                                                )
-                                                            })
-                                                        }
 
-                                                        <div className="w-6/12">
-                                                            <div className="mb-3" id="poc_extra"></div>
-
-                                                            {
-                                                                state.entity.length < (specificObject.max - 1) ? (
-                                                                    <span className="text-blue-500 text-sm cursor-pointer" onClick={addPointOfContactHandler}>
-                                                                        Add another member
-                                                                    </span>
-                                                                ) : (
-                                                                    null
-                                                                )
-                                                            }
-                                                        </div>
-
-                                                        <div className="mb-3 pt-3 px-3 md:px-0">
-                                                            <button className="bg-amber-600 float-right relative w-28 py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white hover:bg-amber-700 focus:outline-none focus:ring-0 focus:ring-offset-2 focus:bg-amber-700" type="submit">
-                                                                {
-                                                                    state.posting ? (
-                                                                        <div className="flex justify-center items-center gap-3 py-2">
-                                                                            <i className="fad fa-spinner-third fa-xl fa-spin"></i>
-                                                                        </div>
-                                                                    ) : (
-                                                                        <div className="flex justify-center items-center gap-3">
-                                                                            Invite
                                                                         </div>
                                                                     )
+                                                                })
+                                                            }
+
+                                                            <div className="w-6/12">
+                                                                <div className="mb-3" id="poc_extra"></div>
+
+                                                                {
+                                                                    state.entity.length < (specificObject.max - 1) ? (
+                                                                        <span className="text-blue-500 text-sm cursor-pointer" onClick={addPointOfContactHandler}>
+                                                                            Add another member
+                                                                        </span>
+                                                                    ) : (
+                                                                        null
+                                                                    )
                                                                 }
-                                                            </button>
-                                                        </div>
-                                                    </form>
+                                                            </div>
+
+                                                            <div className="mb-3 pt-3 md:px-0">
+                                                                <button className="bg-amber-600 float-right relative py-1.5 px-4 border border-transparent text-sm font-medium rounded-md text-white hover:bg-amber-700 focus:outline-none focus:ring-0 focus:ring-offset-2 focus:bg-amber-700" type="submit">
+                                                                    {
+                                                                        state.posting ? (
+                                                                            <div className="flex justify-center items-center gap-3 py-2">
+                                                                                <i className="fad fa-spinner-third fa-xl fa-spin"></i>
+                                                                            </div>
+                                                                        ) : (
+                                                                            <div className="flex justify-center items-center gap-3">
+                                                                                Send Invite{state.entity.length > 1 ? 's' : null}
+                                                                            </div>
+                                                                        )
+                                                                    }
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                    </>
                                                 ) : (
                                                     <span className="text-amber-600 mb-3 text-sm block cursor-pointer border py-1-5 px-4 border-amber-600 rounded-md" onClick={showOrHideEntityInv}>
                                                         Invite to your members
@@ -259,12 +290,22 @@ export const Identity_00 = () => {
                             ) : null
                         }
 
-                        <div className="mb-3 pt-3 px-3 md:px-0">
-                            <button type="button" onClick={reloadWindow} disabled={state.posting ? true : false} className="bg-amber-600 float-right relative w-40 py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white hover:bg-amber-700 focus:outline-none focus:ring-0 focus:ring-offset-2 focus:bg-amber-700 disabled:cursor-not-allowed">
-                                <div className="flex justify-center items-center gap-3">
-                                    Take Me Home
-                                </div>
-                            </button>
+                        <div className="mb-3 w-full pt-6 px-3 md:px-0 border-t mt-3">
+                            {
+                                state.posting ? (
+                                    <button type="button" disabled={true} className="bg-amber-600 float-right relative w-40 py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white hover:bg-amber-700 focus:outline-none focus:ring-0 focus:ring-offset-2 focus:bg-amber-700 disabled:cursor-not-allowed">
+                                        <div className="flex justify-center items-center gap-3">
+                                            Take Me Home
+                                        </div>
+                                    </button>
+                                ) : (
+                                    <Link to={homeRoute} className={classNames(
+                                        "px-6 py-2.5 bg-amber-600 text-sm text-white rounded-md w-auto hover:bg-amber-700 focus:outline-none focus:ring-0 focus:ring-offset-2 focus:bg-amber-700"
+                                    )} tabIndex={1}>
+                                        Take Me Home
+                                    </Link>
+                                )
+                            }
                         </div>
                     </div>
                 </div>
