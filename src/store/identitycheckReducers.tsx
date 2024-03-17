@@ -14,10 +14,10 @@ export const identityCheckReducer = (state = identityState, action: any) => {
         case IDENTITY_.PRc0:
             const metaPRc0 = action.response.dataDump.PRc0
             StorageServices.setLocalStorage(STORAGE_KEYS.PRc0_STATE, metaPRc0)
-
+            
             return {
                 ...state,
-                PRc0: metaPRc0.PRc0
+                PRc0: metaPRc0
             }
 
         case IDENTITY_.RESET_:
