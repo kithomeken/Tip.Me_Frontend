@@ -12,7 +12,7 @@ import { Loading } from "../../components/modules/Loading"
 import { classNames, getColorForLetter, readDecryptAndParseLS } from "../../lib/modules/HelperFunctions"
 import { MemberNominations } from "./MemberNominations"
 import { useAppSelector } from "../../store/hooks"
-import { STORAGE_KEYS } from "../../global/ConstantsRegistry"
+import { CONFIG_MAX_WIDTH, STORAGE_KEYS } from "../../global/ConstantsRegistry"
 import { UpdateDisplayName } from "./UpdateDisplayName"
 
 export const EntityProfile = () => {
@@ -224,7 +224,7 @@ export const EntityProfile = () => {
                 <title>Account Profile</title>
             </Helmet>
 
-            <div className="md:w-12/12 w-full pr-4">
+            <div className="md:w-12/12 w-full">
                 {
                     state.status === 'rejected' ? (
                         state.httpStatus === 404 ? (
@@ -235,9 +235,9 @@ export const EntityProfile = () => {
                             <ERR_500 />
                         )
                     ) : state.status === 'fulfilled' ? (
-                        <div className="w-full">
-                            <div className="w-full gap-y-4 mb-4 md:gap-x-4 flex flex-col align-middle tems-center md:flex-row">
-                                <div className="w-24 h-24 flex flex-col justify-center align-middle items-center mx-auto">
+                        <div className="w-full mx-auto" style={CONFIG_MAX_WIDTH}>
+                            <div className="w-full gap-y-4 mb-4 md:gap-x-8 flex flex-col align-middle tems-center md:flex-row">
+                                <div className="w-24 h-24 flex flex-col mt-3 md:mt-0 justify-center align-middle items-center mx-auto">
                                     {
                                         idenityData.photo_url ? (
                                             <>
