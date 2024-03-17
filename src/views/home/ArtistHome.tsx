@@ -165,7 +165,7 @@ export const ArtistHome = () => {
                         <div className={`w-full mb-3`}>
                             <div className="kiOAkj" style={CONFIG_MAX_WIDTH}>
                                 <div className="w-full flex flex-col-reverse md:space-x-4 md:flex-row pb-6">
-                                    <div className="flex-none flex flex-col justify-center border-t md:border-t-0 pt-3 md:pt-0">
+                                    <div className="flex-none flex flex-col justify-center border-t md:border-t-0 md:pt-0 pt-3">
                                         <img src={qrCode.lowQuality} alt="qr_code" className="block text-center m-auto" />
 
                                         <a className="text-amber-600 w-40 py-2 m-auto px-4 flex flex-row items-center justify-center border border-amber-600 md:hidden text-sm text-center rounded-md bg-white hover:bg-amber-700 focus:outline-none" href={qrCode.highQuality} download={state.data.qrCodeImageName}>
@@ -174,7 +174,7 @@ export const ArtistHome = () => {
                                         </a>
                                     </div>
 
-                                    <div className="flex-grow border-0 md:border-l md:ml-3 px-4 py-4">
+                                    <div className="flex-grow border-0 md:border-l md:ml-3 px-4 pb-4 md:py-0">
                                         <div className="w-full">
                                             <div className="w-full flex flex-row items-center -middle">
                                                 <span className="py-1 flex-grow px-1.5 block text-2xl text-amber-600 mb-2 capitalize">
@@ -189,7 +189,6 @@ export const ArtistHome = () => {
                                                         </button>
                                                     ) : null
                                                 }
-
                                             </div>
 
                                             <span className="px-1.5 block text-sm text-stone-500 mb-2 capitalize">
