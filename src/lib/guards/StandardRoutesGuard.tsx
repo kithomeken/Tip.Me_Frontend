@@ -60,7 +60,7 @@ export default function StandardRoutesGuard() {
 
                 <div className="flex flex-col w-full h-screen">
                     <div className="w-full overflow-y-auto" style={CONFIG_MARGIN_TOP}>
-                        <div className="kiOAkj py-4 px-2">
+                        <div className="kiOAkj">
 
                             <Outlet />
 
