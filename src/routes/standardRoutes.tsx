@@ -1,10 +1,9 @@
 import { Home } from "../views/home/Home";
 import { IndexToHome } from "../views/home/IndexToHome";
+import { ProfileCheck } from "../views/home/ProfileCheck";
 import { Routes_Interface } from "../lib/modules/routesInterface";
 import { WithdrawalRequest } from "../views/home/WithdrawalRequest";
 import { AccountManagement } from "../views/settings/AccountManagement";
-import { IdentityCheck } from "../views/home/IdentityCheck";
-import { IdentityVerification } from "../views/home/IdentityVerification";
 
 export const standardRoutes: Array<Routes_Interface> = [
     { 
@@ -14,22 +13,16 @@ export const standardRoutes: Array<Routes_Interface> = [
         name: 'INDEX_' 
     },
     { 
-        path: "/home", 
-        element: <IdentityCheck />, 
-        caseSensitive: true, 
-        name: 'HOME_'
-    },
-    { 
         path: "/u/artist/home", 
         element: <Home />, 
         caseSensitive: true, 
         name: 'PERIPH_HOME_' 
     },
     { 
-        path: "/u/artist/_/identity-verification", 
-        element: <IdentityVerification />, 
+        path: "/u/artist/_/identity/onboarding", 
+        element: <ProfileCheck />, 
         caseSensitive: true, 
-        name: 'IDENTITY_VERF_' 
+        name: 'IDENTITY_ONBRD_' 
     },
     
 
