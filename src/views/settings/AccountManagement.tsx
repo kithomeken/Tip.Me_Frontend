@@ -44,55 +44,51 @@ export const AccountManagement = () => {
                 <title>Account Management</title>
             </Helmet>
 
-            <div className={`w-full bg-gradient-to-r from-amber-200 to-emerald-100 form-group mb-3 h-30`}>
-                <div className="kiOAkj sttng_strp h-24 px-12">
-                    <div className="flex items-center pb-3 pt-3 lg:justify-between w-full">
-                        <div className="flex-1 min-w-0">
-
-                        </div>
-                    </div>
-                </div>
+            <div className={`w-full bg-gradient-to-r from-amber-100 to-emerald-100 h-16`}>
+                <div className="kiOAkj sttng_strp h-16 px-12"></div>
             </div>
 
-            <div className={`md:px-6 w-full form-group mb-3`}>
-                <div className="kiOAkj" style={CONFIG_MAX_WIDTH}>
-                    <div className="flex flex-row mb-4 w-full">
-                        <div className="w-52 flex-none lg:w-60 md:pr-4 px-4 pt-4 pb-4 md:border-r">
-                            <div className="w-full">
-                                <button type="button" onClick={() => setActivateTab('profile')} className={classNames(
-                                    state.activeTab === 'profile' ? 'text-amber-700 bg-amber-100' : 'text-slate-700 hover:bg-slate-100',
-                                    "text-sm items-center w-full text-left py-2 px-4 rounded"
+            <div className="flex flex-col w-full md:flex-row overflow-hidden">
+                <div className="flex-shrink-0 w-full md:w-56">
+                    <div className="p-4">
+                        <h1 className="text-xl text-amber-600 font-medium tracking-wider">Settings</h1>
+                    </div>
+                    <nav className="flex flex-col px-3">
+                        <button type="button" onClick={() => setActivateTab('profile')} className={classNames(
+                            state.activeTab === 'profile' ? 'text-amber-700 bg-amber-100' : 'text-slate-700 hover:bg-slate-100',
+                            "text-sm items-center w-full text-left py-2 px-6 rounded-md my-1"
+                        )}>
+                            <span className="flex flex-row align-middle items-center">
+                                <span className="flex-auto">
+                                    Account Profile
+                                </span>
+                            </span>
+                        </button>
+
+                        {/* {
+                            auth0.identity.provider === 'password' ? ( */}
+                                <button type="button" onClick={() => setActivateTab('email')} className={classNames(
+                                    state.activeTab === 'email' ? 'text-amber-700 bg-amber-100' : 'text-slate-700 hover:bg-slate-100',
+                                    "text-sm items-center w-full text-left py-2 px-6 rounded-md my-1"
                                 )}>
                                     <span className="flex flex-row align-middle items-center">
-                                        <span className="ml-2 flex-auto">
-                                            Account Profile
+                                        <span className="flex-auto">
+                                            Change Email
                                         </span>
                                     </span>
                                 </button>
+                            {/* ) : null
+                        } */}
+                    </nav>
+                </div>
 
-                                {
-                                    auth0.identity.provider === 'password' ? (
-                                        <button type="button" onClick={() => setActivateTab('email')} className={classNames(
-                                            state.activeTab === 'email' ? 'text-amber-700 bg-amber-100' : 'text-slate-700 hover:bg-slate-100',
-                                            "text-sm items-center w-full text-left py-2 px-4 rounded mt-2"
-                                        )}>
-                                            <span className="flex flex-row align-middle items-center">
-                                                <span className="ml-2 flex-auto">
-                                                    Change Email
-                                                </span>
-                                            </span>
-                                        </button>
-                                    ) : null
-                                }
-
-
-                            </div>
-                        </div>
-
-                        <div className="flex-auto rounded px-4 pt-4 pb-4">
+                {/* Content */}
+                <div className="flex-1 overflow-hidden py-3">
+                    <main className="flex-1 p-4 overflow-y-auto border-gray-200 md:border-l">
+                        <div className="container mx-auto px-2 md:px-4 py-4 border-t md:border-t-0">
                             {loadRespectiveTab(state.activeTab)}
                         </div>
-                    </div>
+                    </main>
                 </div>
             </div>
 
