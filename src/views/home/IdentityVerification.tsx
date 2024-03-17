@@ -128,7 +128,7 @@ export const IdentityVerification = () => {
         <React.Fragment>
             {
                 state.status === 'rejected' ? (
-                    <div className="py-3 px-4">
+                    <div className="py-3 px-4 w-full">
                         <div className="flex items-center justify-center">
                             {
                                 state.httpStatus === 404 ? (

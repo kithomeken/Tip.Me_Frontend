@@ -153,13 +153,19 @@ export const ArtistHome = () => {
 
             {
                 state.status === 'rejected' ? (
-                    state.httpStatus === 404 ? (
-                        <ERR_404
-                            compact={true}
-                        />
-                    ) : (
-                        <ERR_500 />
-                    )
+                    <div className="py-3 px-4 w-full">
+                        <div className="flex items-center justify-center">
+                            {
+                                state.httpStatus === 404 ? (
+                                    <ERR_404
+                                        compact={true}
+                                    />
+                                ) : (
+                                    <ERR_500 />
+                                )
+                            }
+                        </div>
+                    </div>
                 ) : state.status === 'fulfilled' ? (
                     <div className="w-full">
                         <div className={`w-full mb-3`}>
