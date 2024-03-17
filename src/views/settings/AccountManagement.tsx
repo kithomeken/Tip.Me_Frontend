@@ -65,8 +65,8 @@ export const AccountManagement = () => {
                             </span>
                         </button>
 
-                        {/* {
-                            auth0.identity.provider === 'password' ? ( */}
+                        {
+                            auth0.identity.provider === 'password' ? (
                                 <button type="button" onClick={() => setActivateTab('email')} className={classNames(
                                     state.activeTab === 'email' ? 'text-amber-700 bg-amber-100' : 'text-slate-700 hover:bg-slate-100',
                                     "text-sm items-center w-full text-left py-2 px-6 rounded-md my-1"
@@ -77,8 +77,8 @@ export const AccountManagement = () => {
                                         </span>
                                     </span>
                                 </button>
-                            {/* ) : null
-                        } */}
+                            ) : null
+                        }
                     </nav>
                 </div>
 
@@ -91,10 +91,6 @@ export const AccountManagement = () => {
                     </main>
                 </div>
             </div>
-
-
-
-
         </React.Fragment>
     )
 }
