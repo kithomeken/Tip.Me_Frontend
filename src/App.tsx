@@ -11,7 +11,7 @@ import "react-toastify/dist/ReactToastify.css"
 
 import './firebase/firebaseConfigs'
 import { ERR_404 } from './views/errors/ERR_404'
-import { genericRoutes } from "./routes/genericRoutes"
+import { commonRoutes, genericRoutes } from "./routes/genericRoutes"
 import EncryptionKeys from "./security/EncryptionKeys"
 import { standardRoutes } from './routes/standardRoutes'
 import AuthRoutesGuard from './lib/guards/AuthRoutesGuard'
@@ -21,6 +21,7 @@ import { administrativeRoutes } from "./routes/adminRoutes"
 import ErrorRoutesGuard from "./lib/guards/ErrorRoutesGuard"
 import GenericRoutesGuard from "./lib/guards/GenericRoutesGuard"
 import StandardRoutesGuard from "./lib/guards/StandardRoutesGuard"
+import { CommonRoutesGuard } from "./lib/guards/CommonRoutesGuard"
 import { FULLY_QUALIFIED_DOMAIN_NAME } from "./api/API_Controller"
 import { sanctumAxiosInstance } from "./lib/modules/HelperFunctions"
 import CoreSettingsRouteGuard from "./lib/guards/CoreSettingsRoutesGuard"
@@ -87,6 +88,20 @@ function App() {
                         <Route element={<StandardRoutesGuard />} >
                             {
                                 standardRoutes.map((route, index) => {
+                                    return (
+                                        <Route
+                                            path={route.path}
+                                            element={route.element}
+                                            key={index}
+                                        />
+                                    )
+                                })
+                            }
+                        </Route>
+
+                        <Route element={<CommonRoutesGuard />} >
+                            {
+                                commonRoutes.map((route, index) => {
                                     return (
                                         <Route
                                             path={route.path}
