@@ -1,7 +1,6 @@
 import { EntityPayIn } from "../views/home/EntityPayIn";
 import { SignIn } from "../views/auth/SignIn";
 import { SignUp } from "../views/auth/SignUp";
-import { Yeat } from "../views/home/Yeat";
 import { Invitation } from "../views/auth/Invitation";
 import { Routes_Interface } from "../lib/modules/routesInterface";
 
@@ -14,5 +13,4 @@ export const authenticationRoutes: Array<Routes_Interface> = [
 
     { path: "/entity/:uuid", element: <EntityPayIn />, caseSensitive: true, name: 'ENTITY_0_' },
 
-    { path: "/yeat", element: <Yeat />, caseSensitive: true, name: 'YEAT_' },
 ]
