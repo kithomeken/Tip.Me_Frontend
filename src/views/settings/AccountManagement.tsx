@@ -1,10 +1,11 @@
-import React, { useState } from "react"
 import { Helmet } from "react-helmet"
+import React, { useState } from "react"
 
+import { ChangeEmail } from "./ChangeEmail"
 import { EntityProfile } from "./EntityProfile"
+import { useAppSelector } from "../../store/hooks"
 import { classNames } from "../../lib/modules/HelperFunctions"
 import { CONFIG_MAX_WIDTH } from "../../global/ConstantsRegistry"
-import { ChangeEmail } from "./ChangeEmail"
 
 export const AccountManagement = () => {
     const [state, setstate] = useState({
@@ -14,6 +15,8 @@ export const AccountManagement = () => {
             email: null,
         },
     })
+
+    const auth0: any = useAppSelector(state => state.auth0)
 
     const setActivateTab = (tabName: any) => {
         setstate({
@@ -67,19 +70,23 @@ export const AccountManagement = () => {
                                     </span>
                                 </button>
 
-                                <button type="button" onClick={() => setActivateTab('email')} className={classNames(
-                                    state.activeTab === 'email' ? 'text-amber-700 bg-amber-100' : 'text-slate-700 hover:bg-slate-100',
-                                    "text-sm items-center w-full text-left py-2 px-4 rounded mt-2"
-                                )}>
-                                    <span className="flex flex-row align-middle items-center">
-                                        <span className="ml-2 flex-auto">
-                                            Change Email
-                                        </span>
-                                    </span>
-                                </button>
+                                {
+                                    auth0.identity.provider === 'password' ? (
+                                        <button type="button" onClick={() => setActivateTab('email')} className={classNames(
+                                            state.activeTab === 'email' ? 'text-amber-700 bg-amber-100' : 'text-slate-700 hover:bg-slate-100',
+                                            "text-sm items-center w-full text-left py-2 px-4 rounded mt-2"
+                                        )}>
+                                            <span className="flex flex-row align-middle items-center">
+                                                <span className="ml-2 flex-auto">
+                                                    Change Email
+                                                </span>
+                                            </span>
+                                        </button>
+                                    ) : null
+                                }
+
 
                             </div>
-
                         </div>
 
                         <div className="flex-auto rounded px-4 pt-4 pb-4">
