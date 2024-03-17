@@ -1,9 +1,10 @@
 import { Helmet } from "react-helmet"
 import React, { useState } from "react"
 import { Navigate } from "react-router"
+import { useDispatch } from "react-redux"
 import { onAuthStateChanged } from "firebase/auth"
 
-import { useDispatch } from "react-redux"
+import { ArtistHome } from "./ArtistHome"
 import { ERR_404 } from "../errors/ERR_404"
 import { ERR_500 } from "../errors/ERR_500"
 import { AUTH } from "../../api/API_Registry"
@@ -13,6 +14,7 @@ import { standardRoutes } from "../../routes/standardRoutes"
 import StorageServices from "../../services/StorageServices"
 import { firebaseAuth } from "../../firebase/firebaseConfigs"
 import { STORAGE_KEYS } from "../../global/ConstantsRegistry"
+import { standardErrorRoutes } from "../../routes/errorRoutes"
 import { setPRc0MetaStage } from "../../store/identityCheckActions"
 
 export const Home = () => {
@@ -33,8 +35,13 @@ export const Home = () => {
     const [verified, setVerified] = useState('0')
 
     const identityVerificationRoute: any = (
-        standardRoutes.find(
+        standardErrorRoutes.find(
             (routeName) => routeName.name === 'IDENTITY_VERF_')
+    )?.path
+
+    const identityOnboardingRoute: any = (
+        standardRoutes.find(
+            (routeName) => routeName.name === 'IDENTITY_ONBRD_')
     )?.path
 
     React.useEffect(() => {
@@ -188,7 +195,7 @@ export const Home = () => {
                                      * Identity has been verified
                                      * Proceed to artist/entity home page
                                     */
-                                    <>VERFIRCwm</>
+                                    <ArtistHome />
                                 ) : (
                                     /* 
                                      * Identity has not been verified
@@ -201,7 +208,7 @@ export const Home = () => {
                                  * Onboarding has not been completed. 
                                  * Complete onboarding first before any other action
                                 */
-                                <></>
+                                <Navigate to={identityOnboardingRoute} replace />
                             )
                         }
                     </>
