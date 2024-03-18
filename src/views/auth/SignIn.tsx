@@ -7,11 +7,11 @@ import { getRedirectResult } from "firebase/auth";
 import { useAppSelector } from "../../store/hooks";
 import { Navigate, useLocation } from "react-router";
 import { firebaseAuth } from "../../firebase/firebaseConfigs";
-import { authenticationRoutes } from "../../routes/authRoutes";
 import { APPLICATION, AUTH_ } from "../../global/ConstantsRegistry";
+import { authenticationRoutes, postAuthRoutes } from "../../routes/authRoutes";
+import { firebaseSSO_SignIn, resetAuth0 } from "../../store/auth/firebaseAuthActions";
 import { DeviceInfo, classNames, emailValidator } from "../../lib/modules/HelperFunctions";
 import { G_onInputChangeHandler, G_onInputBlurHandler } from "../../components/lib/InputHandlers";
-import { firebaseSSO_SignIn, generateSanctumToken, resetAuth0 } from "../../store/auth/firebaseAuthActions";
 
 export const SignIn = () => {
     const [state, setstate] = useState({
@@ -57,11 +57,7 @@ export const SignIn = () => {
                     },
                 });
 
-                const props = {
-                    deviceInfo: DeviceInfo(),
-                }
-
-                return generateSanctumToken(dispatch, accessToken, props)
+                return
             })
             .catch(() => {
                 dispatch(resetAuth0())
@@ -184,14 +180,18 @@ export const SignIn = () => {
         }
     }
 
-    if (auth0.authenticated) {
+    if (auth0.sso) {
         const state = {
             from: locationState?.from,
             postAuth: true
         }
 
-        const redirectRoute = locationState?.from === undefined ? '/home' : locationState?.from
-        return <Navigate state={state} replace to={redirectRoute} />;
+        const postAuthenticatoinRoute: any = (
+            postAuthRoutes.find(
+                (routeName) => routeName.name === 'AUTH_IDENTITY_')
+        )?.path
+
+        return <Navigate to={postAuthenticatoinRoute} replace state={state} />;
     }
 
     const authRedirectResult = async () => {
@@ -260,12 +260,12 @@ export const SignIn = () => {
                                         <span className="pl-2 block">
                                             {
                                                 auth0.processing && auth0.provider === 'google' ? (
-                                                    <span className="flex flex-row items-center text-stone-600">
-                                                        <i className="fad fa-spinner-third fa-xl fa-spin mr-2"></i>
+                                                    <span className="flex flex-row items-center justify-center align-middle text-stone-600 gap-x-4">
+                                                        <i className="fad fa-spinner fa-xl fa-spin text-amber-600"></i>
                                                         <span>Signing in with Google</span>
                                                     </span>
                                                 ) : (
-                                                    <span className="flex items-center gap-x-3 px-4 justify-center align-middle text-stone-600">
+                                                    <span className="flex items-center gap-x-3 px-4 justify-center align-middle text-amber-600">
                                                         <img className="w-6 h-6" src="https://www.svgrepo.com/show/475656/google-color.svg" loading="lazy" alt="google logo" />
                                                         Sign in with Google
                                                     </span>

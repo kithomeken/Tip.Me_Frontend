@@ -8,7 +8,7 @@ import { getRedirectResult } from "firebase/auth";
 import { useAppSelector } from "../../store/hooks";
 import { Navigate, useLocation } from "react-router";
 import { TermsAndConditions } from "./TermsAndConditions";
-import { authenticationRoutes } from "../../routes/authRoutes";
+import { authenticationRoutes, postAuthRoutes } from "../../routes/authRoutes";
 import { firebaseAuth } from "../../firebase/firebaseConfigs";
 import { APPLICATION, AUTH_ } from "../../global/ConstantsRegistry";
 import { G_onInputChangeHandler, G_onInputBlurHandler } from "../../components/lib/InputHandlers";
@@ -64,11 +64,6 @@ export const SignUp = () => {
     )?.path
 
     React.useEffect(() => {
-        if (location.search !== null || location.search !== undefined) {
-            const searchParams: any = parseQueryString(location.search);
-            // StorageServices.setLocalStorage(STORAGE_KEYS.eede, searchParams.hash)
-        }
-
         authRedirectResult()
             .then(async (result) => {
                 if (!result) {
@@ -254,14 +249,18 @@ export const SignUp = () => {
         }
     }
 
-    if (auth0.authenticated) {
+    if (auth0.sso) {
         const state = {
             from: locationState?.from,
             postAuth: true
         }
 
-        const redirectRoute = locationState?.from === undefined ? '/home' : locationState?.from
-        return <Navigate state={state} replace to={redirectRoute} />;
+        const postAuthenticatoinRoute: any = (
+            postAuthRoutes.find(
+                (routeName) => routeName.name === 'AUTH_IDENTITY_')
+        )?.path
+
+        return <Navigate to={postAuthenticatoinRoute} replace state={state} />;
     }
 
     const authRedirectResult = async () => {
