@@ -6,6 +6,7 @@ import CookieServices from "../../services/CookieServices";
 import StorageServices from "../../services/StorageServices";
 
 const initialState = {
+    sso: false,
     error: null,
     provider: '',
     identity: null,
@@ -16,9 +17,9 @@ const initialState = {
 export const firebaseAuthReducer = (state = initialState, action: any) => {
     switch (action.type) {
         case AUTH_.RESET_:
-            
             return {
                 ...state,
+                sso: false,
                 error: null,
                 processing: false,
                 authenticated: false,
@@ -27,6 +28,7 @@ export const firebaseAuthReducer = (state = initialState, action: any) => {
         case AUTH_.PROCESSING:
             return {
                 ...state,
+                sso: false,
                 error: null,
                 processing: true,
                 authenticated: false,
@@ -39,6 +41,7 @@ export const firebaseAuthReducer = (state = initialState, action: any) => {
 
             return {
                 ...state,
+                sso: true,
                 processing: true,
                 authenticated: false,
             }
@@ -52,6 +55,7 @@ export const firebaseAuthReducer = (state = initialState, action: any) => {
 
             return {
                 ...state,
+                sso: false,
                 processing: false,
                 authenticated: false,
                 error: action.response
@@ -91,6 +95,7 @@ export const firebaseAuthReducer = (state = initialState, action: any) => {
 
             return {
                 ...state,
+                sso: false,
                 processing: false,
                 authenticated: false,
                 error: action.response
@@ -131,11 +136,18 @@ export const firebaseAuthReducer = (state = initialState, action: any) => {
             }
 
         case AUTH_.REVOKE_SESSION:
+            signOut(firebaseAuth).then(() => {
+                // Sign-out successful.                
+            }).catch((error) => {
+                // An error happened.
+            });
+
             CookieServices.remove(COOKIE_KEYS.SANCTUM)
             StorageServices.clearLocalStorage()
 
             return {
                 ...state,
+                sso: false,
                 identity: null,
                 authenticated: false,
             }
