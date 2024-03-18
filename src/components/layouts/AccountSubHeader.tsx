@@ -50,7 +50,7 @@ export const AccountSubHeader: FC<headerProps> = ({ errorMode = false }) => {
                                 className={
                                     classNames(
                                         open ? 'text-slate-700' : null,
-                                        "flex flex-row items-center w-auto px-3 gap-x-3 rounded py-1 bg-white text-sm text-slate-500 hover:bg-slate-100 hover:text-slate-700 focus:outline-none focus:ring-0 focus:ring-offset focus:ring-offset-slate-100 focus:ring-green-500 align-middle"
+                                        "flex flex-row items-center w-auto md:px-3 px-1 gap-x-3 rounded py-1 text-sm text-slate-500 hover:bg-slate-00 hover:text-slate-700 focus:outline-none focus:ring-0 focus:ring-offset focus:ring-offset-slate-100 focus:ring-green-500 align-middle"
                                     )
                                 }>
                                 <span className="text-sm">{auth0.identity.display_name}</span>
