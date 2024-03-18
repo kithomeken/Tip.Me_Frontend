@@ -63,7 +63,8 @@ export const firebaseAuthReducer = (state = initialState, action: any) => {
 
         case AUTH_.SANCTUM_TOKEN:
             const payload = action.response.payload
-            const identity = payload.identity
+            let identity = payload.identity
+            identity.acid = identity.uuid
             
             const identityObject = {
                 uid: identity.uid,
