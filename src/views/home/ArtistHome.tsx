@@ -4,15 +4,15 @@ import React, { useState } from "react"
 
 import { MoneyIn } from './MoneyIn';
 import { MoneyOut } from './MoneyOut';
+import { ERR_404 } from '../errors/ERR_404';
 import { ERR_500 } from '../errors/ERR_500';
 import { WithdrawModal } from './WithdrawModal';
 import { ACCOUNT } from '../../api/API_Registry';
 import HttpServices from '../../services/HttpServices';
 import { Loading } from "../../components/modules/Loading"
-import { authenticationRoutes } from '../../routes/authRoutes'
+import { genericRoutes } from '../../routes/genericRoutes';
 import { APPLICATION, CONFIG_MAX_WIDTH } from "../../global/ConstantsRegistry"
 import { API_RouteReplace, classNames, formatAmount } from '../../lib/modules/HelperFunctions';
-import { ERR_404 } from '../errors/ERR_404';
 
 export const ArtistHome = () => {
     const [qrCode, setQRCode] = useState({
@@ -54,12 +54,12 @@ export const ArtistHome = () => {
                 data.entity = response.data.payload.entity
 
                 let entity0Route: any = (
-                    authenticationRoutes.find(
+                    genericRoutes.find(
                         (routeName) => routeName.name === 'ENTITY_0_'
                     )
                 )?.path
 
-                entity0Route = API_RouteReplace(entity0Route, ':uuid', data.entity.uuid)
+                entity0Route = API_RouteReplace(entity0Route, ':uuid', data.entity.uuid)                
                 const qrCodeText = APPLICATION.URL + entity0Route
                 GenerateQRCode(qrCodeText)
 
@@ -69,6 +69,7 @@ export const ArtistHome = () => {
                 status = 'rejected'
             }
         } catch (error) {
+            console.error(error);
             status = 'rejected'
         }
 
@@ -283,7 +284,7 @@ export const ArtistHome = () => {
                             </div>
                         </div>
                     ) : (
-                        <div className="w-full h-screen -mt-20 flex flex-col justify-center align-middle items-center mx-4">
+                        <div className="w-full h-screen -mt-20 flex flex-col justify-center align-middle items-center">
                             <Loading />
                         </div>
                     )
