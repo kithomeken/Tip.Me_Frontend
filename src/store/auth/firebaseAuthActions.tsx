@@ -87,8 +87,6 @@ async function emailPasswordSignIn(dispatch: any, firebaseProps: any) {
                     expirationTime: firebaseUser.stsTokenManager.expirationTime,
                 },
             });
-
-            generateSanctumToken(dispatch, firebaseUser.accessToken, firebaseProps)
         })
         .catch((error) => {
             const errorCode = error.code;
@@ -135,8 +133,6 @@ async function emailPasswordSignUp(dispatch: any, firebaseProps: any) {
                     expirationTime: firebaseUser.stsTokenManager.expirationTime,
                 },
             });
-
-            generateSanctumToken(dispatch, firebaseUser.accessToken, firebaseProps)
         })
         .catch((error) => {
             const errorCode = error.code;
