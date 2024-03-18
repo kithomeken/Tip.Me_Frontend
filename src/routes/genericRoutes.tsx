@@ -3,6 +3,7 @@ import { EntityPayIn } from "../views/home/EntityPayIn";
 import { EmailActions } from "../views/auth/EmailActions";
 import { IdentityCheck } from "../views/home/IdentityCheck";
 import { Routes_Interface } from "../lib/modules/routesInterface";
+import { IndexToHome } from "../views/home/IndexToHome";
 
 export const genericRoutes: Array<Routes_Interface> = [
     {
@@ -22,6 +23,12 @@ export const genericRoutes: Array<Routes_Interface> = [
 ]
 
 export const commonRoutes: Array<Routes_Interface> = [
+    { 
+        path: "/", 
+        element: <IndexToHome />, 
+        caseSensitive: true, 
+        name: 'INDEX_' 
+    },
     {
         path: "/home",
         element: <IdentityCheck />,

@@ -1,17 +1,10 @@
 import { Home } from "../views/home/Home";
-import { IndexToHome } from "../views/home/IndexToHome";
 import { IdentityOnboarding } from "../views/home/IdentityOnboarding";
 import { Routes_Interface } from "../lib/modules/routesInterface";
 import { WithdrawalRequest } from "../views/home/WithdrawalRequest";
 import { AccountManagement } from "../views/settings/AccountManagement";
 
 export const standardRoutes: Array<Routes_Interface> = [
-    { 
-        path: "/", 
-        element: <IndexToHome />, 
-        caseSensitive: true, 
-        name: 'INDEX_' 
-    },
     { 
         path: "/u/artist/home", 
         element: <Home />, 
