@@ -53,20 +53,26 @@ export const AccountSubHeader: FC<headerProps> = ({ errorMode = false }) => {
                                         "flex flex-row items-center w-auto md:px-3 px-1 gap-x-3 rounded py-1 text-sm text-slate-500 hover:bg-slate-00 hover:text-slate-700 focus:outline-none focus:ring-0 focus:ring-offset focus:ring-offset-slate-100 focus:ring-green-500 align-middle"
                                     )
                                 }>
-                                <span className="text-sm">{auth0.identity.display_name}</span>
 
                                 {
                                     Identity.photo_url === null ? (
-                                        // <img className="ml-4 rounded-full h-10 w-10" src={cartoonChar} alt="avatar" />
-                                        <div className={`w-10 h-10 flex items-center justify-center rounded-full ${getColorForLetter(auth0.identity.display_name.charAt(0))}`}>
-                                            <span className="text-white text-xl font-bold">
-                                                {auth0.identity.display_name.charAt(0)}
-                                            </span>
-                                        </div>
+                                        <>
+                                            {
+                                                auth0.identity.display_name && (
+                                                    <div className={`w-8 h-8 flex items-center justify-center rounded-full ${getColorForLetter(auth0.identity.display_name.charAt(0))}`}>
+                                                        <span className="text-white text-lg font-bold">
+                                                            {auth0.identity.display_name.charAt(0)}
+                                                        </span>
+                                                    </div>
+                                                )
+                                            }
+                                        </>
                                     ) : (
-                                        <img className="ml-4 rounded-full h-10 w-10" src={Identity.photo_url} alt={Identity.photo_url} />
+                                        <img className="rounded-full h-8 w-8" src={Identity.photo_url} alt={Identity.photo_url} />
                                     )
                                 }
+
+                                <span className="text-sm mr-4">{auth0.identity.display_name}</span>
                             </Menu.Button>
                         </div>
 
