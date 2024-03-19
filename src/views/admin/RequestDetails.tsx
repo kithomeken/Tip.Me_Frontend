@@ -6,15 +6,11 @@ import HttpServices from "../../services/HttpServices"
 import { ADMINISTRATION } from "../../api/API_Registry"
 import { Loading } from "../../components/modules/Loading"
 import { BespokePanel } from "../../lib/hooks/BespokePanel"
+import { Basic_Modal_Props } from "../../lib/modules/Interfaces"
 import { G_onInputChangeHandler, G_onInputBlurHandler } from "../../components/lib/InputHandlers"
 import { API_RouteReplace, classNames, humanReadableDate } from "../../lib/modules/HelperFunctions"
-interface RequestProps {
-    uuid: any,
-    show: boolean,
-    showOrHide: any,
-}
 
-export const RequestDetails: FC<RequestProps> = ({ uuid, show, showOrHide }) => {
+export const RequestDetails: FC<Basic_Modal_Props> = ({ uuid, show, showOrHide }) => {
     const [state, setstate] = useState({
         posting: false,
         status: 'pending',

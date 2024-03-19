@@ -6,16 +6,11 @@ import HttpServices from "../../services/HttpServices"
 import { ADMINISTRATION } from "../../api/API_Registry"
 import { Loading } from "../../components/modules/Loading"
 import { BespokePanel } from "../../lib/hooks/BespokePanel"
+import { Basic_Modal_Props } from "../../lib/modules/Interfaces"
 import { G_onInputBlurHandler, G_onInputChangeHandler } from "../../components/lib/InputHandlers"
 import { API_RouteReplace, DateFormating, classNames, formatAmount } from "../../lib/modules/HelperFunctions"
 
-interface PaymentProps {
-    uuid: any,
-    show: boolean,
-    showOrHide: any,
-}
-
-export const PaymentDetails: FC<PaymentProps> = ({ uuid, show, showOrHide }) => {
+export const PaymentDetails: FC<Basic_Modal_Props> = ({ uuid, show, showOrHide }) => {
     const [state, setstate] = useState({
         posting: false,
         status: 'pending',
