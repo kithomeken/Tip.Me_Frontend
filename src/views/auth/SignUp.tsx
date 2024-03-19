@@ -54,9 +54,6 @@ export const SignUp = () => {
     const locationState: any = location.state
     const auth0: any = useAppSelector(state => state.auth0)
 
-    console.log('auth0', auth0);
-
-
     const signInRoute: any = (
         authenticationRoutes.find(
             (routeName) => routeName.name === 'AUTH_SIGN_IN'
