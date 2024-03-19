@@ -13,6 +13,7 @@ export interface Generic_Error_Interface {
 }
 
 export interface Basic_Modal_Props {
+    uuid?: any,
     reload?: any,
     show: boolean,
     showOrHide: any,
