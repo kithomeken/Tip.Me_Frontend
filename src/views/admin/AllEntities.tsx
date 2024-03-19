@@ -128,7 +128,7 @@ export const AllEntities = () => {
             {
                 state.status === 'rejected' ? (
                     <div className="w-full flex-grow">
-                        <div className={`w-full pb-3 mx-auto bg-white border rounded h-full`} style={CONFIG_MAX_WIDTH}>
+                        <div className={`w-full pb-3 mx-auto bg-white border rounded h-full`}>
                             <div className="py-3 px-4">
                                 <div className="flex items-center justify-center">
                                     {
@@ -146,7 +146,7 @@ export const AllEntities = () => {
                     </div>
                 ) : state.status === 'fulfilled' ? (
                     <div className="w-full flex-grow">
-                        <div className={`w-full pb-3 mx-auto bg-white border rounded h-full`} style={CONFIG_MAX_WIDTH}>
+                        <div className={`w-full pb-3 mx-auto bg-white border rounded h-full`}>
                             <div className="py-3 px-4">
                                 <div className="flex items-center">
                                     <p className="text-xl flex-auto text-amber-600 mb-2 font-bold dark:text-white">

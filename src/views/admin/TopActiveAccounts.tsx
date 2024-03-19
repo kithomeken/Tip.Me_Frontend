@@ -59,7 +59,7 @@ export const TopActiveAccounts = () => {
             {
                 state.status === 'rejected' ? (
                     <div className="w-full flex-grow">
-                        <div className={`w-full pb-3 mx-auto bg-white rounded h-full`} style={CONFIG_MAX_WIDTH}>
+                        <div className={`w-full pb-3 mx-auto bg-white rounded h-full`}>
                             <div className="py-3 px-4 w-full">
                                 <div className="flex items-center justify-center">
                                     {
