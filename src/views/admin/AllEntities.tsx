@@ -102,7 +102,7 @@ export const AllEntities = () => {
                 ),
             },
             {
-                Header: 'Request Date',
+                Header: 'Joined Date',
                 id: 'jhfbcinsakdnwq',
                 accessor: (data: { created_at: any }) => (
                     <span className="text-sm font-normal text-gray-500 whitespace-nowrap dark:text-gray-400">
