@@ -35,3 +35,7 @@ export interface Search_Box_Props {
     onInputBlur: any,
     onChangeHandler: any,
 }
+
+export interface Doc_Details_Props {
+    docs: any,
+}
