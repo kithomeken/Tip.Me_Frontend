@@ -87,7 +87,11 @@ export const ADMINISTRATION = {
     REQUETS_DETAILS:    '/v1/admin/onboarding/requests/:uuid',
     ACTION_REQUETS:     '/v1/admin/onboarding/requests/:uuid/action',
     ALL_ENTITIES:       '/v1/admin/onboarding/entities',
+
     ALL_USERS:          '/v1/admin/onboarding/users-management',
+    USER_DETAILS:       '/v1/admin/onboarding/users-management/:uuid',
+    SUSPEND_USER:       '/v1/admin/onboarding/users-management/:uuid/suspend',
+    REINSTATE_USER:       '/v1/admin/onboarding/users-management/:uuid/reinstate',
 
     MPESA_EXCEPTIONS:   '/v1/admin/payments/mpesa/exceptions',
 
