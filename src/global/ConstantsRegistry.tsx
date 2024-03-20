@@ -9,7 +9,7 @@ export const APPLICATION = {
     NAME: 'Big Fan',
     THEME: 'green',
     URL: API_Controller().APP,
-    ERR_MSG: 'Something went wrong. Check connection'
+    ERR_MSG: 'Something went wrong. Kindly try again later'
 }
 
 
