@@ -370,13 +370,13 @@ export const RequestDetails: FC<Basic_Modal_Props> = ({ uuid, show, showOrHide }
                                                                 </span>
 
                                                                 <span className=" py-1 block mb-2">
-                                                                    <span className="hidden md:inline-block">Account Type:</span>
-                                                                    <span className="md:hidden">Account Type:</span>
+                                                                    <span className="hidden md:inline-block">Phone Number:</span>
+                                                                    <span className="md:hidden">Phone:</span>
                                                                 </span>
 
                                                                 <span className=" py-1 block mb-2">
-                                                                    <span className="hidden md:inline-block">Phone Number:</span>
-                                                                    <span className="md:hidden">Phone:</span>
+                                                                    <span className="hidden md:inline-block">Account Type:</span>
+                                                                    <span className="md:hidden">Account Type:</span>
                                                                 </span>
                                                             </div>
 
