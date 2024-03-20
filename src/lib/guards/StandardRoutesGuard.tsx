@@ -11,12 +11,12 @@ import { revokeAuthSession } from "../../store/auth/firebaseAuthActions"
 import { CONFIG_MARGIN_TOP, STORAGE_KEYS } from "../../global/ConstantsRegistry"
 
 export default function StandardRoutesGuard() {
-    const dispatch: any = useDispatch()
     const location = useLocation()
+    const dispatch: any = useDispatch()
     const currentLocation = location.pathname
 
     const auth0: any = useAppSelector(state => state.auth0)
-    const sessionState = Auth.checkAuthentication(auth0)
+    const sessionState = Auth.checkAuthentication(auth0)    
 
     const state = {
         from: currentLocation
