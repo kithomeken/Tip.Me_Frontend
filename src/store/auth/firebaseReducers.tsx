@@ -75,7 +75,11 @@ export const firebaseAuthReducer = (state = initialState, action: any) => {
             }
 
             encryptAndStoreLS(STORAGE_KEYS.ACCOUNT_DATA, identity)
-            encryptAndStoreCookie(COOKIE_KEYS.SANCTUM, payload.token)
+
+            if (payload.token) {
+                // If response containes token, set it
+                encryptAndStoreCookie(COOKIE_KEYS.SANCTUM, payload.token)
+            }
 
             return {
                 ...state,
