@@ -1,16 +1,16 @@
 import React, { useState } from "react"
 
 import { Empty } from "../errors/Empty"
+import { SearchBar } from "./SearchBar"
 import { ERR_404 } from "../errors/ERR_404"
 import { ERR_500 } from "../errors/ERR_500"
+import { ArtistDetails } from "./ArtistDetails"
 import ReactTable from "../../lib/hooks/ReactTable"
 import HttpServices from "../../services/HttpServices"
 import { ADMINISTRATION } from "../../api/API_Registry"
 import { Loading } from "../../components/modules/Loading"
-import { CONFIG_MAX_WIDTH } from "../../global/ConstantsRegistry"
-import { classNames, getColorForLetter } from "../../lib/modules/HelperFunctions"
+import { getColorForLetter } from "../../lib/modules/HelperFunctions"
 import { G_onInputBlurHandler, G_onInputChangeHandler } from "../../components/lib/InputHandlers"
-import { SearchBar } from "./SearchBar"
 
 export const UserManagement = () => {
     const [state, setstate] = useState({
@@ -221,7 +221,7 @@ export const UserManagement = () => {
                 Header: '-',
                 id: 'ihbs87rvhb3298',
                 accessor: (data: { uuid: any }) => (
-                    <span /* onClick={() => showOrHideRequestDetailsPanel(data.uuid)} */ className="text-amber-600 m-auto hover:underline text-right block float-right cursor-pointer hover:text-amber-900 text-xs">
+                    <span onClick={() => showOrHideAccountDetailsPanel(data.uuid)}className="text-amber-600 m-auto hover:underline text-right block float-right cursor-pointer hover:text-amber-900 text-xs">
                         View
                     </span>
                 )
@@ -281,6 +281,20 @@ export const UserManagement = () => {
 
         setstate({
             ...state, search, data, httpStatus
+        })
+    }
+
+    const showOrHideAccountDetailsPanel = (uuidX: string) => {
+        let { show } = state
+        let { uuid } = state
+        let { status } = state
+
+        show.detailsPanel = !state.show.detailsPanel
+        uuid = uuidX
+        status = 'fulfilled'
+
+        setstate({
+            ...state, show, uuid, status
         })
     }
 
@@ -379,6 +393,12 @@ export const UserManagement = () => {
                     </div>
                 )
             }
+
+            <ArtistDetails
+                uuid={state.uuid}
+                show={state.show.detailsPanel}
+                showOrHide={showOrHideAccountDetailsPanel}
+            />
         </React.Fragment>
     )
 }
