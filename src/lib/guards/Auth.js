@@ -62,6 +62,17 @@ class Auth {
                                 'resetSession': false
                             }
                         }
+
+                        if (jsonAccountInfo.active !== 'Y') {
+                            sessionState = {
+                                'identity': true,
+                                'authenticated': true,
+                                'status': {
+                                    'disabled': true,
+                                    'resetSession': false
+                                }
+                            }
+                        }
                     } else {
                         // Account info do not match. Redirect to PostAuth
                         sessionState = {
