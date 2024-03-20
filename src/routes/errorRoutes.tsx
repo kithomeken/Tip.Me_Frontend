@@ -4,13 +4,13 @@ import { IdentityVerification } from "../views/home/IdentityVerification";
 
 export const standardErrorRoutes: Array<Routes_Interface> = [
     { 
-        path: "/u/account/status/suspended", 
+        path: "/u/artist/_/identity/account-suspended", 
         element: <AccountSuspended />, 
         caseSensitive: true, 
         name: 'SUSP_ACC' 
     },
     { 
-        path: "/u/artist/_/identity-verification", 
+        path: "/u/artist/_/identity/account-verification", 
         element: <IdentityVerification />, 
         caseSensitive: true, 
         name: 'IDENTITY_VERF_' 
