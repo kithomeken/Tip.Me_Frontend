@@ -16,12 +16,12 @@ export function setPRc0MetaStage(propsIn: IdentityProps) {
             response: IdentityProps,
         });
     }
-} 
+}
 
 export function addIdentityToProfile(propsIn: IdentityProps) {
     return async (dispatch: (arg0: { type: string; response: any }) => void) => {
         const IdentityProps = { ...propsIn }
-                
+
         dispatch({
             type: IDENTITY_.PROCESSING,
             response: 'PRc0',
@@ -30,22 +30,31 @@ export function addIdentityToProfile(propsIn: IdentityProps) {
         try {
             let formData = new FormData()
             const dataDump = IdentityProps.dataDump
-    
-            formData.append('last_name', dataDump.last_name)
-            formData.append('first_name', dataDump.first_name)
-            formData.append('identifier', dataDump.identifier)
+
+            if (dataDump.keepName) {
+                formData.append('display_name', dataDump.display_name)
+            } else {
+                formData.append('last_name', dataDump.last_name)
+                formData.append('first_name', dataDump.first_name)
+            }
+
             formData.append('id_type', dataDump.id_type)
             formData.append('docPhoto', dataDump.docPhoto)
-    
+            formData.append('identifier', dataDump.identifier)
+
             const identityResponse: any = await HttpServices.httpMultipartForm(AUTH.ID_META_01, formData)
-            console.log(identityResponse);
-            
+
             if (identityResponse.data.success) {
                 dispatch({
                     type: AUTH_.ID_META_01,
-                    response: dataDump,
+                    response: {
+                        keepName: dataDump.keepName,
+                        last_name: dataDump.last_name,
+                        first_name: dataDump.first_name,
+                        display_name: dataDump.display_name,
+                    },
                 });
-    
+
                 dispatch({
                     type: IDENTITY_.PRc0_UPDATE,
                     response: 'PRc0',
@@ -79,17 +88,17 @@ export function addMSISDN_ToProfile(propsIn: IdentityProps) {
         try {
             let formData = new FormData()
             const dataDump = IdentityProps.dataDump
-    
+
             formData.append('msisdn', dataDump.msisdn)
-    
+
             const identityResponse: any = await HttpServices.httpPut(AUTH.ID_META_02, formData)
-            
+
             if (identityResponse.data.success) {
                 dispatch({
                     type: AUTH_.ID_META_02,
                     response: dataDump,
                 });
-    
+
                 dispatch({
                     type: IDENTITY_.PRc0_UPDATE,
                     response: 'PRc0',
@@ -127,16 +136,16 @@ export function artistEntityCreation(propsIn: IdentityProps) {
             let formData = new FormData()
             const dataDump = IdentityProps.dataDump
             const entityHash = StorageServices.getLocalStorage(STORAGE_KEYS.ENTITY_HASH)
-    
+
             formData.append('artist', dataDump.artist)
             formData.append('type', dataDump.type)
             formData.append('entity', dataDump.entity)
 
             if (entityHash !== null && entityHash !== undefined) {
                 formData.append('hash', entityHash);
-            }            
-    
-            const identityResponse: any = await HttpServices.httpPost(AUTH.ID_META_03, formData)            
+            }
+
+            const identityResponse: any = await HttpServices.httpPost(AUTH.ID_META_03, formData)
 
             if (identityResponse.data.success) {
                 // Save the entity type to local storage
@@ -146,7 +155,7 @@ export function artistEntityCreation(propsIn: IdentityProps) {
                     type: AUTH_.ID_META_03,
                     response: identityResponse.data.payload,
                 });
-                    
+
                 dispatch({
                     type: IDENTITY_.PRc0_COMPLETED,
                     response: identityResponse.data.payload,

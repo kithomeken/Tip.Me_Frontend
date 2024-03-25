@@ -65,7 +65,7 @@ export const firebaseAuthReducer = (state = initialState, action: any) => {
             const payload = action.response.payload
             let identity = payload.identity
             identity.acid = identity.uuid
-            
+
             const identityObject = {
                 uid: identity.uid,
                 email: identity.email,
@@ -107,8 +107,16 @@ export const firebaseAuthReducer = (state = initialState, action: any) => {
             }
 
         case AUTH_.ID_META_01:
+            console.log('cwuh3e9', action.response);
+            
             let meta01Identity: any = action.response
-            let displayName = meta01Identity.first_name + " " + meta01Identity.last_name
+            let displayName = null
+
+            if (meta01Identity.keepName) {
+                displayName = meta01Identity.display_name
+            } else {
+                displayName = meta01Identity.first_name + " " + meta01Identity.last_name
+            }
 
             return {
                 ...state,
