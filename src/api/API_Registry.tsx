@@ -34,7 +34,7 @@ export const SIGN_UP = {
 */
 export const ACCOUNT: any = {
     PROFILE: '/v1/account/auth/profile',
-    ARTIST_DETAILS: '/v1/account/artist/:auid/details',
+    ARTIST_DETAILS: '/v1/account/artist/details',
     STK_PUSH_NOFITICATION: '/v1/contribution/stk-push/notification',
 
 
