@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import { useDispatch } from "react-redux"
-import PhoneInput, { isValidPhoneNumber } from 'react-phone-number-input'
+import PhoneInput, { isValidPhoneNumber, parsePhoneNumber } from 'react-phone-number-input'
 
 import { useAppSelector } from "../../store/hooks"
 import '../../assets/css/react_phone_number_input.css'
@@ -43,7 +43,11 @@ export const Identity_02 = () => {
         if (!idC_State.processing) {
             let { errors } = state
             const validPhone = isValidPhoneNumber(e.target.value)
-            console.log('POEIN', validPhone);
+            const phoneNumber = parsePhoneNumber(e.target.value)
+            
+            if (phoneNumber) {
+                // console.log('wrvihni43902', phoneNumber.country);
+            }
 
             if (!validPhone) {
                 errors.msisdn = 'Kindly add a valid phone number'
