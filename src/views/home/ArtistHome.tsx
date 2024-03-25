@@ -44,8 +44,7 @@ export const ArtistHome = () => {
         let { data } = state
 
         try {
-            const apiRoute = API_RouteReplace(ACCOUNT.ARTIST_DETAILS, ':auid', 'owudow')
-            const response: any = await HttpServices.httpGet(apiRoute)
+            const response: any = await HttpServices.httpGet(ACCOUNT.ARTIST_DETAILS)
             httpStatus = response.status
 
             if (response.data.success) {
