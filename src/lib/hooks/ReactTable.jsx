@@ -1,7 +1,7 @@
 import React, { } from 'react'
 import { useTable, usePagination } from 'react-table'
 
-export default function ReactTable({ columns, data, showPageSize = false }) {
+export default function ReactTable({ columns, data, hidePagination = false, showPageSize = false }) {
     // Use the state and functions returned from useTable to build your UI
     const {
         getTableProps,
@@ -40,6 +40,8 @@ export default function ReactTable({ columns, data, showPageSize = false }) {
         var i = 0
         while (++i <= pageCount) pageCountArray.push(i);
     }
+
+    mapPageCountToArray()
 
     return (
         <>
@@ -99,7 +101,7 @@ export default function ReactTable({ columns, data, showPageSize = false }) {
                 </tbody>
             </table>
 
-            <div className="pagination md:mt-6">
+            <div className="pagination md:mt-6" hidden={hidePagination}>
                 <div className="bg-gray-50 px-4 py-3 flex items-center justify-between sm:px-6">
                     <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
                         <div>
@@ -115,11 +117,6 @@ export default function ReactTable({ columns, data, showPageSize = false }) {
                                     className="relative inline-flex items-center px-2 py-1.5 shadow-sm rounded mr-2 text-gray-500 border border-gray-300 bg-white text-xs hover:bg-gray-100">
                                     <span className="">Previous</span>
                                 </button>
-
-                                {// Run to map the number of pages 
-                                    // into an array for loop rendering
-                                    mapPageCountToArray()
-                                }
 
                                 {
                                     pageCount <= 10 ? (
