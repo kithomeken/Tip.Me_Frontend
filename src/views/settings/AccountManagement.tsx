@@ -53,6 +53,7 @@ export const AccountManagement = () => {
                     <div className="p-4">
                         <h1 className="text-xl text-amber-600 font-medium tracking-wider">Settings</h1>
                     </div>
+                    
                     <nav className="flex flex-col px-3">
                         <button type="button" onClick={() => setActivateTab('profile')} className={classNames(
                             state.activeTab === 'profile' ? 'text-amber-700 bg-amber-100' : 'text-slate-700 hover:bg-slate-100',
