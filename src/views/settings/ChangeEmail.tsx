@@ -12,6 +12,7 @@ import { firebaseAuth } from "../../firebase/firebaseConfigs";
 import noActionRequired from '../../assets/images/7769792_3236194.svg'
 import { DateFormating, classNames, emailValidator } from "../../lib/modules/HelperFunctions"
 import { G_onInputChangeHandler, G_onInputBlurHandler } from "../../components/lib/InputHandlers"
+import { Helmet } from "react-helmet";
 
 export const ChangeEmail = () => {
     const [state, setstate] = useState({
@@ -39,7 +40,7 @@ export const ChangeEmail = () => {
     }, [])
 
     const fetchAccountEmailHistory = async () => {
-        const providerId = firebaseAuth.currentUser.providerData[0].providerId
+        const providerId = auth0.provider
         let { status } = state
 
         if (providerId === 'password') {
@@ -60,20 +61,20 @@ export const ChangeEmail = () => {
                 console.log(error);
                 status = 'rejected'
             }
-    
+
             setstate({
                 ...state, status, data, httpStatus
             })
 
             return
-        } 
+        }
 
         status = 'fulfilled'
 
         setstate({
             ...state, status
         })
-        
+
         return
     }
 
@@ -266,13 +267,17 @@ export const ChangeEmail = () => {
 
     return (
         <React.Fragment>
+            <Helmet>
+                <title>Change Email</title>
+            </Helmet>
+
             <div className="w-full px-2">
                 <p className="text-2xl text-amber-600 mb-3">
                     Change Email
                 </p>
 
                 {
-                    firebaseAuth.currentUser.providerData[0].providerId === 'password' ? (
+                    auth0.provider === 'password' ? (
                         <>
                             {
                                 state.status === 'rejected' ? (
