@@ -106,14 +106,14 @@ export const UserManagement = () => {
             {
                 Header: 'Name',
                 id: 'cl74wb4y7',
-                accessor: (data: { display_name: any, email: any, photo_url }) => (
+                accessor: (data: { display_name: any, email: any, photo_url: any }) => (
                     <span className="flex flex-row align-middle items-center space-x-4">
                         <div className="flex-shrink-0">
                             <div className="w-8 h-8 flex flex-col justify-center align-middle items-center mx-auto">
                                 {
                                     data.photo_url ? (
                                         <>
-                                            <img className="rounded-full h-8 w-8" src={data.photo_url} alt={'photo_url'} />
+                                            <img className="rounded-full h-8 w-8" src={data.photo_url} alt={null} />
                                         </>
                                     ) : (
                                         <>
