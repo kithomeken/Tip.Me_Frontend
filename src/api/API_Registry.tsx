@@ -63,6 +63,7 @@ export const ACCOUNT: any = {
 
 
     ENTITY_CONTR_DATA:      '/v1/entity/contr/:uuid',
+    ENTITY_DETAILS:         '/v1/account/settings/entity/details',
     GET_NOMINATED:          '/v1/account/settings/entity/nominated/member',
     SET_NOMINATED:          '/v1/account/settings/entity/nominated/member/set-own',
     NMNTD_MMBR_ACTION:      '/v1/account/settings/entity/nominated/member/action',
