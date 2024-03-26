@@ -12,7 +12,6 @@ import "react-toastify/dist/ReactToastify.css"
 import './firebase/firebaseConfigs'
 import { ERR_404 } from './views/errors/ERR_404'
 import EncryptionKeys from "./security/EncryptionKeys"
-import { standardRoutes } from './routes/standardRoutes'
 import AuthRoutesGuard from './lib/guards/AuthRoutesGuard'
 import { standardErrorRoutes } from "./routes/errorRoutes"
 import { administrativeRoutes } from "./routes/adminRoutes"
@@ -27,6 +26,8 @@ import { commonRoutes, genericRoutes } from "./routes/genericRoutes"
 import CoreSettingsRouteGuard from "./lib/guards/CoreSettingsRoutesGuard"
 import { authenticationRoutes, postAuthRoutes } from './routes/authRoutes'
 import { AUTH, AUTH_SIGN_OUT, CSRF_COOKIE_ROUTE } from "./api/API_Registry"
+import StandardSettingsRoutesGuard from "./lib/guards/StandardSettingsRoute"
+import { standardRoutes, standardSettingsRoutes } from './routes/standardRoutes'
 
 interface RouteContextType {
     currentpage: string,
@@ -102,6 +103,20 @@ function App() {
                         <Route element={<StandardRoutesGuard />} >
                             {
                                 standardRoutes.map((route, index) => {
+                                    return (
+                                        <Route
+                                            path={route.path}
+                                            element={route.element}
+                                            key={index}
+                                        />
+                                    )
+                                })
+                            }
+                        </Route>
+
+                        <Route element={<StandardSettingsRoutesGuard />} >
+                            {
+                                standardSettingsRoutes.map((route, index) => {
                                     return (
                                         <Route
                                             path={route.path}
