@@ -14,10 +14,13 @@ import { APPLICATION, AUTH_ } from "../../global/ConstantsRegistry";
 import { G_onInputChangeHandler, G_onInputBlurHandler } from "../../components/lib/InputHandlers";
 import { firebaseAuthActions, generateSanctumToken, resetAuth0 } from "../../store/auth/firebaseAuthActions";
 import { DeviceInfo, classNames, emailValidator, passwordValidator } from "../../lib/modules/HelperFunctions";
+import { Loading } from "../../components/modules/Loading";
+import Rock_Band_Image from '../../assets/images/cbbd3439ac7db68a31864dfc93545a62.png'
+import { PasswordPolicy } from "./PasswordPolicy";
 
 export const SignUp = () => {
     const [state, setstate] = useState({
-        show: false,
+        status: 'pending',
         acceptTerms: false,
         pwdVisibility: false,
         input: {
@@ -29,13 +32,25 @@ export const SignUp = () => {
             email: '',
             password: '',
             confirm: ''
+        },
+        show: {
+            terms: false,
+            pwdPol: false,
         }
     })
 
     const location = useLocation()
     const dispatch: any = useDispatch();
+    const locationState: any = location.state
+    const auth0: any = useAppSelector(state => state.auth0)
 
-    function parseQueryString(search) {
+    const signInRoute: any = (
+        authenticationRoutes.find(
+            (routeName) => routeName.name === 'AUTH_SIGN_IN'
+        )
+    )?.path
+
+    function parseQueryString(search: any) {
         const params = {};
 
         if (search) {
@@ -51,19 +66,14 @@ export const SignUp = () => {
         return params;
     }
 
-    const locationState: any = location.state
-    const auth0: any = useAppSelector(state => state.auth0)
-
-    const signInRoute: any = (
-        authenticationRoutes.find(
-            (routeName) => routeName.name === 'AUTH_SIGN_IN'
-        )
-    )?.path
-
     React.useEffect(() => {
         authRedirectResult()
             .then(async (result) => {
                 if (!result) {
+                    setstate({
+                        ...state, status: 'fulfilled'
+                    })
+
                     dispatch(resetAuth0())
                     return;
                 }
@@ -84,9 +94,17 @@ export const SignUp = () => {
                     deviceInfo: DeviceInfo(),
                 }
 
-                generateSanctumToken(dispatch, accessToken, props)
+                setstate({
+                    ...state, status: 'fulfilled'
+                })
+
+                return
             })
             .catch(() => {
+                setstate({
+                    ...state, status: 'fulfilled'
+                })
+
                 dispatch(resetAuth0())
                 return null;
             });
@@ -173,8 +191,8 @@ export const SignUp = () => {
                 if (!acceptTerms) {
                     toast.warning("Kindly read through and accept the terms and conditions", {
                         position: "top-right",
-                        autoClose: 7000,
-                        hideProgressBar: true,
+                        autoClose: 5000,
+                        hideProgressBar: false,
                         closeOnClick: true,
                         pauseOnHover: true,
                         draggable: true,
@@ -214,8 +232,8 @@ export const SignUp = () => {
             if (!acceptTerms) {
                 toast.warning("Kindly read through and accept the terms and conditions", {
                     position: "top-right",
-                    autoClose: 7000,
-                    hideProgressBar: true,
+                    autoClose: 5000,
+                    hideProgressBar: false,
                     closeOnClick: true,
                     pauseOnHover: true,
                     draggable: true,
@@ -302,7 +320,18 @@ export const SignUp = () => {
     const showOrHideTC = () => {
         if (!auth0.processing) {
             let { show } = state
-            show = !state.show
+            show.terms = !state.show.terms
+
+            setstate({
+                ...state, show
+            })
+        }
+    }
+
+    const showOrHidePasswordPolicy = () => {
+        if (!auth0.processing) {
+            let { show } = state
+            show.pwdPol = !state.show.pwdPol
 
             setstate({
                 ...state, show
@@ -327,181 +356,185 @@ export const SignUp = () => {
                 <title>Sign Up</title>
             </Helmet>
 
-            <div className="flex flex-col md:h-screen md:flex-row justify-center items-center dark:bg-gray-800">
-                <div className="hidden md:block md:w-3/5 block_strp h-screen">
-
-                </div>
-
-                <div className="wrapper w-full md:w-2/5 md:h-screen overflow-auto">
-                    <section className="gx-container">
-                        <div className="md:px-4 px-4">
-                            <header className="landing-header">
-                                <div className="landing pl-3 mb-0 text-left">
-                                    <span className="odyssey py-3 text-left text-amber-500 nunito block">{APPLICATION.NAME}</span>
-                                    <span className="text-stone-700 block text-left mt-0 mb-3">Join us today by registering</span>
+            {
+                state.status === 'pending' ? (
+                    <div className="flex flex-col md:h-screen md:flex-row justify-center items-center dark:bg-gray-800">
+                        <div className="w-full form-group px-12 mb-14">
+                            <div className="w-full">
+                                <div className="pt-10">
+                                    <Loading />
                                 </div>
-                            </header>
+                            </div>
+                        </div>
+                    </div>
+                ) : (
+                    <div className="wrapper w-full overflow-auto h-screen">
+                        <section className="gx-container bg-white shadow-md rounded-md h-screen sm:h-auto w-full flex items-center justify-center">
+                            <div className="flex md:flex-row flex-col align-middle items-center w-full">
+                                <div className="md:basis-2/5 py-4 md:px-6 px-8 w-full">
+                                    <span className="text-2xl self-start text-amber-500 tracking-wider leading-7 block">{APPLICATION.NAME}</span>
 
-                            <div className="px-3 py-4 text-sm mb-2">
-                                <div className="flex items-center pt-1 justify-center dark:bg-gray-800">
-                                    <button type="button" onClick={signUpWithGoogle} className="w-64 border-slate-300 dark:border-slate-700 text-stone-700 dark:text-stone-200 hover:border-stone-400 hover:text-slate-900 dark:hover:text-slate-300 transition duration-150 disabled:cursor-not-allowed text-sm rounded-md border shadow-sm focus:outline-none " disabled={auth0.processing} style={{ height: '3rem' }}>
-                                        <span className="pl-2 block">
+                                    <div className="w-full py-4">
+                                        <span className="text-stone-700 block text-lg">Are you a star?</span>
+                                        <span className="text-stone-500 block text-sm">Register now and enjoy our services</span>
+                                    </div>
+
+                                    <div className="w-full">
+                                        <button type="button" onClick={signUpWithGoogle} className="w-full border-stone-400 py-2 dark:border-stone-700 text-stone-700 dark:text-stone-200 hover:border-stone-400 hover:text-stone-900 dark:hover:text-stone-300 transition duration-150 font-medium disabled:cursor-not-allowed text-sm rounded-md border shadow-sm focus:outline-none " disabled={auth0.processing}>
+                                            <span className="pl-2 block">
+                                                {
+                                                    auth0.processing && auth0.provider === 'google' ? (
+                                                        <span className="flex flex-row items-center justify-center align-middle text-stone-600 gap-x-4">
+                                                            <i className="fad fa-spinner fa-xl fa-spin"></i>
+                                                            <span className="tracking-wider">Signing you up</span>
+                                                        </span>
+                                                    ) : (
+                                                        <span className="flex items-center gap-x-3 px-4 justify-center align-middle">
+                                                            <img className="w-6 h-6" src="https://www.svgrepo.com/show/475656/google-color.svg" loading="lazy" alt="google logo" />
+                                                            <span className="tracking-wider">Sign up with Google</span>
+                                                        </span>
+                                                    )
+                                                }
+                                            </span>
+                                        </button>
+                                    </div>
+
+                                    <div className="flex flex-row justify-center items-center align-middle py-6">
+                                        <div className="flex-grow border-b border-stone-300"></div>
+                                        <span className="flex-none text-stone-500 text-sm px-4">or</span>
+                                        <div className="flex-grow border-b border-stone-300"></div>
+                                    </div>
+
+                                    <form className="w-full m-auto" onSubmit={passwordSignUpFormHandler}>
+                                        <div className="shadow-none mb-3 pb-3">
+                                            <div className="relative rounded shadow-sm">
+                                                <input type="email" name="email" id="email" placeholder="john.doe@email.com" autoComplete="off"
+                                                    className={classNames(
+                                                        'text-stone-900 ring-slate-300 placeholder:text-stone-500 focus:border-0 focus:outline-none focus:ring-amber-600 focus:outline-amber-500 hover:border-stone-400 border border-stone-300',
+                                                        'block w-full rounded-md py-2 pl-3 pr-8 text-sm'
+                                                    )} onChange={onChangeHandler} onBlur={onInputBlur} value={state.input.email} required />
+
+                                            </div>
+
                                             {
-                                                auth0.processing && auth0.provider === 'google' ? (
-                                                    <span className="flex flex-row items-center text-stone-600">
-                                                        <i className="fad fa-spinner-third fa-xl fa-spin mr-2"></i>
-                                                        <span>Signing up with Google</span>
-                                                    </span>
-                                                ) : (
-                                                    <span className="flex items-center gap-x-3 px-4 justify-center align-middle text-stone-600">
-                                                        <img className="w-6 h-6" src="https://www.svgrepo.com/show/475656/google-color.svg" loading="lazy" alt="google logo" />
-                                                        Sign up with Google
+                                                state.errors.email && (
+                                                    <span className='invalid-feedback text-xs text-red-600 pl-0'>
+                                                        {state.errors.email}
                                                     </span>
                                                 )
                                             }
-                                        </span>
-                                    </button>
-                                </div>
-                            </div>
 
-                            <div className="flex flex-row justify-center items-center align-middle py-2 px-10">
-                                <div className="flex-grow border-b border-amber-300"></div>
-                                <span className="flex-none text-stone-600 px-4">or</span>
-                                <div className="flex-grow border-b border-amber-300"></div>
-                            </div>
-
-                            <form className="space-y-3 shadow-none px-2 mb-3 md:w-4/5 md:px-6 m-auto" onSubmit={passwordSignUpFormHandler}>
-                                <div className="shadow-none space-y-px mb-4">
-                                    <label htmlFor="email" className="block text-sm leading-6 text-stone-700 mb-1">Email:</label>
-
-                                    <div className="relative mt-2 rounded shadow-sm">
-                                        <input type="email" name="email" id="email" placeholder="john.doe@email.com" autoComplete="off" disabled={auth0.processing ? true : false}
-                                            className={classNames(
-                                                'text-stone-900 ring-slate-300 placeholder:text-stone-500 focus:border-0 focus:outline-none focus:ring-amber-600 focus:outline-amber-500 hover:border-stone-400 border border-stone-300',
-                                                'block w-full rounded-md py-2 pl-3 pr-8  text-sm'
-                                            )} onChange={onChangeHandler} onBlur={onInputBlur} value={state.input.email} required style={{ height: '3rem' }} />
-
-                                    </div>
-
-                                    {
-                                        state.errors.email && (
-                                            <span className='invalid-feedback text-xs text-red-600 pl-0'>
-                                                {state.errors.email}
-                                            </span>
-                                        )
-                                    }
-
-                                    {
-                                        auth0.error && (
-                                            <span className='invalid-feedback text-xs text-red-600 pl-0'>
-                                                {auth0.error}
-                                            </span>
-                                        )
-                                    }
-                                </div>
-
-                                <div className="shadow-none space-y-px mb-">
-                                    <label htmlFor="password" className="block text-sm leading-6 text-stone-700 mb-1">Password:</label>
-
-                                    <div className="relative mt-2 rounded shadow-sm">
-                                        <input type={state.pwdVisibility ? 'text' : 'password'} name="password" id="password" placeholder="********" autoComplete="off" disabled={auth0.processing ? true : false}
-                                            className={classNames(
-                                                'text-stone-900 ring-slate-300 placeholder:text-stone-500 focus:border-0 focus:outline-none focus:ring-amber-600 focus:outline-amber-500 hover:border-stone-400 border border-stone-300',
-                                                'block w-full rounded-md py-2 pl-3 pr-8  text-sm'
-                                            )} onChange={onChangeHandler} onBlur={onInputBlur} value={state.input.password} required style={{ height: '3rem' }} />
-
-                                        <div className="absolute inset-y-0 right-0 flex items-center w-8">
                                             {
-                                                state.pwdVisibility ? (
-                                                    <span className="fa-duotone fa-eye text-amber-600 fa-lg cursor-pointer" onClick={togglePasswordVisibility}></span>
-                                                ) : (
-                                                    <span className="fa-duotone fa-eye-slash text-amber-600 fa-lg cursor-pointer" onClick={togglePasswordVisibility}></span>
+                                                auth0.error && (
+                                                    <span className='invalid-feedback text-xs text-red-600 pl-0'>
+                                                        {auth0.error}
+                                                    </span>
                                                 )
                                             }
                                         </div>
-                                    </div>
 
-                                    {
-                                        state.errors.password && (
-                                            <span className='invalid-feedback text-xs text-red-600 pl-0'>
-                                                {state.errors.password}
-                                            </span>
-                                        )
-                                    }
+                                        <div className="shadow-none mb-3 pb-3">
+                                            <div className="relative rounded shadow-sm">
+                                                <input type={state.pwdVisibility ? 'text' : 'password'} name="password" id="password" placeholder="********" autoComplete="off"
+                                                    className={classNames(
+                                                        'text-stone-900 ring-slate-300 placeholder:text-stone-500 focus:border-0 focus:outline-none focus:ring-amber-600 focus:outline-amber-500 hover:border-stone-400 border border-stone-300',
+                                                        'block w-full rounded-md py-2 pl-3 pr-8 text-sm'
+                                                    )} onChange={onChangeHandler} onBlur={onInputBlur} value={state.input.password} required />
+
+                                                <div className="absolute inset-y-0 right-0 flex items-center w-8">
+                                                    {
+                                                        state.pwdVisibility ? (
+                                                            <span className="fa-duotone fa-eye text-amber-600 fa-lg cursor-pointer" onClick={togglePasswordVisibility}></span>
+                                                        ) : (
+                                                            <span className="fa-duotone fa-eye-slash text-amber-600 fa-lg cursor-pointer" onClick={togglePasswordVisibility}></span>
+                                                        )
+                                                    }
+                                                </div>
+                                            </div>
+
+                                            {
+                                                state.errors.password && (
+                                                    <span className='invalid-feedback text-xs text-red-600 pl-0'>
+                                                        {state.errors.password}
+                                                    </span>
+                                                )
+                                            }
+                                        </div>
+
+                                        <div className="shadow-none space-y-px mb-3">
+                                            <div className="relative mt-2 rounded shadow-sm">
+                                                <input type={state.pwdVisibility ? 'text' : 'password'} name="confirm" id="confirm" placeholder="********" autoComplete="off" disabled={auth0.processing ? true : false}
+                                                    className={classNames(
+                                                        'text-stone-900 ring-slate-300 placeholder:text-stone-500 focus:border-0 focus:outline-none focus:ring-amber-600 focus:outline-amber-500 hover:border-stone-400 border border-stone-300',
+                                                        'block w-full rounded-md py-2 pl-3 pr-8 text-sm'
+                                                    )} onChange={onChangeHandler} onBlur={onInputBlur} value={state.input.confirm} required />
+                                            </div>
+                                        </div>
+
+                                        <span onClick={showOrHidePasswordPolicy} className="text-stone-600 hover:text-amber-600 text-sm m-auto flex flex-row-reverse gap-x-1 align-middle items-center cursor-pointer">
+                                            <span>Password policy</span>
+                                            <span className="fa-regular fa-circle-info fa-lg"></span>
+                                        </span>
+
+                                        <div className="text-sm pt-3 pb-1">
+                                            <div className="relative flex gap-x-3 align-middle items-center py-1 px-2">
+                                                <div className="flex-none">
+                                                    <input
+                                                        id="offers"
+                                                        name="offers"
+                                                        type="checkbox"
+                                                        checked={state.acceptTerms}
+                                                        onChange={acceptTermsAndConditions}
+                                                        className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                                                    />
+                                                </div>
+                                                <div className="text-sm leading-6">
+                                                    <p className="text-gray-500">
+                                                        I have read, understood, and agreed to the <span className="text-amber-600 cursor-pointer hover:text-amber-700 hover:underline" onClick={showOrHideTC}>Terms & Conditions</span>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className="pb-3 pt-3 flex justify-center">
+                                            <button type="submit" className="w-44 disabled:cursor-not-allowed text-sm rounded-md border border-transparent shadow-sm px-4 py-2 bg-amber-500 text-white disabled:bg-amber-600 hover:bg-amber-600 focus:outline-none flex items-center justify-center" disabled={auth0.processing}>
+                                                {
+                                                    auth0.processing && auth0.provider === 'password' ? (
+                                                        <span className="flex flex-row items-center">
+                                                            <i className="fad fa-spinner-third fa-xl fa-spin mr-2"></i>
+                                                            <span>Signing u...</span>
+                                                        </span>
+                                                    ) : (
+                                                        <span>Sign Up</span>
+                                                    )
+                                                }
+                                            </button>
+                                        </div>
+                                    </form>
+
+                                    <span className="text-stone-800 text-sm m-auto flex gap-x-2 py-2">
+                                        <span>Already have an account?</span>
+                                        <Link to={signInRoute} className="text-amber-600 hover:text-amber-700 hover:underline">Sign In</Link>
+                                    </span>
                                 </div>
 
-                                <div className="shadow-none space-y-px pb-3">
-                                    <label htmlFor="confirm" className="block text-sm leading-6 text-stone-700 mb-1">Confirm Password:</label>
-
-                                    <div className="relative mt-2 rounded shadow-sm">
-                                        <input type={state.pwdVisibility ? 'text' : 'password'} name="confirm" id="confirm" placeholder="********" autoComplete="off" disabled={auth0.processing ? true : false}
-                                            className={classNames(
-                                                'text-stone-900 ring-slate-300 placeholder:text-stone-500 focus:border-0 focus:outline-none focus:ring-amber-600 focus:outline-amber-500 hover:border-stone-400 border border-stone-300',
-                                                'block w-full rounded-md py-2 pl-3 pr-8  text-sm'
-                                            )} onChange={onChangeHandler} onBlur={onInputBlur} value={state.input.confirm} required style={{ height: '3rem' }} />
-                                    </div>
+                                <div className="md:basis-3/5 hidden md:block">
+                                    <img className="h-full" src={Rock_Band_Image} loading="lazy" alt="rock_band" />
                                 </div>
-
-                                <span className="px-1.5 block text-sm text-stone-500 mb-2 capitalize">
-                                    Our password policy:
-                                    <span className="block pl-4">• One upper case letter</span>
-                                    <span className="block pl-4">• One lower case letter</span>
-                                    <span className="block pl-4">• One numberic character</span>
-                                    <span className="block pl-4">• One special character</span>
-                                </span>
-
-                                <div className="relative flex gap-x-3">
-                                    <div className="flex h-6 items-center">
-                                        <input
-                                            id="offers"
-                                            name="offers"
-                                            type="checkbox"
-                                            checked={state.acceptTerms}
-                                            onChange={acceptTermsAndConditions}
-                                            className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
-                                        />
-                                    </div>
-                                    <div className="text-sm leading-6">
-                                        <p className="text-gray-500">
-                                            I have read, understood, and agree to the <span className="text-amber-600 cursor-pointer" onClick={showOrHideTC}>terms and conditions.</span>
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <div className="pb-3 pt-3 flex justify-center">
-                                    <button type="submit" className="w-44 disabled:cursor-not-allowed text-sm rounded-md border border-transparent shadow-sm px-4 py-2 bg-amber-500 text-white disabled:bg-amber-600 hover:bg-amber-600 focus:outline-none flex items-center justify-center" disabled={auth0.processing} style={{ height: '3rem' }}>
-                                        {
-                                            auth0.processing && auth0.provider === 'password' ? (
-                                                <span className="flex flex-row items-center">
-                                                    <i className="fad fa-spinner-third fa-xl fa-spin mr-2"></i>
-                                                    <span>Signing Up...</span>
-                                                </span>
-                                            ) : (
-                                                <span>Sign Up</span>
-                                            )
-                                        }
-                                    </button>
-                                </div>
-                            </form>
-
-                            <span className="text-ston text- block md:w-4/5 md:px-6 m-auto pb-4">
-                                <span>Already have an account?</span>
-                                <Link to={signInRoute} className="text-amber-600 underline ml-1">Sign In</Link>
-                            </span>
-
-                            <div className="mx-auto py-3 text-center">
-                                <p className="text-sm">
-                                    © {new Date().getFullYear()}. Elevated Acts of Appreciation, <span className="text-amber-600 block">Tip by Tip.</span>
-                                </p>
                             </div>
-                        </div>
-                    </section>
-                </div>
-            </div>
+                        </section>
+                    </div>
+                )
+            }
 
             <TermsAndConditions
-                show={state.show}
+                show={state.show.terms}
                 showOrHide={showOrHideTC}
+            />
+
+            <PasswordPolicy
+                show={state.show.pwdPol}
+                showOrHide={showOrHidePasswordPolicy}
             />
         </React.Fragment>
     )
