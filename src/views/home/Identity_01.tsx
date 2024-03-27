@@ -8,10 +8,11 @@ import { useAppSelector } from "../../store/hooks"
 import HttpServices from "../../services/HttpServices"
 import { ListBoxZero } from "../../lib/hooks/ListBoxZero"
 import { classNames } from "../../lib/modules/HelperFunctions"
-import smallAsset from "../../assets/images/12704367_5037373.svg"
+import smallAsset from "../../assets/images/0e4537779b99b50a40a4c70b5acdf857.svg"
 import { InputWithLoadingIcon } from "../../components/lib/InputWithLoadingIcon"
 import { addIdentityToProfile, resetIdentity } from "../../store/identityCheckActions"
 import { G_onInputBlurHandler, G_onInputChangeHandler } from "../../components/lib/InputHandlers"
+import { CONFIG_MAX_WIDTH, APPLICATION } from '../../global/ConstantsRegistry';
 
 export const Identity_01 = () => {
     const [state, setstate] = useState({
@@ -313,220 +314,252 @@ export const Identity_01 = () => {
 
     return (
         <React.Fragment>
-            <div className="w-full border-dashed rounded-md border-2 border-slate-300">
-                <div className="flex mb-4 w-full flex-col md:flex-row px-3 gap-4 py-3 align-middle justitfy-center m-auto ">
-                    <div className="mx-auto md:basis-1/2 md:px-2 flex-shrink-0 flex items-center justify-center mb-3 sm:mx-0 md:w-64 w-48">
-                        <img src={smallAsset} alt={smallAsset} width="auto" className="block text-center m-auto" />
-                    </div>
+            <div className="wrapper w-full overflow-auto h-screen">
+                <section className="gx-container h-screen rounded-md w-full flex items-center justify-center" style={CONFIG_MAX_WIDTH}>
+                    <div className="flex md:flex-row flex-col align-middle items-center w-full md:pb-0 pb-10">
+                        <div className="md:basis-3/5 md:px-6 px-8 w-full h-screen py-8">
+                            <span className="text-2xl self-start text-amber-500 tracking-wider leading-7 block mb-2 md:pt-0 pt-4">{APPLICATION.NAME}</span>
 
-                    <div className="w-full md:basis-1/2 px-4">
-                        <div className="text-center md:text-start">
-                            <span className="text-amber-500 mb-2 py-1 md:px-3 text-right block text-sm">
-                                1 OF 4 COMPLETE
-                            </span>
+                            <div className="flex flex-row w-full align-middle justitfy-between items-center md:hidden">
+                                <div className="w-48 pt-4 mx-auto pb-3">
+                                    <img src={smallAsset} alt={"hello_i'm_carol"} width="auto" className="block text-center m-auto" />
+                                </div>
+                            </div>
 
-                            <span className="text-amber-600 mb-3 text-2xl block">
-                                Your Identity
-                                <span className="text-sm pt-2 text-slate-500 block">
-                                    Let us know who you are...
+                            <div className="w-32 md:float-start float-right">
+                                <div className="w-full py-4 grid grid-cols-3 gap-x-2">
+                                    <div className="rounded-md h-2 shadow-lg bg-amber-600"></div>
+                                    <div className="rounded-md h-2 shadow-lg bg-amber-400"></div>
+                                    <div className="rounded-md h-2 shadow-lg bg-gray-300"></div>
+                                </div>
+
+                                <span className="text-sm text-stone-500 md:text-start text-right block">
+                                    1 of 3
                                 </span>
-                            </span>
-                        </div>
+                            </div>
 
-                        <div className="flex flex-col mb-3 md:w-4/ w-full">
-                            <form className="md:spac shadow-none mb-3" onSubmit={onFormSubmitHandler}>
-                                {
-                                    auth0.provider === 'password' ? (
-                                        <IdentityDisplayName
-                                            state={state}
-                                            onInputBlur={onInputBlur}
-                                            onChangeHandler={onChangeHandler}
-                                        />
-                                    ) : (
-                                        state.keepName ? (
-                                            <div className="py-2 px-3 border-2 border-amber-300 border-dashed rounded-md mb-4">
-                                                <div className="flex flex-row align-middle justify-center items-center text-amber-700 px-2 gap-x-3 mt-2">
-                                                    <img className="w-8 h-8" src="https://www.svgrepo.com/show/475656/google-color.svg" loading="lazy" alt="google logo" />
+                            <div className={
+                                classNames(
+                                    "w-full text-sm text-stone-600 float-right mb-4",
+                                    auth0.provider === 'google' && state.keepName ? "border-b-0" : "border-b-2 border-dashed"
+                                )
+                            }>
+                                <span className="block py-4 text-xl md:text-2xl">
+                                    Welcome aboard! We're excited to have you!
 
-                                                    <div className="flex-auto">
-                                                        <span className="text-sm block text-gray-600">
-                                                            We'll set your name to <span className="text-amber-600">{auth0.identity.display_name}</span> as provided by your Google sign-in.
+                                    <span className="text-sm pt-4 pb-2 text-stone-500 block">
+                                        First things first, share some details about yourself...
+                                    </span>
+                                </span>
+                            </div>
+
+                            <div className="flex flex-col mb-3 w-full">
+                                <form className="md:spac shadow-none mb-3" onSubmit={onFormSubmitHandler}>
+                                    {
+                                        auth0.provider === 'password' ? (
+                                            <IdentityDisplayName
+                                                state={state}
+                                                onInputBlur={onInputBlur}
+                                                onChangeHandler={onChangeHandler}
+                                            />
+                                        ) : (
+                                            state.keepName ? (
+                                                <div className="py-2 px-3 border-2 border-amber-300 border-dashed rounded-md mb-4">
+                                                    <div className="flex flex-row align-middle justify-center items-center text-amber-700 px-2 gap-x-3 mt-2">
+                                                        <img className="w-8 h-8" src="https://www.svgrepo.com/show/475656/google-color.svg" loading="lazy" alt="google logo" />
+
+                                                        <div className="flex-auto">
+                                                            <span className="text-sm block text-gray-600">
+                                                                We'll set your name to <span className="text-amber-600">{auth0.identity.display_name}</span> as provided by your Google sign-in.
+                                                            </span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="flex flex-row-reverse align-middle items-center text-amber-600 px-2">
+                                                        <span onClick={keepOrChangeDisplayName} className="text-sm flex-none shadow-none py-2 md:py-1 bg-inherit hover:underline hover:cursor-pointer sm:w-auto sm:text-sm">
+                                                            Change name
                                                         </span>
                                                     </div>
                                                 </div>
-
-                                                <div className="flex flex-row-reverse align-middle items-center text-amber-600 px-2">
-                                                    <span onClick={keepOrChangeDisplayName} className="text-sm flex-none shadow-none py-1 bg-inherit hover:underline hover:cursor-pointer sm:w-auto sm:text-sm">
-                                                        Change name
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        ) : (
-                                            <>
-                                                <div className="flex flex-row-reverse align-middle items-center text-amber-600 px-2">
-                                                    <span onClick={keepOrChangeDisplayName} className="text-sm flex-none shadow-none py-1 bg-inherit hover:underline hover:cursor-pointer sm:w-auto sm:text-sm">
-                                                        Keep name from Google sign-in
-                                                    </span>
-                                                </div>
-
-                                                <IdentityDisplayName
-                                                    state={state}
-                                                    onInputBlur={onInputBlur}
-                                                    onChangeHandler={onChangeHandler}
-                                                />
-                                            </>
-                                        )
-                                    )
-                                }
-
-                                <div className="flex flex-col md:flex-row md:space-x-4 md:pt-1">
-                                    <div className="w-full md:w-1/2 mb-3">
-                                        <ListBoxZero
-                                            onChangeListBoxHandler={(e) => onChangeListBoxHandler(e)}
-                                            state={state}
-                                            label="Document Type:"
-                                            listButton={
-                                                <>
-                                                    {documentTypes.map((document, key) => (
-                                                        <span key={key}>
-                                                            {
-                                                                state.input.id_type === document.value ? (
-                                                                    <span className="flex items-center">
-                                                                        <span className="ml-2 text-sm text-gray-700 truncate">{document.name}</span>
-                                                                    </span>
-                                                                ) : null
-                                                            }
-                                                        </span>
-                                                    ))}
-
-                                                    <span className="ml-3 absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                                                        <i className="far fa-chevron-down text-emerald-500"></i>
-                                                    </span>
-                                                </>
-                                            }
-                                            listOptions={
-                                                <>
-                                                    {documentTypes.map((document, key) => (
-                                                        <Listbox.Option
-                                                            key={`DES-${key}`}
-                                                            className={({ active }) =>
-                                                                classNames(
-                                                                    active ? 'text-white bg-gray-100' : 'text-gray-900',
-                                                                    'cursor-default select-none relative py-2 pl-3 pr-9'
-                                                                )
-                                                            }
-                                                            value={document.value}
-                                                        >
-                                                            {({ selected }) => (
-                                                                <>
-                                                                    <span className="flex items-center">
-                                                                        <span className="ml-2 text-sm text-gray-700 truncate">{document.name}</span>
-                                                                    </span>
-
-                                                                    {selected ? (
-                                                                        <span className="text-purple-600 absolute inset-y-0 right-0 flex items-center pr-4">
-                                                                            <i className="fad fa-check h-5 w-5"></i>
-                                                                        </span>
-                                                                    ) : null}
-                                                                </>
-                                                            )}
-                                                        </Listbox.Option>
-                                                    ))}
-                                                </>
-                                            }
-                                        />
-                                    </div>
-
-                                    <div className="w-full md:w-1/2">
-                                        <InputWithLoadingIcon
-                                            name={'identifier'}
-                                            label={state.input.id_type === 'ID' ? 'ID Number' : 'Passport Number'}
-                                            placeHolder={state.input.id_type === 'ID' ? 'ID Number' : 'Passport Number'}
-                                            onInputBlurHandler={onInputBlur}
-                                            onChangeHandler={onChangeHandler}
-                                            inputValue={state.input.identifier}
-                                            errorsName={state.errors.identifier}
-                                            checkForStatus={state.identifier.checking}
-                                        />
-                                    </div>
-                                </div>
-
-                                <div className="mt-3 flex flex-col md:flex-row md:space-x-4 justify-center px-6 pt-4 pb-4 mb-3 border-2 border-gray-300 border-dashed rounded-md">
-                                    <div className="space-y-1 text-center flex align-middle">
-                                        <svg
-                                            className="mx-auto h-12 w-12 text-gray-400"
-                                            stroke="currentColor"
-                                            fill="none"
-                                            viewBox="0 0 48 48"
-                                            aria-hidden="true"
-                                        >
-                                            <path
-                                                d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
-                                                strokeWidth={2}
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                            />
-                                        </svg>
-                                        <div className="text-sm w-full ml-3 text-gray-600">
-                                            <label
-                                                htmlFor="file-upload"
-                                                className="relative cursor-pointer rounded bg-white text-indigo-600 hover:text-indigo-500 focus:outline-none focus-within:outline-none "
-                                            >
-                                                <span>
-                                                    {
-                                                        state.input.id_type === 'ID' ? 'Upload National ID Photo' : 'Upload Passport Photo'
-                                                    }
-                                                </span>
-                                                <input id="file-upload" name="docPhoto" required type="file" onChange={(e) => onFileChangeHandler(e)} className="sr-only" />
-                                            </label>
-                                            <p className="pl-1"></p>
-                                            <p className="text-xs text-gray-500">png, jpg, jpeg up to 1MB</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {
-                                    state.input.docFile && (
-                                        <div className="w-full">
-                                            <span className="text-gray-500 block mb-1 text-xs w-full">
-                                                File Name:
-                                            </span>
-
-                                            <span className="text-slate-600 block text-xs w-full">
-                                                <span className="fad fa-file mr-2"></span>
-                                                {state.input.docFile}
-                                            </span>
-                                        </div>
-                                    )
-                                }
-
-                                {
-                                    state.errors.docPhoto.length > 0 ? (
-                                        <span className='invalid-feedback text-xs text-red-600 pl-0'>
-                                            {state.errors.docPhoto}
-                                        </span>
-                                    ) : null
-                                }
-
-                                <div className="mb-3 pt-3 px-3 md:px-0">
-                                    <button className="bg-amber-600 float-right relative w-28 py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white hover:bg-amber-700 focus:outline-none focus:ring-0 focus:ring-offset-2 focus:bg-amber-700" type="submit">
-                                        {
-                                            idC_State.processing ? (
-                                                <div className="flex justify-center items-center py-3">
-                                                    <i className="fad fa-spinner-third fa-xl fa-spin"></i>
-                                                </div>
                                             ) : (
-                                                <div className="flex justify-center items-center gap-3">
-                                                    Next
-                                                </div>
+                                                <>
+                                                    <div className="flex flex-row-reverse align-middle items-center text-amber-600 px-2">
+                                                        <span onClick={keepOrChangeDisplayName} className="text-sm flex-none shadow-none py-1 mb-2 bg-inherit hover:underline hover:cursor-pointer sm:w-auto sm:text-sm">
+                                                            Retain your name from Google sign-in
+                                                        </span>
+                                                    </div>
+
+                                                    <IdentityDisplayName
+                                                        state={state}
+                                                        onInputBlur={onInputBlur}
+                                                        onChangeHandler={onChangeHandler}
+                                                    />
+                                                </>
                                             )
-                                        }
-                                    </button>
-                                </div>
-                            </form>
+                                        )
+                                    }
+
+                                    <div className="flex flex-col md:flex-row md:space-x-4 md:pt-1">
+                                        <div className="w-full md:w-1/2 mb-3">
+                                            <ListBoxZero
+                                                onChangeListBoxHandler={(e: any) => onChangeListBoxHandler(e)}
+                                                state={state}
+                                                label="Document Type:"
+                                                listButton={
+                                                    <>
+                                                        {documentTypes.map((document, key) => (
+                                                            <span key={key}>
+                                                                {
+                                                                    state.input.id_type === document.value ? (
+                                                                        <span className="flex items-center">
+                                                                            <span className="ml-2 text-sm text-gray-700 truncate">{document.name}</span>
+                                                                        </span>
+                                                                    ) : null
+                                                                }
+                                                            </span>
+                                                        ))}
+
+                                                        <span className="ml-3 absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                                                            <i className="far fa-chevron-down text-emerald-500"></i>
+                                                        </span>
+                                                    </>
+                                                }
+                                                listOptions={
+                                                    <>
+                                                        {documentTypes.map((document, key) => (
+                                                            <Listbox.Option
+                                                                key={`DES-${key}`}
+                                                                className={({ active }) =>
+                                                                    classNames(
+                                                                        active ? 'text-white bg-gray-100' : 'text-gray-900',
+                                                                        'cursor-default select-none relative py-2 pl-3 pr-9'
+                                                                    )
+                                                                }
+                                                                value={document.value}
+                                                            >
+                                                                {({ selected }) => (
+                                                                    <>
+                                                                        <span className="flex items-center">
+                                                                            <span className="ml-2 text-sm text-gray-700 truncate">{document.name}</span>
+                                                                        </span>
+
+                                                                        {selected ? (
+                                                                            <span className="text-purple-600 absolute inset-y-0 right-0 flex items-center pr-4">
+                                                                                <i className="fad fa-check h-5 w-5"></i>
+                                                                            </span>
+                                                                        ) : null}
+                                                                    </>
+                                                                )}
+                                                            </Listbox.Option>
+                                                        ))}
+                                                    </>
+                                                }
+                                            />
+                                        </div>
+
+                                        <div className="w-full md:w-1/2">
+                                            <InputWithLoadingIcon
+                                                name={'identifier'}
+                                                label={state.input.id_type === 'ID' ? 'ID Number' : 'Passport Number'}
+                                                placeHolder={state.input.id_type === 'ID' ? 'ID Number' : 'Passport Number'}
+                                                onInputBlurHandler={onInputBlur}
+                                                onChangeHandler={onChangeHandler}
+                                                inputValue={state.input.identifier}
+                                                errorsName={state.errors.identifier}
+                                                checkForStatus={state.identifier.checking}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div className="mt-3 flex flex-col md:flex-row md:space-x-4 justify-center px-6 pt-4 pb-4 mb-3 border-2 border-stone-300 border-dashed rounded-md">
+                                        <div className="text-center flex align-middle items-center">
+                                            <svg
+                                                className="mx-auto h-16 w-16 text-stone-400"
+                                                stroke="currentColor"
+                                                fill="none"
+                                                viewBox="0 0 48 48"
+                                                aria-hidden="true"
+                                            >
+                                                <path
+                                                    d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
+                                                    strokeWidth={2}
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                />
+                                            </svg>
+                                            <div className="text-sm w-full ml-3 text-stone-600">
+                                                <label
+                                                    htmlFor="file-upload"
+                                                    className="relative cursor-pointer rounded bg-white text-amber-600 hover:text-amber-700 focus:outline-none focus-within:outline-none "
+                                                >
+                                                    <span>
+                                                        {
+                                                            state.input.id_type === 'ID' ? 'Upload National ID Photo' : 'Upload Passport Photo'
+                                                        }
+                                                    </span>
+                                                    <input id="file-upload" name="docPhoto" required type="file" onChange={(e) => onFileChangeHandler(e)} className="sr-only" />
+                                                </label>
+                                                <p className="pl-1"></p>
+                                                <p className="text-xs text-stone-500">png, jpg, jpeg up to 1MB</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {
+                                        state.input.docFile && (
+                                            <div className="w-full">
+                                                <span className="text-gray-500 block mb-1 text-xs w-full">
+                                                    File Name:
+                                                </span>
+
+                                                <span className="text-slate-600 block text-xs w-full">
+                                                    <span className="fad fa-file mr-2"></span>
+                                                    {state.input.docFile}
+                                                </span>
+                                            </div>
+                                        )
+                                    }
+
+                                    {
+                                        state.errors.docPhoto.length > 0 ? (
+                                            <span className='invalid-feedback text-xs text-red-600 pl-0'>
+                                                {state.errors.docPhoto}
+                                            </span>
+                                        ) : null
+                                    }
+
+                                    <div className="mb-3 pt-3 px-3 md:px-0">
+                                        <button className="bg-amber-600 float-right relative w-28 py-1.5 px-4 border border-transparent text-sm font-medium rounded-md text-white hover:bg-amber-700 focus:outline-none focus:ring-0 focus:ring-offset-2 focus:bg-amber-700" type="submit">
+                                            {
+                                                idC_State.processing ? (
+                                                    <div className="flex justify-center items-center py-2">
+                                                        <i className="fad fa-spinner-third fa-xl fa-spin"></i>
+                                                    </div>
+                                                ) : (
+                                                    <div className="flex justify-center align-middle items-center gap-x-3">
+                                                        Next
+                                                        <i className="fa-duotone fa-arrow-right fa-lg"></i>
+                                                    </div>
+                                                )
+                                            }
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+
+
+                            <div className="mx-auto py-3 text-center">
+                                <p className="text-sm text-stone-500">
+                                    © {new Date().getFullYear()}. Elevated Acts of Appreciation, <span className="text-amber-600 block">Tip by Tip.</span>
+                                </p>
+                            </div>
+                        </div>
+
+                        <div className="md:basis-2/5 hidden md:block h-screen px-4 py-8">
+                            <img className="h-full bg-amber-100 rounded-2xl" src={smallAsset} alt={"hello_i'm_carol"} loading="lazy" />
                         </div>
                     </div>
-                </div>
+                </section>
             </div>
         </React.Fragment>
     )
