@@ -88,7 +88,7 @@ async function emailPasswordSignIn(dispatch: any, firebaseProps: any) {
                 },
             });
         })
-        .catch((error) => {
+        .catch((error) => {            
             const errorCode = error.code;
             let errorMessage = error.message;
 

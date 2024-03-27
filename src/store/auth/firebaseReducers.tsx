@@ -77,7 +77,7 @@ export const firebaseAuthReducer = (state = initialState, action: any) => {
             encryptAndStoreLS(STORAGE_KEYS.ACCOUNT_DATA, identity)
 
             if (payload.token) {
-                // If response containes token, set it
+                // If response containes token, set it                
                 encryptAndStoreCookie(COOKIE_KEYS.SANCTUM, payload.token)
             }
 
@@ -106,9 +106,7 @@ export const firebaseAuthReducer = (state = initialState, action: any) => {
                 error: action.response
             }
 
-        case AUTH_.ID_META_01:
-            console.log('cwuh3e9', action.response);
-            
+        case AUTH_.ID_META_01:            
             let meta01Identity: any = action.response
             let displayName = null
 

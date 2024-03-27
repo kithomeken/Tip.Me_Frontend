@@ -13,7 +13,7 @@ export const CommonRoutesGuard = () => {
     const dispatch: any = useDispatch()
     const auth0: any = useAppSelector(state => state.auth0)
     const sessionState = Auth.checkAuthentication(auth0)
-
+    
     if (!sessionState.authenticated) {
         if (sessionState.status.resetSession) {
             /* 

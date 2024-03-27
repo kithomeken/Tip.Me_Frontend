@@ -7,7 +7,7 @@ class CookieService {
     }
 
     set (key: string, value: any, options: object) {
-        cookie.set(key, value, options)
+        cookie.set(key, value, options)        
     }
 
     remove (key: string) {
