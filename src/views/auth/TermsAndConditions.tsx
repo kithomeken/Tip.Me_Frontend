@@ -1,12 +1,9 @@
 import React, { FC } from "react"
+
+import { Basic_Modal_Props } from "../../lib/modules/Interfaces"
 import { InformationalModal } from "../../lib/hooks/InformationalModal"
 
-interface props {
-    show: boolean,
-    showOrHide: any,
-}
-
-export const TermsAndConditions: FC<props> = ({ show, showOrHide }) => {
+export const TermsAndConditions: FC<Basic_Modal_Props> = ({ show, showOrHide }) => {
     return (
         <React.Fragment>
             <InformationalModal
