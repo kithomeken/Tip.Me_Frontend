@@ -13,7 +13,7 @@ export const CommonRoutesGuard = () => {
     const dispatch: any = useDispatch()
     const auth0: any = useAppSelector(state => state.auth0)
     const sessionState = Auth.checkAuthentication(auth0)
-    
+
     if (!sessionState.authenticated) {
         if (sessionState.status.resetSession) {
             /* 
@@ -34,20 +34,21 @@ export const CommonRoutesGuard = () => {
 
     return (
         <div>
-            <div className="flex h-screen">
 
-                <Header />
+            <Outlet />
 
+
+            {/* <div className="flex h-screen">
                 <div className="flex flex-col w-full h-screen">
                     <div className="w-full overflow-y-auto" style={CONFIG_MARGIN_TOP}>
                         <div className="kiOAkj py-4 px-2">
 
-                            <Outlet />
+
 
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> */}
         </div>
     )
 }
