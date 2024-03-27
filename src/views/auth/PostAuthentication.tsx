@@ -39,8 +39,8 @@ export const PostAuthentication = () => {
         );
     }
 
-    if (auth0.identity !== null) {
-        const locationState: any = location.state
+    if (auth0.identity !== null && auth0.authenticated) {
+        const locationState: any = location.state        
 
         if (locationState?.from === undefined) {
             return <Navigate replace to="/home" />
