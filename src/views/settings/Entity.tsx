@@ -1,21 +1,24 @@
 import { Helmet } from "react-helmet"
+import { toast } from "react-toastify"
 import React, { useState } from "react"
 
-import { Loading } from "../../components/modules/Loading"
 import { ERR_404 } from "../errors/ERR_404"
 import { ERR_500 } from "../errors/ERR_500"
-import { ACCOUNT } from "../../api/API_Registry"
+import { ACCOUNT, AUTH } from "../../api/API_Registry"
 import HttpServices from "../../services/HttpServices"
-import { getColorForLetter, humanReadableDate } from "../../lib/modules/HelperFunctions"
+import { Loading } from "../../components/modules/Loading"
 import { CONFIG_MAX_WIDTH } from "../../global/ConstantsRegistry"
-import ReactTable from "../../lib/hooks/ReactTable"
-import { Empty } from "../errors/Empty"
+import { classNames, getColorForLetter } from "../../lib/modules/HelperFunctions"
 
 export const Entity = () => {
     const [state, setstate] = useState({
         data: null,
+        posting: false,
         httpStatus: 200,
         status: 'pending',
+        invitation: [{
+            email: ''
+        }],
     })
 
     React.useEffect(() => {
@@ -44,6 +47,57 @@ export const Entity = () => {
 
         setstate({
             ...state, status, data, httpStatus
+        })
+    }
+
+    const invitationHandler = (email: string) => {
+        let { posting } = state
+        let { invitation } = state
+
+        if (!posting) {
+            posting = true
+            invitation[0].email = email
+
+            setstate({
+                ...state, posting, invitation
+            })
+
+            resendEmailInvitation()
+        }
+    }
+
+    const resendEmailInvitation = async () => {
+        let {posting} = state
+        let {invitation} = state
+
+        try {
+            let formData = new FormData()
+            formData.append("email[]", invitation[0].email)
+
+            const invitationResponse: any = await HttpServices.httpPost(AUTH.ENTITY_EXPANSION, formData)
+
+            if (invitationResponse.data.success) {
+                posting = false
+                let toastText = 'New invitation has been sent out'
+
+                toast.success(toastText, {
+                    position: "top-right",
+                    autoClose: 7000,
+                    hideProgressBar: true,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                });
+            } else {
+                posting = false
+            }
+        } catch (error) {
+            posting = false
+        }
+
+        setstate({
+            ...state, posting
         })
     }
 
@@ -139,7 +193,7 @@ export const Entity = () => {
                                                 {
                                                     person.status === 'Y' ? (
                                                         <div className="mt-1 flex items-center gap-x-1.5">
-                                                            <div className="flex-none rounded-full bg-emerald-500/20 p-1">
+                                                            <div className="flex-none rounded-full bg-emerald-500/20 p-1 animate-pulse">
                                                                 <div className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
                                                             </div>
                                                             <p className="text-xs leading-5 text-emerald-500">Active</p>
@@ -163,7 +217,7 @@ export const Entity = () => {
                         <div className="flex-none w-full pt-4">
                             <p className="text-lg leading-7 text-stone-500 py-1">
                                 Invited Members
-                                
+
                                 <span className="block text-sm text-stone-500 py-2">
                                     Invited members that have not yet onboarded.
                                 </span>
@@ -191,10 +245,18 @@ export const Entity = () => {
                                             </div>
 
                                             <div className="hidden shrink-0 sm:flex sm:flex-col sm:items-end">
-                                                <div className="mt-1 flex items-center gap-x-1.5 text-blue-600">
+                                                <button type="button" onClick={() => invitationHandler(person.email)} disabled={state.posting}
+                                                    className={
+                                                        classNames(
+                                                            state.posting && state.invitation[0].email === person.email ? "animate-pulse" : null,
+                                                            "mt-1 flex items-center gap-x-1.5 text-blue-600 cursor-pointer disabled:cursor-not-allowed"
+                                                        )
+                                                    }>
                                                     <i className="fa-duotone fa-paper-plane"></i>
-                                                    <p className="text-xs leading-5">Resend invitation</p>
-                                                </div>
+                                                    <p className="text-xs leading-5">
+                                                        {state.posting && state.invitation[0].email === person.email ? 'Sending invitation' : 'Resend invitation'}
+                                                    </p>
+                                                </button>
                                             </div>
                                         </li>
                                     ))
