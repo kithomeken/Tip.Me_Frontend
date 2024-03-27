@@ -266,8 +266,8 @@ export const SignIn_Alt = () => {
                         </div>
                     </div>
                 ) : (
-                    <div className="wrapper w-full overflow-auto h-screen">
-                        <section className="gx-container bg-white shadow-md rounded-md h-screen sm:h-auto w-full flex items-center justify-center">
+                    <div className="wrapper wrapper-background w-full overflow-auto h-screen">
+                        <section className="gx-container gx-900 bg-white shadow-md rounded-md h-screen sm:h-auto w-full flex items-center justify-center">
                             <div className="flex md:flex-row flex-col align-middle items-center">
                                 <div className="md:basis-2/5 py-4 md:px-6 px-3 w-full">
                                     <span className="text-2xl self-start text-amber-500 tracking-wider leading-7 block">{APPLICATION.NAME}</span>

@@ -333,7 +333,7 @@ export const SignUp_Alt = () => {
                 </div>
 
                 <div className="wrapper w-full md:w-2/5 md:h-screen overflow-auto">
-                    <section className="gx-container">
+                    <section className="gx-container gx-900">
                         <div className="md:px-4 px-4">
                             <header className="landing-header">
                                 <div className="landing pl-3 mb-0 text-left">
