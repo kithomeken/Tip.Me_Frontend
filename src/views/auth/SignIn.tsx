@@ -12,10 +12,12 @@ import { authenticationRoutes, postAuthRoutes } from "../../routes/authRoutes";
 import { firebaseSSO_SignIn, resetAuth0 } from "../../store/auth/firebaseAuthActions";
 import { DeviceInfo, classNames, emailValidator } from "../../lib/modules/HelperFunctions";
 import { G_onInputChangeHandler, G_onInputBlurHandler } from "../../components/lib/InputHandlers";
+import { Loading } from "../../components/modules/Loading";
 
 export const SignIn = () => {
     const [state, setstate] = useState({
         pwdVisibility: false,
+        status: 'pending',
         input: {
             email: '',
             password: ''
@@ -41,6 +43,10 @@ export const SignIn = () => {
         authRedirectResult()
             .then(async (result) => {
                 if (!result) {
+                    setstate({
+                        ...state, status: 'fulfilled'
+                    })
+
                     dispatch(resetAuth0())
                     return;
                 }
@@ -57,9 +63,17 @@ export const SignIn = () => {
                     },
                 });
 
+                setstate({
+                    ...state, status: 'fulfilled'
+                })
+
                 return
             })
-            .catch(() => {
+            .catch((error) => {
+                setstate({
+                    ...state, status: 'fulfilled'
+                })
+
                 dispatch(resetAuth0())
                 return null;
             });
@@ -239,147 +253,161 @@ export const SignIn = () => {
                 <title>Sign In</title>
             </Helmet>
 
-            <div className="flex flex-col md:h-screen md:flex-row justify-center items-center dark:bg-gray-800">
-                <div className="hidden md:block md:w-3/5 block_strp h-screen">
-
-                </div>
-
-                <div className="wrapper w-full md:w-2/5 md:h-screen overflow-auto">
-                    <section className="gx-container">
-                        <div className="md:px-4 px-4">
-                            <header className="landing-header">
-                                <div className="landing pl-3 mb-0 text-left">
-                                    <span className="odyssey py-3 text-left text-amber-500 nunito block">{APPLICATION.NAME}</span>
-                                    <span className="text-stone-700 block text-left mt-0 mb-3">Account Sign In</span>
-                                </div>
-                            </header>
-
-                            <div className="px-3 py-4 text-sm mb-2">
-                                <div className="flex items-center pt-1 justify-center dark:bg-gray-800">
-                                    <button type="button" onClick={signInWithGoogle} className="w-64 border-slate-300 dark:border-slate-700 text-stone-700 dark:text-stone-200 hover:border-stone-400 hover:text-slate-900 dark:hover:text-slate-300 transition duration-150 disabled:cursor-not-allowed text-sm rounded-md border shadow-sm focus:outline-none " disabled={auth0.processing} style={{ height: '3rem' }}>
-                                        <span className="pl-2 block">
-                                            {
-                                                auth0.processing && auth0.provider === 'google' ? (
-                                                    <span className="flex flex-row items-center justify-center align-middle text-stone-600 gap-x-4">
-                                                        <i className="fad fa-spinner fa-xl fa-spin text-amber-600"></i>
-                                                        <span>Signing in with Google</span>
-                                                    </span>
-                                                ) : (
-                                                    <span className="flex items-center gap-x-3 px-4 justify-center align-middle text-amber-600">
-                                                        <img className="w-6 h-6" src="https://www.svgrepo.com/show/475656/google-color.svg" loading="lazy" alt="google logo" />
-                                                        Sign in with Google
-                                                    </span>
-                                                )
-                                            }
-                                        </span>
-                                    </button>
+            {
+                state.status === 'pending' ? (
+                    <div className="flex flex-col md:h-screen md:flex-row justify-center items-center dark:bg-gray-800">
+                        <div className="w-full form-group px-12 mb-14">
+                            <div className="w-full">
+                                <div className="pt-10">
+                                    <Loading />
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                ) : (
+                    <div className="flex flex-col md:h-screen md:flex-row justify-center items-center dark:bg-gray-800">
+                        <div className="hidden md:block md:w-3/5 block_strp h-screen">
 
-                            <div className="flex flex-row justify-center items-center align-middle py-2 px-10">
-                                <div className="flex-grow border-b border-amber-300"></div>
-                                <span className="flex-none text-stone-600 px-4">or</span>
-                                <div className="flex-grow border-b border-amber-300"></div>
-                            </div>
+                        </div>
 
-                            <form className="space-y-3 shadow-none py-3 px-2 mb-3 md:w-4/5 md:px-6 m-auto" onSubmit={passwordSignInFormHandler}>
-                                <div className="shadow-none space-y-px mb-4">
-                                    <label htmlFor="email" className="block text-sm leading-6 text-stone-700 mb-1">Email:</label>
+                        <div className="wrapper w-full md:w-2/5 md:h-screen overflow-auto">
+                            <section className="gx-container">
+                                <div className="md:px-4 px-4">
+                                    <header className="landing-header">
+                                        <div className="landing pl-3 mb-0 text-left">
+                                            <span className="odyssey py-3 text-left text-amber-500 nunito block">{APPLICATION.NAME}</span>
+                                            <span className="text-stone-700 block text-left mt-0 mb-3">Account Sign In</span>
+                                        </div>
+                                    </header>
 
-                                    <div className="relative mt-2 rounded shadow-sm">
-                                        <input type="email" name="email" id="email" placeholder="john.doe@email.com" autoComplete="off"
-                                            className={classNames(
-                                                'text-stone-900 ring-slate-300 placeholder:text-stone-500 focus:border-0 focus:outline-none focus:ring-amber-600 focus:outline-amber-500 hover:border-stone-400 border border-stone-300',
-                                                'block w-full rounded-md py-2 pl-3 pr-8 text-sm'
-                                            )} onChange={onChangeHandler} onBlur={onInputBlur} value={state.input.email} required style={{ height: '3rem' }} />
-
-                                    </div>
-
-                                    {
-                                        state.errors.email && (
-                                            <span className='invalid-feedback text-xs text-red-600 pl-0'>
-                                                {state.errors.email}
-                                            </span>
-                                        )
-                                    }
-
-                                    {
-                                        auth0.error && (
-                                            <span className='invalid-feedback text-xs text-red-600 pl-0'>
-                                                {auth0.error}
-                                            </span>
-                                        )
-                                    }
-                                </div>
-
-                                <div className="shadow-none space-y-px mb-">
-                                    <label htmlFor="password" className="block text-sm leading-6 text-stone-700 mb-1">Password:</label>
-
-                                    <div className="relative mt-2 rounded shadow-sm">
-                                        <input type={state.pwdVisibility ? 'text' : 'password'} name="password" id="password" placeholder="********" autoComplete="off"
-                                            className={classNames(
-                                                'text-stone-900 ring-slate-300 placeholder:text-stone-500 focus:border-0 focus:outline-none focus:ring-amber-600 focus:outline-amber-500 hover:border-stone-400 border border-stone-300',
-                                                'block w-full rounded-md py-2 pl-3 pr-8 text-sm'
-                                            )} onChange={onChangeHandler} onBlur={onInputBlur} value={state.input.password} required style={{ height: '3rem' }} />
-
-                                        <div className="absolute inset-y-0 right-0 flex items-center w-8">
-                                            {
-                                                state.pwdVisibility ? (
-                                                    <span className="fa-duotone fa-eye text-amber-600 fa-lg cursor-pointer" onClick={togglePasswordVisibility}></span>
-                                                ) : (
-                                                    <span className="fa-duotone fa-eye-slash text-amber-600 fa-lg cursor-pointer" onClick={togglePasswordVisibility}></span>
-                                                )
-                                            }
+                                    <div className="px-3 py-4 text-sm mb-2">
+                                        <div className="flex items-center pt-1 justify-center dark:bg-gray-800">
+                                            <button type="button" onClick={signInWithGoogle} className="w-64 border-slate-300 dark:border-slate-700 text-stone-700 dark:text-stone-200 hover:border-stone-400 hover:text-slate-900 dark:hover:text-slate-300 transition duration-150 disabled:cursor-not-allowed text-sm rounded-md border shadow-sm focus:outline-none " disabled={auth0.processing} style={{ height: '3rem' }}>
+                                                <span className="pl-2 block">
+                                                    {
+                                                        auth0.processing && auth0.provider === 'google' ? (
+                                                            <span className="flex flex-row items-center justify-center align-middle text-stone-600 gap-x-4">
+                                                                <i className="fad fa-spinner fa-xl fa-spin text-amber-600"></i>
+                                                                <span>Signing in with Google</span>
+                                                            </span>
+                                                        ) : (
+                                                            <span className="flex items-center gap-x-3 px-4 justify-center align-middle text-amber-600">
+                                                                <img className="w-6 h-6" src="https://www.svgrepo.com/show/475656/google-color.svg" loading="lazy" alt="google logo" />
+                                                                Sign in with Google
+                                                            </span>
+                                                        )
+                                                    }
+                                                </span>
+                                            </button>
                                         </div>
                                     </div>
 
-                                    {
-                                        state.errors.password && (
-                                            <span className='invalid-feedback text-xs text-red-600 pl-0'>
-                                                {state.errors.password}
-                                            </span>
-                                        )
-                                    }
-                                </div>
+                                    <div className="flex flex-row justify-center items-center align-middle py-2 px-10">
+                                        <div className="flex-grow border-b border-amber-300"></div>
+                                        <span className="flex-none text-stone-600 px-4">or</span>
+                                        <div className="flex-grow border-b border-amber-300"></div>
+                                    </div>
 
-                                <div className="text-sm">
-                                    <a href="/auth/forgot-password" className="text-right block text-stone-500 hover:text-stone-600">
-                                        <span className="font-small">
-                                            Forgot password?
-                                        </span>
-                                    </a>
-                                </div>
+                                    <form className="space-y-3 shadow-none py-3 px-2 mb-3 md:w-4/5 md:px-6 m-auto" onSubmit={passwordSignInFormHandler}>
+                                        <div className="shadow-none space-y-px mb-4">
+                                            <label htmlFor="email" className="block text-sm leading-6 text-stone-700 mb-1">Email:</label>
 
-                                <div className="pb-3 pt-3 flex justify-center">
-                                    <button type="submit" className="w-44 disabled:cursor-not-allowed text-sm rounded-md border border-transparent shadow-sm px-4 py-2 bg-amber-500 text-white disabled:bg-amber-600 hover:bg-amber-600 focus:outline-none flex items-center justify-center" disabled={auth0.processing} style={{ height: '3rem' }}>
-                                        {
-                                            auth0.processing && auth0.provider === 'password' ? (
-                                                <span className="flex flex-row items-center">
-                                                    <i className="fad fa-spinner-third fa-xl fa-spin mr-2"></i>
-                                                    <span>Signing In...</span>
+                                            <div className="relative mt-2 rounded shadow-sm">
+                                                <input type="email" name="email" id="email" placeholder="john.doe@email.com" autoComplete="off"
+                                                    className={classNames(
+                                                        'text-stone-900 ring-slate-300 placeholder:text-stone-500 focus:border-0 focus:outline-none focus:ring-amber-600 focus:outline-amber-500 hover:border-stone-400 border border-stone-300',
+                                                        'block w-full rounded-md py-2 pl-3 pr-8 text-sm'
+                                                    )} onChange={onChangeHandler} onBlur={onInputBlur} value={state.input.email} required style={{ height: '3rem' }} />
+
+                                            </div>
+
+                                            {
+                                                state.errors.email && (
+                                                    <span className='invalid-feedback text-xs text-red-600 pl-0'>
+                                                        {state.errors.email}
+                                                    </span>
+                                                )
+                                            }
+
+                                            {
+                                                auth0.error && (
+                                                    <span className='invalid-feedback text-xs text-red-600 pl-0'>
+                                                        {auth0.error}
+                                                    </span>
+                                                )
+                                            }
+                                        </div>
+
+                                        <div className="shadow-none space-y-px mb-">
+                                            <label htmlFor="password" className="block text-sm leading-6 text-stone-700 mb-1">Password:</label>
+
+                                            <div className="relative mt-2 rounded shadow-sm">
+                                                <input type={state.pwdVisibility ? 'text' : 'password'} name="password" id="password" placeholder="********" autoComplete="off"
+                                                    className={classNames(
+                                                        'text-stone-900 ring-slate-300 placeholder:text-stone-500 focus:border-0 focus:outline-none focus:ring-amber-600 focus:outline-amber-500 hover:border-stone-400 border border-stone-300',
+                                                        'block w-full rounded-md py-2 pl-3 pr-8 text-sm'
+                                                    )} onChange={onChangeHandler} onBlur={onInputBlur} value={state.input.password} required style={{ height: '3rem' }} />
+
+                                                <div className="absolute inset-y-0 right-0 flex items-center w-8">
+                                                    {
+                                                        state.pwdVisibility ? (
+                                                            <span className="fa-duotone fa-eye text-amber-600 fa-lg cursor-pointer" onClick={togglePasswordVisibility}></span>
+                                                        ) : (
+                                                            <span className="fa-duotone fa-eye-slash text-amber-600 fa-lg cursor-pointer" onClick={togglePasswordVisibility}></span>
+                                                        )
+                                                    }
+                                                </div>
+                                            </div>
+
+                                            {
+                                                state.errors.password && (
+                                                    <span className='invalid-feedback text-xs text-red-600 pl-0'>
+                                                        {state.errors.password}
+                                                    </span>
+                                                )
+                                            }
+                                        </div>
+
+                                        <div className="text-sm">
+                                            <a href="/auth/forgot-password" className="text-right block text-stone-500 hover:text-stone-600">
+                                                <span className="font-small">
+                                                    Forgot password?
                                                 </span>
-                                            ) : (
-                                                <span>Sign In</span>
-                                            )
-                                        }
-                                    </button>
+                                            </a>
+                                        </div>
+
+                                        <div className="pb-3 pt-3 flex justify-center">
+                                            <button type="submit" className="w-44 disabled:cursor-not-allowed text-sm rounded-md border border-transparent shadow-sm px-4 py-2 bg-amber-500 text-white disabled:bg-amber-600 hover:bg-amber-600 focus:outline-none flex items-center justify-center" disabled={auth0.processing} style={{ height: '3rem' }}>
+                                                {
+                                                    auth0.processing && auth0.provider === 'password' ? (
+                                                        <span className="flex flex-row items-center">
+                                                            <i className="fad fa-spinner-third fa-xl fa-spin mr-2"></i>
+                                                            <span>Signing In...</span>
+                                                        </span>
+                                                    ) : (
+                                                        <span>Sign In</span>
+                                                    )
+                                                }
+                                            </button>
+                                        </div>
+                                    </form>
+
+                                    <span className="text-ston text- block md:w-4/5 md:px-6 m-auto pb-4">
+                                        <span>Don't have an account?</span>
+                                        <Link to={signUpRoute} className="text-amber-600 underline ml-1">Sign Up</Link>
+                                    </span>
+
+                                    <div className="mx-auto py-3 text-center">
+                                        <p className="text-sm">
+                                            © {new Date().getFullYear()}. Elevated Acts of Appreciation, <span className="text-amber-600 block">Tip by Tip.</span>
+                                        </p>
+                                    </div>
                                 </div>
-                            </form>
-
-                            <span className="text-ston text- block md:w-4/5 md:px-6 m-auto pb-4">
-                                <span>Don't have an account?</span>
-                                <Link to={signUpRoute} className="text-amber-600 underline ml-1">Sign Up</Link>
-                            </span>
-
-                            <div className="mx-auto py-3 text-center">
-                                <p className="text-sm">
-                                    © {new Date().getFullYear()}. Elevated Acts of Appreciation, <span className="text-amber-600 block">Tip by Tip.</span>
-                                </p>
-                            </div>
+                            </section>
                         </div>
-                    </section>
-                </div>
-            </div>
+                    </div>
+                )
+            }
         </React.Fragment>
     )
 }
