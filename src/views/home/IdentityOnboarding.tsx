@@ -87,53 +87,51 @@ export const IdentityOnboarding = () => {
                 <title>Identity Onboarding</title>
             </Helmet>
 
-            <div className="w-full">
-                <div className={`w-full mb-3`}>
-                    <div className="kiOAkj py-3 px-3" style={CONFIG_MAX_WIDTH}>
-                        {
-                            state.status === 'rejected' ? (
-                                <div className="py-3 px-4 w-full h-screen">
-                                    <div className="flex items-center justify-center">
-                                        {
-                                            state.httpStatus === 404 ? (
-                                                <ERR_404
-                                                    compact={true}
-                                                />
-                                            ) : (
-                                                <ERR_500 />
-                                            )
-                                        }
-                                    </div>
-                                </div>
-                            ) : state.status === 'fulfilled' ? (
-                                <>
-                                    {
-                                        idC_State.PRc0 !== 'META_00' ? (
-                                            <span className="text-amber-600 mb-2 py-2 text-2xl block">
-                                                Complete Your Profile
-                                            </span>
-                                        ) : null
-                                    }
-
-                                    <div className="w-full">
-                                        {loadIdentityModules(idC_State.PRc0)}
-                                    </div>
-                                </>
-                            ) : (
-                                <div className="w-full h-screen -mt-20 flex flex-col justify-center align-middle items-center mx-4">
-                                    <Loading />
-                                </div>
-                            )
-                        }
-
-                        <div className="mx-auto py-3 text-center">
-                            <p className="text-sm py-2">
-                                © {new Date().getFullYear()}. Elevated Acts of Appreciation, <span className="text-amber-600 block">Tip by Tip.</span>
-                            </p>
+            {
+                state.status === 'rejected' ? (
+                    <div className="py-3 px-4 w-full h-screen">
+                        <div className="flex items-center justify-center">
+                            {
+                                state.httpStatus === 404 ? (
+                                    <ERR_404
+                                        compact={true}
+                                    />
+                                ) : (
+                                    <ERR_500 />
+                                )
+                            }
                         </div>
                     </div>
-                </div >
-            </div >
+                ) : state.status === 'fulfilled' ? (
+                    <>
+                        {
+                            loadIdentityModules(idC_State.PRc0)
+                        }
+
+{/* 
+
+
+
+                        {
+                            idC_State.PRc0 !== 'META_00' ? (
+                                <span className="text-amber-600 mb-2 py-2 text-2xl block">
+                                    Complete Your Profile
+                                </span>
+                            ) : null
+                        } */}
+                    </>
+                ) : (
+                    <div className="w-full h-screen -mt-20 flex flex-col justify-center align-middle items-center mx-4">
+                        <Loading />
+                    </div>
+                )
+            }
+
+
+
+
+
+
         </React.Fragment >
     )
 }
