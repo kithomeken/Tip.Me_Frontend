@@ -1,5 +1,4 @@
 import { Home } from "../views/home/Home";
-import { IdentityOnboarding } from "../views/home/IdentityOnboarding";
 import { Routes_Interface } from "../lib/modules/routesInterface";
 import { WithdrawalRequest } from "../views/home/WithdrawalRequest";
 import { AccountManagement } from "../views/settings/AccountManagement";
@@ -14,13 +13,7 @@ export const standardRoutes: Array<Routes_Interface> = [
         caseSensitive: true, 
         name: 'PERIPH_HOME_' 
     },
-    { 
-        path: "/u/artist/_/identity/onboarding", 
-        element: <IdentityOnboarding />, 
-        caseSensitive: true, 
-        name: 'IDENTITY_ONBRD_' 
-    },
-    
+
 
 
 

@@ -4,6 +4,7 @@ import { EmailActions } from "../views/auth/EmailActions";
 import { IdentityCheck } from "../views/home/IdentityCheck";
 import { Routes_Interface } from "../lib/modules/routesInterface";
 import { IndexToHome } from "../views/home/IndexToHome";
+import { IdentityOnboarding } from "../views/home/IdentityOnboarding";
 
 export const genericRoutes: Array<Routes_Interface> = [
     {
@@ -35,4 +36,11 @@ export const commonRoutes: Array<Routes_Interface> = [
         caseSensitive: true,
         name: 'HOME_'
     },
+    { 
+        path: "/u/artist/_/identity/onboarding", 
+        element: <IdentityOnboarding />, 
+        caseSensitive: true, 
+        name: 'IDENTITY_ONBRD_' 
+    },
+    
 ]

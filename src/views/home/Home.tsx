@@ -10,12 +10,12 @@ import { ERR_500 } from "../errors/ERR_500"
 import { AUTH } from "../../api/API_Registry"
 import HttpServices from "../../services/HttpServices"
 import { Loading } from "../../components/modules/Loading"
-import { standardRoutes } from "../../routes/standardRoutes"
 import StorageServices from "../../services/StorageServices"
 import { firebaseAuth } from "../../firebase/firebaseConfigs"
 import { STORAGE_KEYS } from "../../global/ConstantsRegistry"
 import { standardErrorRoutes } from "../../routes/errorRoutes"
 import { setPRc0MetaStage } from "../../store/identityCheckActions"
+import { commonRoutes } from "../../routes/genericRoutes"
 
 export const Home = () => {
     const [state, setstate] = useState({
@@ -40,7 +40,7 @@ export const Home = () => {
     )?.path
 
     const identityOnboardingRoute: any = (
-        standardRoutes.find(
+        commonRoutes.find(
             (routeName) => routeName.name === 'IDENTITY_ONBRD_')
     )?.path
 
