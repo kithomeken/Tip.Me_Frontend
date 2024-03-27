@@ -13,6 +13,7 @@ import { firebaseSSO_SignIn, resetAuth0 } from "../../store/auth/firebaseAuthAct
 import { DeviceInfo, classNames, emailValidator } from "../../lib/modules/HelperFunctions";
 import { G_onInputChangeHandler, G_onInputBlurHandler } from "../../components/lib/InputHandlers";
 import { Loading } from "../../components/modules/Loading";
+import Rock_Band_Image from '../../assets/images/a13f7362f05da71627491eb19944a53e.png'
 
 export const SignIn = () => {
     const [state, setstate] = useState({
@@ -111,7 +112,7 @@ export const SignIn = () => {
 
             dispatch(resetAuth0())
             input[e.target.name] = output.value
-            errors[e.target.name] = output.error
+            // errors[e.target.name] = output.error
 
             setstate({
                 ...state, input, errors
@@ -265,59 +266,51 @@ export const SignIn = () => {
                         </div>
                     </div>
                 ) : (
-                    <div className="flex flex-col md:h-screen md:flex-row justify-center items-center dark:bg-gray-800">
-                        <div className="hidden md:block md:w-3/5 block_strp h-screen">
+                    <div className="wrapper w-full overflow-auto h-screen">
+                        <section className="gx-container bg-white shadow-md rounded-md h-screen sm:h-auto w-full flex items-center justify-center">
+                            <div className="flex md:flex-row flex-col align-middle items-center">
+                                <div className="md:basis-2/5 py-4 md:px-6 px-3 w-full">
+                                    <span className="text-2xl self-start text-amber-500 tracking-wider leading-7 block">{APPLICATION.NAME}</span>
 
-                        </div>
-
-                        <div className="wrapper w-full md:w-2/5 md:h-screen overflow-auto">
-                            <section className="gx-container">
-                                <div className="md:px-4 px-4">
-                                    <header className="landing-header">
-                                        <div className="landing pl-3 mb-0 text-left">
-                                            <span className="odyssey py-3 text-left text-amber-500 nunito block">{APPLICATION.NAME}</span>
-                                            <span className="text-stone-700 block text-left mt-0 mb-3">Account Sign In</span>
-                                        </div>
-                                    </header>
-
-                                    <div className="px-3 py-4 text-sm mb-2">
-                                        <div className="flex items-center pt-1 justify-center dark:bg-gray-800">
-                                            <button type="button" onClick={signInWithGoogle} className="w-64 border-slate-300 dark:border-slate-700 text-stone-700 dark:text-stone-200 hover:border-stone-400 hover:text-slate-900 dark:hover:text-slate-300 transition duration-150 disabled:cursor-not-allowed text-sm rounded-md border shadow-sm focus:outline-none " disabled={auth0.processing} style={{ height: '3rem' }}>
-                                                <span className="pl-2 block">
-                                                    {
-                                                        auth0.processing && auth0.provider === 'google' ? (
-                                                            <span className="flex flex-row items-center justify-center align-middle text-stone-600 gap-x-4">
-                                                                <i className="fad fa-spinner fa-xl fa-spin text-amber-600"></i>
-                                                                <span>Signing in with Google</span>
-                                                            </span>
-                                                        ) : (
-                                                            <span className="flex items-center gap-x-3 px-4 justify-center align-middle text-amber-600">
-                                                                <img className="w-6 h-6" src="https://www.svgrepo.com/show/475656/google-color.svg" loading="lazy" alt="google logo" />
-                                                                Sign in with Google
-                                                            </span>
-                                                        )
-                                                    }
-                                                </span>
-                                            </button>
-                                        </div>
+                                    <div className="w-full py-6">
+                                        <span className="text-stone-700 block text-lg">Account Sign In</span>
+                                        <span className="text-stone-500 block text-sm">Continue with Google or enter your details</span>
                                     </div>
 
-                                    <div className="flex flex-row justify-center items-center align-middle py-2 px-10">
-                                        <div className="flex-grow border-b border-amber-300"></div>
-                                        <span className="flex-none text-stone-600 px-4">or</span>
-                                        <div className="flex-grow border-b border-amber-300"></div>
+                                    <div className="w-full">
+                                        <button type="button" onClick={signInWithGoogle} className="w-full border-stone-400 py-2 dark:border-stone-700 text-stone-700 dark:text-stone-200 hover:border-stone-400 hover:text-stone-900 dark:hover:text-stone-300 transition duration-150 font-medium disabled:cursor-not-allowed text-sm rounded-md border shadow-sm focus:outline-none " disabled={auth0.processing}>
+                                            <span className="pl-2 block">
+                                                {
+                                                    auth0.processing && auth0.provider === 'google' ? (
+                                                        <span className="flex flex-row items-center justify-center align-middle text-stone-600 gap-x-4">
+                                                            <i className="fad fa-spinner fa-xl fa-spin"></i>
+                                                            <span className="tracking-wider">Signing you in</span>
+                                                        </span>
+                                                    ) : (
+                                                        <span className="flex items-center gap-x-3 px-4 justify-center align-middle">
+                                                            <img className="w-6 h-6" src="https://www.svgrepo.com/show/475656/google-color.svg" loading="lazy" alt="google logo" />
+                                                            <span className="tracking-wider">Sign in with Google</span>
+                                                        </span>
+                                                    )
+                                                }
+                                            </span>
+                                        </button>
                                     </div>
 
-                                    <form className="space-y-3 shadow-none py-3 px-2 mb-3 md:w-4/5 md:px-6 m-auto" onSubmit={passwordSignInFormHandler}>
-                                        <div className="shadow-none space-y-px mb-4">
-                                            <label htmlFor="email" className="block text-sm leading-6 text-stone-700 mb-1">Email:</label>
+                                    <div className="flex flex-row justify-center items-center align-middle py-6">
+                                        <div className="flex-grow border-b border-stone-300"></div>
+                                        <span className="flex-none text-stone-500 text-sm px-4">or</span>
+                                        <div className="flex-grow border-b border-stone-300"></div>
+                                    </div>
 
-                                            <div className="relative mt-2 rounded shadow-sm">
+                                    <form className="w-full m-auto" onSubmit={passwordSignInFormHandler}>
+                                        <div className="shadow-none mb-4 pb-3">
+                                            <div className="relative rounded shadow-sm">
                                                 <input type="email" name="email" id="email" placeholder="john.doe@email.com" autoComplete="off"
                                                     className={classNames(
                                                         'text-stone-900 ring-slate-300 placeholder:text-stone-500 focus:border-0 focus:outline-none focus:ring-amber-600 focus:outline-amber-500 hover:border-stone-400 border border-stone-300',
                                                         'block w-full rounded-md py-2 pl-3 pr-8 text-sm'
-                                                    )} onChange={onChangeHandler} onBlur={onInputBlur} value={state.input.email} required style={{ height: '3rem' }} />
+                                                    )} onChange={onChangeHandler} onBlur={onInputBlur} value={state.input.email} required />
 
                                             </div>
 
@@ -339,14 +332,12 @@ export const SignIn = () => {
                                         </div>
 
                                         <div className="shadow-none space-y-px mb-">
-                                            <label htmlFor="password" className="block text-sm leading-6 text-stone-700 mb-1">Password:</label>
-
                                             <div className="relative mt-2 rounded shadow-sm">
                                                 <input type={state.pwdVisibility ? 'text' : 'password'} name="password" id="password" placeholder="********" autoComplete="off"
                                                     className={classNames(
                                                         'text-stone-900 ring-slate-300 placeholder:text-stone-500 focus:border-0 focus:outline-none focus:ring-amber-600 focus:outline-amber-500 hover:border-stone-400 border border-stone-300',
                                                         'block w-full rounded-md py-2 pl-3 pr-8 text-sm'
-                                                    )} onChange={onChangeHandler} onBlur={onInputBlur} value={state.input.password} required style={{ height: '3rem' }} />
+                                                    )} onChange={onChangeHandler} onBlur={onInputBlur} value={state.input.password} required />
 
                                                 <div className="absolute inset-y-0 right-0 flex items-center w-8">
                                                     {
@@ -368,8 +359,8 @@ export const SignIn = () => {
                                             }
                                         </div>
 
-                                        <div className="text-sm">
-                                            <a href="/auth/forgot-password" className="text-right block text-stone-500 hover:text-stone-600">
+                                        <div className="text-sm pt-4 pb-1">
+                                            <a href="/auth/forgot-password" className="text-right block text-stone-600 hover:text-stone-700 hover:underline">
                                                 <span className="font-small">
                                                     Forgot password?
                                                 </span>
@@ -377,7 +368,7 @@ export const SignIn = () => {
                                         </div>
 
                                         <div className="pb-3 pt-3 flex justify-center">
-                                            <button type="submit" className="w-44 disabled:cursor-not-allowed text-sm rounded-md border border-transparent shadow-sm px-4 py-2 bg-amber-500 text-white disabled:bg-amber-600 hover:bg-amber-600 focus:outline-none flex items-center justify-center" disabled={auth0.processing} style={{ height: '3rem' }}>
+                                            <button type="submit" className="w-44 disabled:cursor-not-allowed text-sm rounded-md border border-transparent shadow-sm px-4 py-2 bg-amber-500 text-white disabled:bg-amber-600 hover:bg-amber-600 focus:outline-none flex items-center justify-center" disabled={auth0.processing}>
                                                 {
                                                     auth0.processing && auth0.provider === 'password' ? (
                                                         <span className="flex flex-row items-center">
@@ -392,9 +383,9 @@ export const SignIn = () => {
                                         </div>
                                     </form>
 
-                                    <span className="text-ston text- block md:w-4/5 md:px-6 m-auto pb-4">
+                                    <span className="text-stone-600 text-sm m-auto flex gap-x-2 py-2">
                                         <span>Don't have an account?</span>
-                                        <Link to={signUpRoute} className="text-amber-600 underline ml-1">Sign Up</Link>
+                                        <Link to={signUpRoute} className="text-amber-600 hover:text-amber-700 hover:underline">Sign Up</Link>
                                     </span>
 
                                     <div className="mx-auto py-3 text-center">
@@ -403,8 +394,12 @@ export const SignIn = () => {
                                         </p>
                                     </div>
                                 </div>
-                            </section>
-                        </div>
+
+                                <div className="md:basis-3/5 hidden md:block">
+                                    <img className="h-full" src={Rock_Band_Image} loading="lazy" alt="rock_band" />
+                                </div>
+                            </div>
+                        </section>
                     </div>
                 )
             }
