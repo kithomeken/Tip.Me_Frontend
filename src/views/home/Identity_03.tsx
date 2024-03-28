@@ -205,7 +205,7 @@ export const Identity_03 = () => {
 
                             <div className="flex flex-row w-full align-middle justitfy-between items-center md:hidden">
                                 <div className="w-48 pt-4 mx-auto pb-3">
-                                    <img src={artisticForm} alt={"hello_i'm_carol"} width="auto" className="block text-center m-auto" />
+                                    <img src={artisticForm} alt={"i_am_an_artist"} width="auto" className="block text-center m-auto" />
                                 </div>
                             </div>
 
@@ -443,7 +443,7 @@ export const Identity_03 = () => {
                         </div>
 
                         <div className="md:basis-2/5 hidden md:block h-screen px-4 py-8">
-                            <img className="h-full bg-amber-100 rounded-2xl" src={artisticForm} alt={"hello_i'm_carol"} loading="lazy" />
+                            <img className="h-full bg-amber-100 rounded-2xl" src={artisticForm} alt={"i_am_an_artist"} loading="lazy" />
                         </div>
                     </div>
                 </section>
