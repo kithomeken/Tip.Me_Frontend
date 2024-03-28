@@ -532,9 +532,7 @@ export const Identity_01 = () => {
                                         <button className="bg-amber-600 float-right relative w-28 py-1.5 px-4 border border-transparent text-sm font-medium rounded-md text-white hover:bg-amber-700 focus:outline-none focus:ring-0 focus:ring-offset-2 focus:bg-amber-700" type="submit">
                                             {
                                                 idC_State.processing ? (
-                                                    <div className="flex justify-center items-center py-2">
-                                                        <i className="fad fa-spinner-third fa-xl fa-spin"></i>
-                                                    </div>
+                                                    <i className="fad fa-spinner-third fa-xl fa-spin py-2.5"></i>
                                                 ) : (
                                                     <div className="flex justify-center align-middle items-center gap-x-3">
                                                         Next
@@ -546,7 +544,6 @@ export const Identity_01 = () => {
                                     </div>
                                 </form>
                             </div>
-
 
                             <div className="mx-auto py-3 text-center">
                                 <p className="text-sm text-stone-500">
