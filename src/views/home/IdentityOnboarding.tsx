@@ -107,21 +107,9 @@ export const IdentityOnboarding = () => {
                         {
                             loadIdentityModules(idC_State.PRc0)
                         }
-
-{/* 
-
-
-
-                        {
-                            idC_State.PRc0 !== 'META_00' ? (
-                                <span className="text-amber-600 mb-2 py-2 text-2xl block">
-                                    Complete Your Profile
-                                </span>
-                            ) : null
-                        } */}
                     </>
                 ) : (
-                    <div className="w-full h-screen -mt-20 flex flex-col justify-center align-middle items-center mx-4">
+                    <div className="w-full h-screen -mt-20 flex flex-col justify-center align-middle items-center">
                         <Loading />
                     </div>
                 )
