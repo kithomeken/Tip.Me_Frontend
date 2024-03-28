@@ -8,10 +8,11 @@ import HttpServices from "../../services/HttpServices"
 import { ListBoxZero } from "../../lib/hooks/ListBoxZero"
 import { Loading } from "../../components/modules/Loading"
 import { classNames } from "../../lib/modules/HelperFunctions"
-import artisticForm from "../../assets/images/9148043_4085061.svg"
+import artisticForm from "../../assets/images/7e33b86cfb1293b8c7a101e9b1011e5d.svg"
 import { InputWithLoadingIcon } from "../../components/lib/InputWithLoadingIcon"
 import { artistEntityCreation, resetIdentity } from "../../store/identityCheckActions"
 import { G_onInputBlurHandler, G_onInputChangeHandler } from "../../components/lib/InputHandlers"
+import { CONFIG_MAX_WIDTH, APPLICATION } from "../../global/ConstantsRegistry"
 
 export const Identity_03 = () => {
     const [state, setstate] = useState({
@@ -43,6 +44,7 @@ export const Identity_03 = () => {
 
     const dispatch: any = useDispatch();
     const idC_State: any = useAppSelector(state => state.idC)
+    const auth0: any = useAppSelector(state => state.auth0)
 
     const onChangeHandler = (e: any) => {
         if (!idC_State.processing) {
@@ -176,223 +178,260 @@ export const Identity_03 = () => {
             }
         } catch (error) {
             console.log(error);
-            
+
             status = 'rejected'
         }
 
         setstate({
             ...state, status, data, input
-        })        
+        })
+    }
+
+    const getMaxMembersForEntity = () => {
+        let { data } = state
+        let { input } = state
+
+        const categoryType = data.artistTypes.find((category: any) => category.key === input.artist_type)
+        return categoryType ? categoryType.max : 0
     }
 
     return (
         <React.Fragment>
-            <div className="w-full border-dashed rounded-md border-2 border-slate-300">
-                <div className="flex mb-4 w-full flex-col md:flex-row px-3 gap-4 py-3 align-middle justitfy-center m-auto ">
-                    <div className="mx-auto md:basis-1/2 md:px-2 flex-shrink-0 flex items-center justify-center mb-3 sm:mx-0 md:w-64 w-48">
-                        <img src={artisticForm} alt={artisticForm} width="auto" className="block text-center m-auto" />
-                    </div>
+            <div className="wrapper w-full overflow-auto h-screen">
+                <section className="gx-container h-screen rounded-md w-full flex items-center justify-center" style={CONFIG_MAX_WIDTH}>
+                    <div className="flex md:flex-row flex-col align-middle items-center w-full md:pb-0 pb-10">
+                        <div className="md:basis-3/5 md:px-6 px-8 w-full h-screen py-8">
+                            <span className="text-2xl self-start text-amber-500 tracking-wider leading-7 block mb-2 md:pt-0 pt-4">{APPLICATION.NAME}</span>
 
-                    <div className="w-full md:basis-1/2">
-                        <div className="text-center md:text-start">
-                            <span className="text-amber-600 mb-2 py-1 md:px-3 text-right block text-sm">
-                                3 OF 4 COMPLETE
-                            </span>
+                            <div className="flex flex-row w-full align-middle justitfy-between items-center md:hidden">
+                                <div className="w-48 pt-4 mx-auto pb-3">
+                                    <img src={artisticForm} alt={"hello_i'm_carol"} width="auto" className="block text-center m-auto" />
+                                </div>
+                            </div>
 
-                            <span className="text-stone-600 mb-3 text-2xl block">
-                                Your Artist Profile
-                                <span className="text-sm text-slate-500 block">
-                                    The final step
-                                </span>
-                            </span>
+                            <div className="w-32 md:float-start float-right">
+                                <div className="w-full py-4 grid grid-cols-3 gap-x-2">
+                                    <div className="rounded-md h-2 shadow-lg bg-amber-600"></div>
+                                    <div className="rounded-md h-2 shadow-lg bg-amber-600"></div>
+                                    <div className="rounded-md h-2 shadow-lg bg-amber-600"></div>
+                                </div>
 
-                            <div className="text-sm text-slate-600 pb-4">
-                                <span className="block">
-                                    Ready to shine? Complete your artist profile and step into a world of possibilities as a registered artist on our platform.
+                                <span className="text-sm text-stone-500 md:text-start text-right block">
+                                    3 of 3
                                 </span>
                             </div>
-                        </div>
 
-                        <div className="flex flex-col mb-3">
+                            <div className="w-full text-sm text-stone-600 float-right">
+                                <span className="block py-4 text-xl md:text-2xl">
+                                    Who is <span className="text-amber-600">{auth0.identity.display_name.split(' ')[1]}</span> as an artist?
+
+                                    <span className="text-sm pt-4 pb-2 text-stone-500 block">
+                                        Wrap up your artist profile and step into a world of possibilities
+                                    </span>
+                                </span>
+                            </div>
+
                             {
                                 state.status === 'rejected' ? (
-                                    <>
-                                    </>
+                                    <></>
                                 ) : state.status === 'fulfilled' ? (
-                                    <form className="space-y-4 shadow-none px- mb-3 w-full md:w-2/3 text-sm" onSubmit={artistEntityFormHandler}>
-                                        {
-                                            state.data.entity === null ? (
-                                                <>
-                                                    <div className="w-full pb-2 px-3 md:px-0">
-                                                        <ListBoxZero
-                                                            onChangeListBoxHandler={(e: any) => onChangeListBoxHandler(e)}
-                                                            state={state}
-                                                            label="Artist Type:"
-                                                            listButton={
-                                                                <>
-                                                                    {state.data.artistTypes.map((artistType: any, index: any) => (
-                                                                        <span key={`kP${index}YxL7Zu`}>
-                                                                            {
-                                                                                state.input.artist_type === artistType.key ? (
-                                                                                    <span className="flex items-center py-1">
-                                                                                        <span className="ml-2 text-sm text-gray-700 truncate">{artistType.value}</span>
-                                                                                    </span>
-                                                                                ) : null
-                                                                            }
-                                                                        </span>
-                                                                    ))}
+                                    <div className="flex flex-col w-full mb-4">
+                                        <form className="space-y-4 mb-3 w-full text-sm md:w-3/5" onSubmit={artistEntityFormHandler}>
+                                            {
+                                                state.data.entity && (
+                                                    <>
+                                                        <div className="w-full mb-4">
+                                                            <span className="block text-stone-700 pb-3">
+                                                                Hey, we've discovered you've been included as a member on:
+                                                            </span>
 
-                                                                    <span className="ml-3 absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                                                                        <i className="far fa-chevron-down text-emerald-500"></i>
+                                                            <div className="w-full grid grid-cols-3 gap-x-3 pb-2">
+                                                                <div className="grid-col-1">
+                                                                    <span className="block text-sm text-stone-600">
+                                                                        Artist Type:
                                                                     </span>
-                                                                </>
-                                                            }
-                                                            listOptions={
-                                                                <>
-                                                                    {state.data.artistTypes.map((artistType: any, index: any) => (
-                                                                        <Listbox.Option
-                                                                            key={`28LbWz${index}XqFp`}
-                                                                            className={({ active }) =>
-                                                                                classNames(
-                                                                                    active ? 'text-white bg-gray-100' : 'text-gray-900',
-                                                                                    'cursor-default select-none relative py-2 pl-3 pr-9'
-                                                                                )
-                                                                            }
-                                                                            value={artistType.key}
-                                                                        >
-                                                                            {({ selected }) => (
-                                                                                <>
-                                                                                    <span className="flex items-center">
-                                                                                        <span className="ml-2 text-sm text-gray-700 truncate">{artistType.value}</span>
-                                                                                    </span>
-
-                                                                                    {selected ? (
-                                                                                        <span className="text-amber-600 absolute inset-y-0 right-0 flex items-center pr-4">
-                                                                                            <i className="fad fa-check h-5 w-5"></i>
-                                                                                        </span>
-                                                                                    ) : null}
-                                                                                </>
-                                                                            )}
-                                                                        </Listbox.Option>
-                                                                    ))}
-                                                                </>
-                                                            }
-                                                        />
-                                                    </div>
-
-                                                    {
-                                                        state.input.artist_type !== 'SOLO' ? (
-                                                            <div className="shadow-none space-y-px mb-4 px-3 md:px-0">
-                                                                <label htmlFor="entity" className="block text-sm leading-6 text-stone-600 mb-1">
-                                                                    {
-                                                                        (state.data.artistTypes.find(
-                                                                            (typeValue: any) => typeValue.key === state.input.artist_type
-                                                                        )
-                                                                        )?.value
-                                                                    } Name:
-                                                                </label>
-
-                                                                <div className="relative mt-2 rounded shadow-sm">
-                                                                    <input type="text" name="entity" id="entity" placeholder="Name" autoComplete="off"
-                                                                        className={classNames(
-                                                                            state.errors.entity.length > 0 ?
-                                                                                'text-red-900 ring-slate-300 placeholder:text-red-400 focus:ring-red-600 border border-red-600 focus:outline-red-500' :
-                                                                                'text-stone-900 ring-slate-300 placeholder:text-stone-400 focus:border-0 focus:outline-none focus:ring-amber-600 focus:outline-amber-500 hover:border-stone-400 border border-stone-300',
-                                                                            'block w-full rounded-md py-2 pl-3 pr-8  text-sm'
-                                                                        )} onChange={onChangeHandler} value={state.input.entity} onBlur={onInputBlur} required />
-                                                                    <div className="absolute inset-y-0 right-0 flex items-center w-8">
-                                                                        {
-                                                                            state.errors.entity.length > 0 ? (
-                                                                                <span className="fa-duotone text-red-500 fa-circle-exclamation fa-lg"></span>
-                                                                            ) : null
-                                                                        }
-                                                                    </div>
                                                                 </div>
 
-                                                                {
-                                                                    state.errors.entity.length > 0 ? (
-                                                                        <span className='invalid-feedback text-xs text-red-600 pl-0'>
-                                                                            {state.errors.entity}
-                                                                        </span>
-                                                                    ) : null
-                                                                }
+                                                                <div className="grid-col-2">
+                                                                    <span className="block text-sm text-amber-600">
+                                                                        {state.data.entity.description}
+                                                                    </span>
+                                                                </div>
                                                             </div>
-                                                        ) : null
-                                                    }
-                                                </>
-                                            ) : (
-                                                <>
-                                                    <hr />
 
-                                                    <span className="block text-sm text-stone-600">
-                                                        <span className="mr-3">
-                                                            Artist Type:
-                                                        </span>
+                                                            <div className="w-full grid grid-cols-3 gap-x-3 pb-2">
+                                                                <div className="grid-col-1">
+                                                                    <span className="block text-sm text-stone-600">
+                                                                        Group Name:
+                                                                    </span>
+                                                                </div>
 
-                                                        {state.data.artistTypes.map((artistType: any, index: any) => (
-                                                            <span key={`duehbP${index}YxL7Zu`}>
-                                                                {
-                                                                    state.data.entity.type === artistType.key ? (
-                                                                        <span className="">
-                                                                            <span className="ml-2 text- text-gray-700 truncate">{artistType.value}</span>
+                                                                <div className="grid-col-2">
+                                                                    <span className="block text-sm text-amber-600">
+                                                                        {state.data.entity.name}
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div className="py-2 px-3 border-2 border-amber-300 border-dashed rounded-md mb-4 w-full">
+                                                            <div className="flex flex-row align-middle justify-center items-center text-amber-700 px-2 gap-x-3">
+                                                                <span className="fa-duotone fa-info-circle fa-2x"></span>
+
+                                                                <div className="flex-auto">
+                                                                    <span className="text-sm block text-gray-600">
+
+                                                                        <span className="block py-2">
+                                                                            Please note that as a result, the above aspects of your artist profile data are now fixed and cannot be changed.
                                                                         </span>
-                                                                    ) : null
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </>
+                                                )
+                                            }
+
+                                            {
+                                                !state.data.entity && (
+                                                    <>
+                                                        <div className="w-full pb-2 px-3 md:px-0">
+                                                            <ListBoxZero
+                                                                onChangeListBoxHandler={(e: any) => onChangeListBoxHandler(e)}
+                                                                state={state}
+                                                                label="Artist Type:"
+                                                                listButton={
+                                                                    <>
+                                                                        {state.data.artistTypes.map((artistType: any, index: any) => (
+                                                                            <span key={`kP${artistType.key}YxL7Zu`}>
+                                                                                {
+                                                                                    state.input.artist_type === artistType.key ? (
+                                                                                        <span className="flex items-center py-0.5">
+                                                                                            <span className="ml-2 text-sm text-gray-700 truncate">{artistType.value}</span>
+                                                                                        </span>
+                                                                                    ) : null
+                                                                                }
+                                                                            </span>
+                                                                        ))}
+
+                                                                        <span className="ml-3 w-6 absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                                                                            <i className="far fa-chevron-down text-emerald-500"></i>
+                                                                        </span>
+                                                                    </>
                                                                 }
-                                                            </span>
-                                                        ))}
-                                                    </span>
+                                                                listOptions={
+                                                                    <>
+                                                                        {state.data.artistTypes.map((artistType: any, index: any) => (
+                                                                            <Listbox.Option
+                                                                                key={`28LbWz${index}XqFp`}
+                                                                                className={({ active }) =>
+                                                                                    classNames(
+                                                                                        active ? 'text-white bg-gray-100' : 'text-gray-900',
+                                                                                        'cursor-default select-none relative py-2 pl-3 pr-9'
+                                                                                    )
+                                                                                }
+                                                                                value={artistType.key}
+                                                                            >
+                                                                                {({ selected }) => (
+                                                                                    <>
+                                                                                        <span className="flex items-center">
+                                                                                            <span className="ml-2 text-sm text-gray-700 truncate">{artistType.value}</span>
+                                                                                        </span>
 
-                                                    <span className="block text-sm text-stone-600">
-                                                        <span className="mr-3">
-                                                            Group Name:
-                                                        </span>
-
-                                                        <span className="">
-                                                            <span className="ml-2 text- text-gray-700 truncate">
-                                                                {state.data.entity.name}
-                                                            </span>
-                                                        </span>
-                                                    </span>
-
-                                                    <hr />
-                                                </>
-                                            )
-                                        }
-
-
-
-                                        <div className="shadow-none space-y-px mb-4 px-3 md:px-0">
-                                            <InputWithLoadingIcon
-                                                name={'artist_name'}
-                                                label={`${state.input.artist_type !== 'SOLO' ? 'My ' : ''} Artist Name`}
-                                                placeHolder={'Artist name'}
-                                                onInputBlurHandler={onInputBlur}
-                                                onChangeHandler={onChangeHandler}
-                                                inputValue={state.input.artist_name}
-                                                errorsName={state.errors.artist_name}
-                                                checkForStatus={state.artist_name.checking}
-                                            />
-                                        </div>
-
-                                        <div className="mb-3 pt-3 px-3 md:px-0">
-                                            <button className="bg-amber-600 float-right relative w-28 py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white hover:bg-amber-700 focus:outline-none focus:ring-0 focus:ring-offset-2 focus:bg-amber-700" type="submit">
-                                                {
-                                                    idC_State.processing ? (
-                                                        <div className="flex justify-center items-center gap-3 py-2">
-                                                            <i className="fad fa-spinner-third fa-xl fa-spin"></i>
+                                                                                        {selected ? (
+                                                                                            <span className="text-amber-600 absolute inset-y-0 right-0 flex items-center pr-4">
+                                                                                                <i className="fad fa-check h-5 w-5"></i>
+                                                                                            </span>
+                                                                                        ) : null}
+                                                                                    </>
+                                                                                )}
+                                                                            </Listbox.Option>
+                                                                        ))}
+                                                                    </>
+                                                                }
+                                                            />
                                                         </div>
-                                                    ) : (
-                                                        <div className="flex justify-center items-center gap-3">
-                                                            Complete
-                                                        </div>
-                                                    )
-                                                }
-                                            </button>
+
+                                                        {
+                                                            getMaxMembersForEntity() > 1 ? (
+                                                                <div className="shadow-none space-y-px mb-4 px-3 md:px-0">
+                                                                    <label htmlFor="entity" className="block text-sm leading-6 text-stone-600 mb-1">
+                                                                        {
+                                                                            (state.data.artistTypes.find(
+                                                                                (typeValue: any) => typeValue.key === state.input.artist_type)
+                                                                            )?.value
+                                                                        } Name:
+                                                                    </label>
+
+                                                                    <div className="relative mt-2 rounded shadow-sm">
+                                                                        <input type="text" name="entity" id="entity" placeholder="Name" autoComplete="off"
+                                                                            className={classNames(
+                                                                                state.errors.entity.length > 0 ?
+                                                                                    'text-red-900 ring-slate-300 placeholder:text-red-400 focus:ring-red-600 border border-red-600 focus:outline-red-500' :
+                                                                                    'text-stone-900 ring-slate-300 placeholder:text-stone-400 focus:border-0 focus:outline-none focus:ring-amber-600 focus:outline-amber-500 hover:border-stone-400 border border-stone-300',
+                                                                                'block w-full rounded-md py-2 pl-3 pr-8  text-sm'
+                                                                            )} onChange={onChangeHandler} value={state.input.entity} onBlur={onInputBlur} required />
+                                                                        <div className="absolute inset-y-0 right-0 flex items-center w-8">
+                                                                            {
+                                                                                state.errors.entity.length > 0 ? (
+                                                                                    <span className="fa-duotone text-red-500 fa-circle-exclamation fa-lg"></span>
+                                                                                ) : null
+                                                                            }
+                                                                        </div>
+                                                                    </div>
+
+                                                                    {
+                                                                        state.errors.entity.length > 0 ? (
+                                                                            <span className='invalid-feedback text-xs text-red-600 pl-0'>
+                                                                                {state.errors.entity}
+                                                                            </span>
+                                                                        ) : null
+                                                                    }
+                                                                </div>
+                                                            ) : null
+                                                        }
+                                                    </>
+                                                )
+                                            }
+
+                                            <div className="shadow-none space-y-px mb-4 px-3 md:px-0">
+                                                <InputWithLoadingIcon
+                                                    name={'artist_name'}
+                                                    label={`${getMaxMembersForEntity() > 1 ? 'My ' : ''} Artist Name`}
+                                                    placeHolder={'Artist name'}
+                                                    onInputBlurHandler={onInputBlur}
+                                                    onChangeHandler={onChangeHandler}
+                                                    inputValue={state.input.artist_name}
+                                                    errorsName={state.errors.artist_name}
+                                                    checkForStatus={state.artist_name.checking}
+                                                />
+                                            </div>
+
+                                            <div className="mb-3 pt-3 px-0">
+                                                <button className="bg-amber-600 float-right relative w-28 py-1.5 px-4 border border-transparent text-sm font-medium rounded-md text-white hover:bg-amber-700 focus:outline-none focus:ring-0 focus:ring-offset-2 focus:bg-amber-700" type="submit">
+                                                    {
+                                                        idC_State.processing ? (
+                                                            <i className="fad fa-spinner-third fa-xl fa-spin py-2.5"></i>
+                                                        ) : (
+                                                            <div className="flex justify-center align-middle items-center gap-x-3">
+                                                                Complete
+                                                                <i className="fa-duotone fa-circle-check fa-lg"></i>
+                                                            </div>
+                                                        )
+                                                    }
+                                                </button>
+                                            </div>
+                                        </form>
+
+                                        <div className="mx-auto py-3 text-center">
+                                            <p className="text-sm text-stone-500">
+                                                © {new Date().getFullYear()}. Elevated Acts of Appreciation, <span className="text-amber-600 block">Tip by Tip.</span>
+                                            </p>
                                         </div>
-                                    </form>
+                                    </div>
                                 ) : (
-                                    <div className="w-full h-full flex flex-col justify-center">
-                                        <div className="flex-grow">
+                                    <div className="w-full h-1/2 flex flex-col justify-center">
+                                        <div className="flex-grow pt-8">
                                             <Loading />
                                         </div>
                                     </div>
@@ -400,9 +439,14 @@ export const Identity_03 = () => {
                             }
 
 
+
+                        </div>
+
+                        <div className="md:basis-2/5 hidden md:block h-screen px-4 py-8">
+                            <img className="h-full bg-amber-100 rounded-2xl" src={artisticForm} alt={"hello_i'm_carol"} loading="lazy" />
                         </div>
                     </div>
-                </div>
+                </section>
             </div>
         </React.Fragment>
     )
