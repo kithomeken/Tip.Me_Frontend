@@ -9,11 +9,11 @@ import { Navigate, useLocation } from "react-router";
 import { firebaseAuth } from "../../firebase/firebaseConfigs";
 import { APPLICATION, AUTH_ } from "../../global/ConstantsRegistry";
 import { authenticationRoutes, postAuthRoutes } from "../../routes/authRoutes";
-import { firebaseSSO_SignIn, resetAuth0 } from "../../store/auth/firebaseAuthActions";
+import { Alt_FirebaseSSO_SignIn, resetAuth0 } from "../../store/auth/firebaseAuthActions";
 import { DeviceInfo, classNames, emailValidator } from "../../lib/modules/HelperFunctions";
 import { G_onInputChangeHandler, G_onInputBlurHandler } from "../../components/lib/InputHandlers";
 import { Loading } from "../../components/modules/Loading";
-import Rock_Band_Image from '../../assets/images/a13f7362f05da71627491eb19944a53e.png'
+import Rock_Band_Image from '../../assets/images/a4f6dd9ebd724d8dcf29e1163ccf36cb.png'
 
 export const SignIn_Alt = () => {
     const [state, setstate] = useState({
@@ -169,7 +169,7 @@ export const SignIn_Alt = () => {
                     }
                 }
 
-                dispatch(firebaseSSO_SignIn(signInProps))
+                dispatch(Alt_FirebaseSSO_SignIn(signInProps))
             }
         }
     };
@@ -191,7 +191,7 @@ export const SignIn_Alt = () => {
                 identity: 'google',
             }
 
-            dispatch(firebaseSSO_SignIn(signInProps))
+            dispatch(Alt_FirebaseSSO_SignIn(signInProps))
         }
     }
 
@@ -268,12 +268,12 @@ export const SignIn_Alt = () => {
                 ) : (
                     <div className="wrapper wrapper-background w-full overflow-auto h-screen">
                         <section className="gx-container gx-900 bg-white shadow-md rounded-md h-screen sm:h-auto w-full flex items-center justify-center">
-                            <div className="flex md:flex-row flex-col align-middle items-center">
-                                <div className="md:basis-2/5 py-4 md:px-6 px-3 w-full">
+                            <div className="flex md:flex-row flex-col align-middle items-center w-full">
+                                <div className="md:basis-2/5 py-4 md:px-6 px-8 w-full">
                                     <span className="text-2xl self-start text-amber-500 tracking-wider leading-7 block">{APPLICATION.NAME}</span>
 
                                     <div className="w-full py-6">
-                                        <span className="text-stone-700 block text-lg">Account Sign In</span>
+                                        <span className="text-stone-700 block text-lg">Sign In</span>
                                         <span className="text-stone-500 block text-sm">Continue with Google or enter your details</span>
                                     </div>
 
@@ -331,7 +331,7 @@ export const SignIn_Alt = () => {
                                             }
                                         </div>
 
-                                        <div className="shadow-none space-y-px mb-">
+                                        <div className="shadow-none space-y-px">
                                             <div className="relative mt-2 rounded shadow-sm">
                                                 <input type={state.pwdVisibility ? 'text' : 'password'} name="password" id="password" placeholder="********" autoComplete="off"
                                                     className={classNames(
@@ -383,16 +383,16 @@ export const SignIn_Alt = () => {
                                         </div>
                                     </form>
 
-                                    <span className="text-stone-600 text-sm m-auto flex gap-x-2 py-2">
-                                        <span>Don't have an account?</span>
-                                        <Link to={signUpRoute} className="text-amber-600 hover:text-amber-700 hover:underline">Sign Up</Link>
-                                    </span>
-
                                     <div className="mx-auto py-3 text-center">
-                                        <p className="text-sm">
+                                        <p className="text-sm text-stone-500">
                                             © {new Date().getFullYear()}. Elevated Acts of Appreciation, <span className="text-amber-600 block">Tip by Tip.</span>
                                         </p>
                                     </div>
+
+                                    <span className="text-stone-800 text-sm m-auto flex gap-x-2 py-2">
+                                        <span>Don't have an account?</span>
+                                        <Link to={signUpRoute} className="text-amber-600 hover:text-amber-700 hover:underline">Sign Up</Link>
+                                    </span>
                                 </div>
 
                                 <div className="md:basis-3/5 hidden md:block">
