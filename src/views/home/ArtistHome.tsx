@@ -22,6 +22,7 @@ export const ArtistHome = () => {
 
     const [state, setstate] = useState({
         show: false,
+        blurred: true,
         activeTab: 'in',
         httpStatus: 200,
         pageTitle: 'Home',
@@ -58,7 +59,7 @@ export const ArtistHome = () => {
                     )
                 )?.path
 
-                entity0Route = API_RouteReplace(entity0Route, ':uuid', data.entity.uuid)                
+                entity0Route = API_RouteReplace(entity0Route, ':uuid', data.entity.uuid)
                 const qrCodeText = APPLICATION.URL + entity0Route
                 GenerateQRCode(qrCodeText)
 
@@ -145,6 +146,12 @@ export const ArtistHome = () => {
         }
     }
 
+    const toggleAmountBlur = () => {
+        setstate({
+            ...state, blurred: !state.blurred
+        })
+    }
+
     return (
         <React.Fragment>
             <Helmet>
@@ -177,7 +184,7 @@ export const ArtistHome = () => {
 
                                             <a className="text-amber-600 w-40 py-2 m-auto px-4 flex flex-row items-center justify-center border border-amber-600 md:hidden text-sm text-center rounded-md bg-white hover:bg-amber-700 focus:outline-none" href={qrCode.highQuality} download={state.data.qrCodeImageName}>
                                                 <i className="fa-duotone fa-download mr-2 fa-lg"></i>
-                                                Download
+                                                Download QR
                                             </a>
                                         </div>
 
@@ -207,15 +214,32 @@ export const ArtistHome = () => {
                                                     Wallet
                                                 </span>
 
-                                                <div className="w-full flex flex-row align-middle items-center py-1">
-                                                    <span className=" py-1 px-1.5 text-slate-500 text-xs">
-                                                        Ksh.
-                                                    </span>
+                                                <div className="w-full flex flex-row align-middle items-center py-1 gap-x-4">
+                                                    <div className={
+                                                        classNames(
+                                                            state.blurred ? 'blurred' : null,
+                                                            "flex-none"
+                                                        )
+                                                    }>
+                                                        <span className=" py-1 px-1.5 text-slate-500 text-xs">
+                                                            Ksh.
+                                                        </span>
 
-                                                    <span className=" py-1 px-1.5 text-3xl">
-                                                        <span className="text-slate-700">{state.data.entity.bal.split('.')[0]}</span>
-                                                        <span className="text-slate-400">.{state.data.entity.bal.split('.')[1]}</span>
-                                                    </span>
+                                                        <span className=" py-1 px-1.5 text-3xl">
+                                                            <span className="text-slate-700">{state.data.entity.bal.split('.')[0]}</span>
+                                                            <span className="text-slate-400">.{state.data.entity.bal.split('.')[1]}</span>
+                                                        </span>
+                                                    </div>
+
+                                                    <div className="flex-none">
+                                                        {
+                                                            state.blurred ? (
+                                                                <span className="fa-duotone fa-eye text-amber-600 fa-lg cursor-pointer" onClick={toggleAmountBlur}></span>
+                                                            ) : (
+                                                                <span className="fa-duotone fa-eye-slash text-amber-600 fa-lg cursor-pointer" onClick={toggleAmountBlur}></span>
+                                                            )
+                                                        }
+                                                    </div>
                                                 </div>
 
                                                 {
@@ -232,7 +256,7 @@ export const ArtistHome = () => {
                                                 <div className="flex flex-col justify-center md:py-2">
                                                     <a className="bg-amber-600 w-40 py-2 px-4 hidden text-sm md:flex flex-row items-center justify-center text-center rounded-md text-white hover:bg-amber-700 focus:outline-none" href={qrCode.highQuality} download={state.data.qrCodeImageName}>
                                                         <i className="fa-duotone fa-download mr-2 fa-lg"></i>
-                                                        Download
+                                                        Download QR
                                                     </a>
                                                 </div>
                                             </div>
