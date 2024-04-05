@@ -1,4 +1,4 @@
-import { Sanctum } from "react-sanctum"
+// import { Sanctum } from "react-sanctum"
 import { ToastContainer } from 'react-toastify'
 import React, { useEffect, useState } from 'react'
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom'
@@ -34,21 +34,12 @@ interface RouteContextType {
     from: string
 }
 
-const RoutingContext = React.createContext<RouteContextType>(null!)
-const sanctumConfig = {
-    userObjectRoute: 'api/v1/account/auth/profile',
-    csrfCookieRoute: CSRF_COOKIE_ROUTE,
-    signInRoute: '/api' + AUTH.FIREBASE_SSO,
-    apiUrl: FULLY_QUALIFIED_DOMAIN_NAME,
-    signOutRoute: '/api' + AUTH_SIGN_OUT,
-    axiosInstance: sanctumAxiosInstance()
-}
-
 /*
  * Create encryption keys 
  * if they do not exist
  */
 EncryptionKeys.setEncryptionKeys()
+const RoutingContext = React.createContext<RouteContextType>(null!)
 
 function App() {
     const RouterProvider = ({ children }: { children: React.ReactNode }) => {
@@ -69,13 +60,39 @@ function App() {
 
     return (
         <Router basename='/'>
-            <Sanctum config={sanctumConfig}>
-                <RouterProvider>
-                    <ToastContainer />
+            <RouterProvider>
+                <ToastContainer />
 
-                    <Routes>
-                        <Route element={<AuthRoutesGuard />}>
-                            {authenticationRoutes.map((route, index) => {
+                <Routes>
+                    <Route element={<AuthRoutesGuard />}>
+                        {authenticationRoutes.map((route, index) => {
+                            return (
+                                <Route
+                                    path={route.path}
+                                    element={route.element}
+                                    key={index}
+                                />
+                            )
+                        })
+                        }
+                    </Route>
+
+                    <Route element={<PostAuthRouteGuard />}>
+                        {postAuthRoutes.map((route, index) => {
+                            return (
+                                <Route
+                                    path={route.path}
+                                    element={route.element}
+                                    key={index}
+                                />
+                            )
+                        })
+                        }
+                    </Route>
+
+                    <Route element={<StandardRoutesGuard />} >
+                        {
+                            standardRoutes.map((route, index) => {
                                 return (
                                     <Route
                                         path={route.path}
@@ -84,11 +101,12 @@ function App() {
                                     />
                                 )
                             })
-                            }
-                        </Route>
-                        
-                        <Route element={<PostAuthRouteGuard />}>
-                            {postAuthRoutes.map((route, index) => {
+                        }
+                    </Route>
+
+                    <Route element={<StandardSettingsRoutesGuard />} >
+                        {
+                            standardSettingsRoutes.map((route, index) => {
                                 return (
                                     <Route
                                         path={route.path}
@@ -97,98 +115,69 @@ function App() {
                                     />
                                 )
                             })
-                            }
-                        </Route>
+                        }
+                    </Route>
 
-                        <Route element={<StandardRoutesGuard />} >
-                            {
-                                standardRoutes.map((route, index) => {
-                                    return (
-                                        <Route
-                                            path={route.path}
-                                            element={route.element}
-                                            key={index}
-                                        />
-                                    )
-                                })
-                            }
-                        </Route>
+                    <Route element={<CommonRoutesGuard />} >
+                        {
+                            commonRoutes.map((route, index) => {
+                                return (
+                                    <Route
+                                        path={route.path}
+                                        element={route.element}
+                                        key={index}
+                                    />
+                                )
+                            })
+                        }
+                    </Route>
 
-                        <Route element={<StandardSettingsRoutesGuard />} >
-                            {
-                                standardSettingsRoutes.map((route, index) => {
-                                    return (
-                                        <Route
-                                            path={route.path}
-                                            element={route.element}
-                                            key={index}
-                                        />
-                                    )
-                                })
-                            }
-                        </Route>
+                    <Route element={<CoreSettingsRouteGuard />} >
+                        {
+                            administrativeRoutes.map((route, index) => {
+                                return (
+                                    <Route
+                                        path={route.path}
+                                        element={route.element}
+                                        key={index}
+                                    />
+                                )
+                            })
+                        }
+                    </Route>
 
-                        <Route element={<CommonRoutesGuard />} >
-                            {
-                                commonRoutes.map((route, index) => {
-                                    return (
-                                        <Route
-                                            path={route.path}
-                                            element={route.element}
-                                            key={index}
-                                        />
-                                    )
-                                })
-                            }
-                        </Route>
+                    <Route element={<ErrorRoutesGuard />} >
+                        {
+                            standardErrorRoutes.map((route, index) => {
+                                return (
+                                    <Route
+                                        path={route.path}
+                                        element={route.element}
+                                        key={index}
+                                    />
+                                )
+                            })
+                        }
+                    </Route>
 
-                        <Route element={<CoreSettingsRouteGuard />} >
-                            {
-                                administrativeRoutes.map((route, index) => {
-                                    return (
-                                        <Route
-                                            path={route.path}
-                                            element={route.element}
-                                            key={index}
-                                        />
-                                    )
-                                })
-                            }
-                        </Route>
+                    <Route element={<GenericRoutesGuard />} >
+                        {
+                            genericRoutes.map((route, index) => {
+                                return (
+                                    <Route
+                                        path={route.path}
+                                        element={route.element}
+                                        key={index}
+                                    />
+                                )
+                            })
+                        }
+                    </Route>
 
-                        <Route element={<ErrorRoutesGuard />} >
-                            {
-                                standardErrorRoutes.map((route, index) => {
-                                    return (
-                                        <Route
-                                            path={route.path}
-                                            element={route.element}
-                                            key={index}
-                                        />
-                                    )
-                                })
-                            }
-                        </Route>
+                    <Route path="*" element={<ERR_404 />} />
 
-                        <Route element={<GenericRoutesGuard />} >
-                            {
-                                genericRoutes.map((route, index) => {
-                                    return (
-                                        <Route
-                                            path={route.path}
-                                            element={route.element}
-                                            key={index}
-                                        />
-                                    )
-                                })
-                            }
-                        </Route>
-
-                        <Route path="*" element={<ERR_404 />} />
-
-                    </Routes>
-                </RouterProvider>
-            </Sanctum>
+                </Routes>
+            </RouterProvider>
         </Router>
     )
 }
