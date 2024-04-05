@@ -218,16 +218,16 @@ export const ArtistHome = () => {
                                                     <div className={
                                                         classNames(
                                                             state.blurred ? 'blurred' : null,
-                                                            "flex-none"
+                                                            "flex-none flex flex-row align-middle items-center py-1 gap-x-2"
                                                         )
                                                     }>
-                                                        <span className=" py-1 px-1.5 text-slate-500 text-xs">
+                                                        <span className="text-slate-500 text-xs">
                                                             Ksh.
                                                         </span>
 
-                                                        <span className=" py-1 px-1.5 text-3xl">
+                                                        <span className="text-3xl">
                                                             <span className="text-slate-700">{state.data.entity.bal.split('.')[0]}</span>
-                                                            <span className="text-slate-400">.{state.data.entity.bal.split('.')[1]}</span>
+                                                            <span className="text-slate-400 text-xl">.{state.data.entity.bal.split('.')[1]}</span>
                                                         </span>
                                                     </div>
 
