@@ -72,7 +72,7 @@ export const AccountSubHeader: FC<headerProps> = ({ errorMode = false }) => {
                                     )
                                 }
 
-                                <span className="text-sm mr-4">{auth0.identity.display_name}</span>
+                                <span className="text-sm">{auth0.identity.display_name}</span>
                             </Menu.Button>
                         </div>
 
