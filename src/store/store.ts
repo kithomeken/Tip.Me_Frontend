@@ -1,7 +1,7 @@
 import * as rp from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
-import { sessionService } from 'redux-react-session';
+// import { sessionService } from 'redux-react-session';
 import { initStateWithPrevTab } from 'redux-state-sync';
 import { persistStore, persistReducer } from 'redux-persist'
 import { firebaseAuthReducer } from './auth/firebaseReducers';
@@ -32,7 +32,7 @@ export const store = configureStore({
 
 
 initStateWithPrevTab(store);
-sessionService.initSessionService(store);
+// sessionService.initSessionService(store);
 
 export const persistor = persistStore(store)
 export type AppDispatch = typeof store.dispatch;
