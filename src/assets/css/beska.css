@@ -602,3 +602,8 @@ select:focus~label {
     margin: 15px 0px;
     /* Set the border radius of the scrollbar thumb */
 }
+
+.blurred {
+    filter: blur(5px);
+    /* Adjust the blur intensity as needed */
+}
