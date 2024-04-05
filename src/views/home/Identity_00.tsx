@@ -179,9 +179,8 @@ export const Identity_00 = () => {
                                 </div>
                             </div>
 
-                            <div className="w-32 md:float-start float-right">
-                                <div className="rounded-md h-2 shadow-lg bg-amber-600 my-2">
-                                </div>
+                            <div className="flex flex-row align-middle items-center gap-x-3 pt-2">
+                                <span className="fa-duotone text-amber-600 fa-badge-check fa-lg"></span>
 
                                 <span className="text-sm text-stone-500 md:text-start text-right block">
                                     Profile completed
@@ -302,7 +301,7 @@ export const Identity_00 = () => {
                                                             </div>
                                                         </>
                                                     ) : (
-                                                        <div className="flex flex-col md:flex-row align-middle items-center pt-3 gap-y-3 md:gap-x-3 border-b-2 border-dashed">
+                                                        <div className="flex flex-col md:flex-row align-middle items-center md:gap-x-3 border-b-2 border-dashed">
                                                             <div className="md:w-1/2 w-full">
                                                                 <img src={invitation} alt={"invitation"} width="auto" className="block text-center m-auto" />
                                                             </div>
@@ -325,7 +324,7 @@ export const Identity_00 = () => {
                                 )
                             }
 
-                            <div className="mb-6 w-full flex flex-row-reverse py-6 px-3 md:px-0 mt-3">
+                            <div className="mb-4 w-full flex flex-row-reverse py-4 px-3 md:px-0">
                                 {
                                     state.posting ? (
                                         <button disabled={true} className="bg-amber-600 float-right min-w-28 relative py-1.5 px-4 border border-transparent text-sm font-medium rounded-md text-white hover:bg-amber-700 focus:outline-none focus:ring-0 focus:ring-offset-2 focus:bg-amber-700" type="submit">
